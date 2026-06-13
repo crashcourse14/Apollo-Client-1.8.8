@@ -247,9 +247,15 @@ public class GuiScreenEditCape extends GuiScreen {
 			if(result != null) {
 				ImageData loadedCape = ImageData.loadImageFile(result.fileData, ImageData.getMimeFromType(result.fileName));
 				if(loadedCape != null) {
-					if((loadedCape.width == 32 || loadedCape.width == 64) && loadedCape.height == 32) {
+					boolean supportedCapeSize = ((loadedCape.width == 32 || loadedCape.width == 64) && loadedCape.height == 32)
+							|| (loadedCape.width == 128 && loadedCape.height == 256);
+					if(supportedCapeSize) {
+						ImageData capeToConvert = loadedCape;
+						if(loadedCape.width == 128 && loadedCape.height == 256) {
+							capeToConvert = SkinConverter.resizeCapeForImport(loadedCape);
+						}
 						byte[] resized = new byte[1173];
-						SkinConverter.convertCape32x32RGBAto23x17RGB(loadedCape, resized);
+						SkinConverter.convertCape32x32RGBAto23x17RGB(capeToConvert, resized);
 						int k;
 						if((k = EaglerProfile.addCustomCape(result.fileName, resized)) != -1) {
 							selectedSlot = k;
@@ -257,7 +263,7 @@ public class GuiScreenEditCape extends GuiScreen {
 							safeProfile();
 						}
 					}else {
-						EagRuntime.showPopup("The selected image '" + result.fileName + "' is not the right size!\nEaglercraft only supports 32x32 or 64x32 capes");
+						EagRuntime.showPopup("The selected image '" + result.fileName + "' is not the right size!\nEaglercraft only supports 32x32, 64x32, or 128x256 capes");
 					}
 				}else {
 					EagRuntime.showPopup("The selected file '" + result.fileName + "' is not a supported format!");

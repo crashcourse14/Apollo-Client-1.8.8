@@ -48,20 +48,13 @@ public class EaglercraftVersion {
 
 	public static final EaglercraftUUID legacyClientUUIDInSharedWorld = EagUtils.makeClientBrandUUIDLegacy(projectOriginName);
 	
-	
-	// Miscellaneous variables:
 
-	public static final String mainMenuStringA = "Minecraft 1.8.8";
-	public static final String mainMenuStringB = projectOriginName + " " + projectOriginRevision + "-"
-			+ projectOriginVersion + " ultimate [" + EagRuntime.getPlatformType().getName() + "]";
+	public static final String mainMenuStringB = "Pure Lobby Client v1 Patch 0";
 	public static final String mainMenuStringC = "";
-	public static final String mainMenuStringD = "Resources Copyright Mojang AB";
+	public static final String mainMenuStringD = "Copyright Mojang AB, and 983kk. All rights reserved.";
 
 	public static final String mainMenuStringE = projectForkName + " " + projectForkVersion;
 	public static final String mainMenuStringF = "Made by " + projectForkVendor;
-
-	public static final String mainMenuStringG = "Collector's Edition";
-	public static final String mainMenuStringH = "PBR Shaders";
 
 	public static final String screenRecordingFilePrefix = projectOriginName + " "
 			+ projectOriginRevision + "-" + projectOriginVersion;

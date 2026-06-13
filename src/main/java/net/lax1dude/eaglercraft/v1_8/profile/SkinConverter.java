@@ -20,6 +20,24 @@ import net.lax1dude.eaglercraft.v1_8.opengl.ImageData;
 
 public class SkinConverter {
 
+	public static ImageData resizeCapeForImport(ImageData cape) {
+		if((cape.width == 64 && cape.height == 32) || (cape.width == 32 && cape.height == 32)) {
+			return cape;
+		}
+		if(cape.width == 128 && cape.height == 256) {
+			ImageData resized = new ImageData(64, 32, true);
+			for(int y = 0; y < 32; ++y) {
+				for(int x = 0; x < 64; ++x) {
+					int srcX = (x * cape.width) / 64;
+					int srcY = (y * cape.height) / 32;
+					resized.pixels[y * 64 + x] = cape.pixels[srcY * cape.width + srcX];
+				}
+			}
+			return resized;
+		}
+		return cape;
+	}
+
 	public static void convert64x32to64x64(ImageData skinIn, ImageData skinOut) {
 		copyRawPixels(skinIn.pixels, skinOut.pixels, 0, 0, 0, 0, 64, 32, 64, 64, false);
 		copyRawPixels(skinIn.pixels, skinOut.pixels, 24, 48, 20, 52, 4, 16, 8, 20, 64, 64);

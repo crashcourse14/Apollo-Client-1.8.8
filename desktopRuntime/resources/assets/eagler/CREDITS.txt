@@ -1,3 +1,8 @@
+ Pure Lobby Developers
+ ~~~~~~~~~~~~~~~~~~~~~
+ 983kk:
+  - Creator of Pure Lobby
+
 
  EaglercraftX Developers
  ~~~~~~~~~~~~~~~~~~~~~~~

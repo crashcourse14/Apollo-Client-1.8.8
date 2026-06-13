@@ -49,6 +49,8 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.ISaveFormat;
 
+import net.minecraft.client.gui.GuiClearButton;
+
 /**+
  * This portion of EaglercraftX contains deobfuscated Minecraft 1.8 source code.
  * 
@@ -99,12 +101,12 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 	 * An array of all the paths to the panorama pictures.
 	 */
 	private static final ResourceLocation[] titlePanoramaPaths = new ResourceLocation[] {
-			new ResourceLocation("textures/gui/title/background/panorama_0.png"),
-			new ResourceLocation("textures/gui/title/background/panorama_1.png"),
-			new ResourceLocation("textures/gui/title/background/panorama_2.png"),
-			new ResourceLocation("textures/gui/title/background/panorama_3.png"),
-			new ResourceLocation("textures/gui/title/background/panorama_4.png"),
-			new ResourceLocation("textures/gui/title/background/panorama_5.png") };
+			new ResourceLocation("textures/gui/title/background/panorama0.png"),
+			new ResourceLocation("textures/gui/title/background/panorama1.png"),
+			new ResourceLocation("textures/gui/title/background/panorama2.png"),
+			new ResourceLocation("textures/gui/title/background/panorama3.png"),
+			new ResourceLocation("textures/gui/title/background/panorama4.png"),
+			new ResourceLocation("textures/gui/title/background/panorama5.png") };
 	private int field_92024_r;
 	private int field_92023_s;
 	private int field_92022_t;
@@ -262,15 +264,9 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 			backgroundTexture2 = this.mc.getTextureManager().getDynamicTextureLocation("background", viewportTexture2);
 		}
 		this.updateCheckerOverlay.setResolution(mc, width, height);
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(new Date());
-		if (calendar.get(2) + 1 == 12 && calendar.get(5) == 24) {
-			this.splashText = "Merry X-mas!";
-		} else if (calendar.get(2) + 1 == 1 && calendar.get(5) == 1) {
-			this.splashText = "Happy new year!";
-		} else if (calendar.get(2) + 1 == 10 && calendar.get(5) == 31) {
-			this.splashText = "OOoooOOOoooo! Spooky!";
-		}
+		/*Calendar calendar = Calendar.getInstance();
+		calendar.setTime(new Date());*/
+
 
 		int i = this.height / 4 + 48;
 
@@ -285,13 +281,15 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 		} else {
 			this.addSingleplayerMultiplayerButtons(i, 24);
 		}
+		this.buttonList.add(new GuiClearButton(200, this.width / 2 - 100, i + 52, 98, 20,
+				I18n.format("PLC Options", new Object[0])));
+		this.buttonList.add(new GuiClearButton(201, this.width / 2 + 2, i + 52, 98, 20,
+				I18n.format("Cosmetics", new Object[0])));
 
-		this.buttonList.add(new GuiButton(0, this.width / 2 - 100, i + 72 + 12, 98, 20,
+		this.buttonList.add(new GuiClearButton(0, this.width / 2 - 100, i + 72, 98, 20,
 				I18n.format("menu.options", new Object[0])));
-		this.buttonList.add(new GuiButton(4, this.width / 2 + 2, i + 72 + 12, 98, 20,
+		this.buttonList.add(new GuiClearButton(4, this.width / 2 + 2, i + 72, 98, 20,
 				I18n.format("menu.editProfile", new Object[0])));
-
-		this.buttonList.add(new GuiButtonLanguage(5, this.width / 2 - 124, i + 72 + 12));
 
 		if (isFork) {
 			this.openGLWarning1 = EaglercraftVersion.mainMenuStringE;
@@ -315,22 +313,11 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 	 */
 	private void addSingleplayerMultiplayerButtons(int parInt1, int parInt2) {
 		this.buttonList
-				.add(new GuiButton(1, this.width / 2 - 100, parInt1, I18n.format("menu.singleplayer", new Object[0])));
-		this.buttonList.add(new GuiButton(2, this.width / 2 - 100, parInt1 + parInt2 * 1,
+				.add(new GuiClearButton(1, this.width / 2 - 100, parInt1, I18n.format("menu.singleplayer", new Object[0])));
+		this.buttonList.add(new GuiClearButton(2, this.width / 2 - 100, parInt1 + parInt2 * 1,
 				I18n.format("menu.multiplayer", new Object[0])));
-		if (EaglercraftVersion.mainMenuEnableGithubButton) {
-			this.buttonList.add(
-					new GuiButton(14, this.width / 2 - 100, parInt1 + parInt2 * 2, I18n.format("menu.forkOnGitlab")));
-		} else {
-			if (EagRuntime.getConfiguration().isEnableDownloadOfflineButton()
-					&& (EagRuntime.getConfiguration().getDownloadOfflineButtonLink() != null
-							|| (!EagRuntime.isOfflineDownloadURL() && UpdateService.supported()
-									&& UpdateService.getClientSignatureData() != null))) {
-				this.buttonList.add(downloadOfflineButton = new GuiButton(15, this.width / 2 - 100,
-						parInt1 + parInt2 * 2, I18n.format("update.downloadOffline")));
-				downloadOfflineButton.enabled = !UpdateService.shouldDisableDownloadButton();
-			}
-		}
+		this.buttonList.add(new GuiClearButton(3, this.width / 2 - 100, parInt1 + parInt2 * 2,
+				I18n.format("menu.language", new Object[0])));
 	}
 
 	/**+
@@ -614,19 +601,26 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 		this.mc.getTextureManager().bindTexture(minecraftTitleTextures);
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		boolean minc = (double) this.updateCounter < 1.0E-4D;
-		if (this.isDefault) {
-			minc = !minc;
-		}
-		if (minc) {
-			this.drawTexturedModalRect(k + 0, b0 + 0, 0, 0, 99, 44);
-			this.drawTexturedModalRect(k + 99, b0 + 0, 129, 0, 27, 44);
-			this.drawTexturedModalRect(k + 99 + 26, b0 + 0, 126, 0, 3, 44);
-			this.drawTexturedModalRect(k + 99 + 26 + 3, b0 + 0, 99, 0, 26, 44);
-			this.drawTexturedModalRect(k + 154, b0 + 0, 0, 45, 155, 44);
-		} else {
-			this.drawTexturedModalRect(k + 0, b0 + 0, 0, 0, 155, 44);
-			this.drawTexturedModalRect(k + 155, b0 + 0, 0, 45, 155, 44);
-		}
+		
+		//Client title is hardcoded since we don't have an image logo.
+		String title = "Pure Lobby";
+
+		GlStateManager.pushMatrix();
+		GlStateManager.scale(2.0F, 2.0F, 2.0F);
+
+		int titleWidth = this.fontRendererObj.getStringWidth(title);
+		int x = (this.width- titleWidth * 2) / 4;
+		int y = (b0 + 50) / 2 + - 10 ;
+
+		this.drawString(this.fontRendererObj, title, x, y, -1);
+
+		GlStateManager.popMatrix();
+
+		String clientDescription = "The most complete all-in-one mod library for Eaglercraft";
+		int descWidth = this.fontRendererObj.getStringWidth(clientDescription);
+		int descY = y * 2 + 25; // 5px below the bottom edge of the (2x-scaled) title
+
+		this.drawString(this.fontRendererObj, clientDescription, (this.width - descWidth) / 2, descY, 0xFF737B81);
 
 		boolean isForkLabel = ((this.openGLWarning1 != null && this.openGLWarning1.length() > 0)
 				|| (this.openGLWarning2 != null && this.openGLWarning2.length() > 0));
@@ -641,86 +635,16 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 						this.field_92021_u + 12, -1);
 		}
 
-		GlStateManager.pushMatrix();
-		GlStateManager.translate((float) (this.width / 2 + 90), 70.0F, 0.0F);
-		GlStateManager.rotate(isForkLabel ? -12.0F : -20.0F, 0.0F, 0.0F, 1.0F);
-		float f1 = 1.8F - MathHelper
-				.abs(MathHelper.sin((float) (Minecraft.getSystemTime() % 1000L) / 1000.0F * 3.1415927F * 2.0F) * 0.1F);
-		f1 = f1 * 100.0F / (float) (this.fontRendererObj.getStringWidth(this.splashText) + 32);
-		if (isForkLabel) {
-			f1 *= 0.8f;
-		}
-		GlStateManager.scale(f1, f1, f1);
-		this.drawCenteredString(this.fontRendererObj, this.splashText, 0, -8, -256);
-		GlStateManager.popMatrix();
-
-		String s = EaglercraftVersion.mainMenuStringA;
-		if (this.mc.isDemo()) {
-			s += " Demo";
-		}
-		this.drawString(this.fontRendererObj, s, 2, this.height - 20, -1);
-		s = EaglercraftVersion.mainMenuStringB;
-		this.drawString(this.fontRendererObj, s, 2, this.height - 10, -1);
+		String s = EaglercraftVersion.mainMenuStringB;
+		this.drawString(this.fontRendererObj, s, 2, this.height - 10, 0xFF737B81);
 
 		String s1 = EaglercraftVersion.mainMenuStringC;
 		this.drawString(this.fontRendererObj, s1, this.width - this.fontRendererObj.getStringWidth(s1) - 2,
-				this.height - 20, -1);
+				this.height - 20, 0xFF737B81);
 		s1 = EaglercraftVersion.mainMenuStringD;
-		if (this.mc.isDemo()) {
-			s1 = "Copyright Mojang AB. Do not distribute!";
-		}
 		this.drawString(this.fontRendererObj, s1, this.width - this.fontRendererObj.getStringWidth(s1) - 2,
-				this.height - 10, -1);
+				this.height - 10, 0xFF737B81);
 
-		if (!this.mc.isDemo()) {
-			GlStateManager.pushMatrix();
-			GlStateManager.scale(0.75f, 0.75f, 0.75f);
-			int www = 0;
-			int hhh = 0;
-			s1 = EaglercraftVersion.mainMenuStringG;
-			if (s1 != null) {
-				www = this.fontRendererObj.getStringWidth(s1);
-				hhh += 10;
-			}
-			s1 = EaglercraftVersion.mainMenuStringH;
-			if (s1 != null) {
-				www = Math.max(www, this.fontRendererObj.getStringWidth(s1));
-				hhh += 10;
-			}
-			if (www > 0) {
-				drawRect(0, 0, www + 6, hhh + 4, 0x55200000);
-				s1 = EaglercraftVersion.mainMenuStringG;
-				if (s1 != null) {
-					www = this.fontRendererObj.getStringWidth(s1);
-					this.drawString(this.fontRendererObj, s1, 3, 3, 0xFFFFFF99);
-				}
-				s1 = EaglercraftVersion.mainMenuStringH;
-				if (s1 != null) {
-					www = Math.max(www, this.fontRendererObj.getStringWidth(s1));
-					this.drawString(this.fontRendererObj, s1, 3, 13, 0xFFFFFF99);
-				}
-			}
-			if (EagRuntime.getConfiguration().isEnableSignatureBadge()) {
-				UpdateCertificate cert = UpdateService.getClientCertificate();
-				GlStateManager.scale(0.66667f, 0.66667f, 0.66667f);
-				if (cert != null) {
-					s1 = I18n.format("update.digitallySigned",
-							GuiUpdateVersionSlot.dateFmt.format(new Date(cert.sigTimestamp)));
-				} else {
-					s1 = I18n.format("update.signatureInvalid");
-				}
-				www = this.fontRendererObj.getStringWidth(s1) + 14;
-				drawRect((this.width * 2 - www) / 2, 0, (this.width * 2 - www) / 2 + www, 12, 0x33000000);
-				GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-				this.drawString(this.fontRendererObj, s1, (this.width * 2 - www) / 2 + 12, 2,
-						cert != null ? 0xFFFFFF99 : 0xFFFF5555);
-				GlStateManager.scale(0.6f, 0.6f, 0.6f);
-				mc.getTextureManager().bindTexture(eaglerGuiTextures);
-				drawTexturedModalRect((int) ((this.width * 2 - www) / 2 / 0.6f) + 2, 1, cert != null ? 32 : 16, 0, 16,
-						16);
-			}
-			GlStateManager.popMatrix();
-		}
 
 		String lbl = "CREDITS.txt";
 		int w = fontRendererObj.getStringWidth(lbl) * 3 / 4;
