@@ -101,12 +101,12 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 	 * An array of all the paths to the panorama pictures.
 	 */
 	private static final ResourceLocation[] titlePanoramaPaths = new ResourceLocation[] {
-			new ResourceLocation("textures/gui/title/background/panorama0.png"),
-			new ResourceLocation("textures/gui/title/background/panorama1.png"),
-			new ResourceLocation("textures/gui/title/background/panorama2.png"),
-			new ResourceLocation("textures/gui/title/background/panorama3.png"),
-			new ResourceLocation("textures/gui/title/background/panorama4.png"),
-			new ResourceLocation("textures/gui/title/background/panorama5.png") };
+			new ResourceLocation("textures/gui/title/background/panorama_0.png"),
+			new ResourceLocation("textures/gui/title/background/panorama_1.png"),
+			new ResourceLocation("textures/gui/title/background/panorama_2.png"),
+			new ResourceLocation("textures/gui/title/background/panorama_3.png"),
+			new ResourceLocation("textures/gui/title/background/panorama_4.png"),
+			new ResourceLocation("textures/gui/title/background/panorama_5.png") };
 	private int field_92024_r;
 	private int field_92023_s;
 	private int field_92022_t;
@@ -599,7 +599,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 		boolean minc = (double) this.updateCounter < 1.0E-4D;
 		
 		//Client title is hardcoded since we don't have an image logo.
-		String title = "Pure Lobby";
+		String title = "Monsoon Client";
 
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(2.0F, 2.0F, 2.0F);

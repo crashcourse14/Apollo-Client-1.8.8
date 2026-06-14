@@ -104,27 +104,9 @@ public class GuiClearButton extends GuiButton {
 
 	private void drawRoundedButtonBackground(int x, int y, int width, int height, int backgroundColor,
 			int borderColor) {
-		this.drawRoundedRect(x, y, x + width, y + height, 5, backgroundColor);
 		this.drawRoundedBorder(x, y, x + width, y + height, 5, 2, borderColor);
 	}
 
-	private void drawRoundedRect(int left, int top, int right, int bottom, int radius, int color) {
-		int r = Math.max(1, Math.min(radius, Math.min(right - left, bottom - top) / 2));
-		for (int y = top; y < bottom; ++y) {
-			int runStart = -1;
-			for (int x = left; x <= right; ++x) {
-				boolean inside = x < right && this.isInsideRoundedRect(x, y, left, top, right, bottom, r);
-				if (inside) {
-					if (runStart < 0) {
-						runStart = x;
-					}
-				} else if (runStart >= 0) {
-					drawRect(runStart, y, x, y + 1, color);
-					runStart = -1;
-				}
-			}
-		}
-	}
 
 	private void drawRoundedBorder(int left, int top, int right, int bottom, int radius, int borderWidth, int color) {
 		int r = Math.max(1, Math.min(radius, Math.min(right - left, bottom - top) / 2));

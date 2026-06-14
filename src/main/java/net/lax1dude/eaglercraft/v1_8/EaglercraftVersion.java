@@ -49,7 +49,7 @@ public class EaglercraftVersion {
 	public static final EaglercraftUUID legacyClientUUIDInSharedWorld = EagUtils.makeClientBrandUUIDLegacy(projectOriginName);
 	
 
-	public static final String mainMenuStringB = "Pure Lobby Client v1 Patch 0";
+	public static final String mainMenuStringB = "Monsoon Client Client v1 Patch 0";
 	public static final String mainMenuStringC = "";
 	public static final String mainMenuStringD = "Copyright Mojang AB, and 983kk. All rights reserved.";
 
