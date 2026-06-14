@@ -57,6 +57,7 @@ import net.minecraft.world.World;
 
 import net.minecraft.monsoonclient.Client;
 import net.minecraft.monsoonclient.event.events.EventUpdate;
+import net.minecraft.monsoonclient.event.Event;
 import net.minecraft.monsoonclient.event.EventManager;
 /**+
  * This portion of EaglercraftX contains deobfuscated Minecraft 1.8 source code.
@@ -144,7 +145,7 @@ public class EntityPlayerSP extends AbstractClientPlayer {
 	public void onUpdate() {
 
 		EventUpdate event = new EventUpdate();
-		eventManager.call();
+		event.call();
 
 		if (this.worldObj.isBlockLoaded(new BlockPos(this.posX, 0.0D, this.posZ))) {
 			super.onUpdate();

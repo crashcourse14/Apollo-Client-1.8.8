@@ -226,7 +226,7 @@ import net.minecraft.monsoonclient.event.EventManager;
  */
 public class Minecraft implements IThreadListener {
 	private static final Logger logger = LogManager.getLogger();
-	private static final ResourceLocation locationMojangPng = new ResourceLocation("textures/gui/title/background/panorama3.png");
+	private static final ResourceLocation locationMojangPng = new ResourceLocation("textures/gui/title/mojang.png");
 	public static final boolean isRunningOnMac = false;
 	private ServerData currentServerData;
 	private TextureManager renderEngine;
