@@ -452,7 +452,7 @@ public class PlatformRuntime {
 			enterBootMenu(BootMenuEntryPoint.wasManuallyInvoked);
 		}
 
-		byte[] finalLoadScreen = PlatformAssets.getResourceBytes("/assets/eagler/eagtek.png");
+		byte[] finalLoadScreen = PlatformAssets.getResourceBytes("/assets/minecraft/textures/gui/title/background/panorama3.png");
 
 		if(finalLoadScreen != null) {
 			EarlyLoadScreen.loadFinal(finalLoadScreen);

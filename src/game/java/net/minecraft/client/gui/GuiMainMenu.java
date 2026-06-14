@@ -92,6 +92,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 	private String openGLWarning1;
 	private String openGLWarning2;
 	private static final ResourceLocation splashTexts = new ResourceLocation("texts/splashes.txt");
+	private static final ResourceLocation monsoonLogo = new ResourceLocation("monsoon/title/logo.png");
 	private static final ResourceLocation minecraftTitleTextures = new ResourceLocation(
 			"textures/gui/title/minecraft.png");
 	private static final ResourceLocation minecraftTitleBlurFlag = new ResourceLocation(
@@ -101,12 +102,12 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 	 * An array of all the paths to the panorama pictures.
 	 */
 	private static final ResourceLocation[] titlePanoramaPaths = new ResourceLocation[] {
-			new ResourceLocation("textures/gui/title/background/panorama_0.png"),
-			new ResourceLocation("textures/gui/title/background/panorama_1.png"),
-			new ResourceLocation("textures/gui/title/background/panorama_2.png"),
-			new ResourceLocation("textures/gui/title/background/panorama_3.png"),
-			new ResourceLocation("textures/gui/title/background/panorama_4.png"),
-			new ResourceLocation("textures/gui/title/background/panorama_5.png") };
+			new ResourceLocation("textures/gui/title/background/panorama0.png"),
+			new ResourceLocation("textures/gui/title/background/panorama1.png"),
+			new ResourceLocation("textures/gui/title/background/panorama2.png"),
+			new ResourceLocation("textures/gui/title/background/panorama3.png"),
+			new ResourceLocation("textures/gui/title/background/panorama4.png"),
+			new ResourceLocation("textures/gui/title/background/panorama5.png") };
 	private int field_92024_r;
 	private int field_92023_s;
 	private int field_92022_t;
@@ -309,11 +310,9 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 	 */
 	private void addSingleplayerMultiplayerButtons(int parInt1, int parInt2) {
 		this.buttonList
-				.add(new GuiClearButton(1, this.width / 2 - 100, parInt1, I18n.format("menu.singleplayer", new Object[0])));
-		this.buttonList.add(new GuiClearButton(2, this.width / 2 - 100, parInt1 + parInt2 * 1,
+				.add(new GuiClearButton(1, this.width / 2 - 100, parInt1 + 20, I18n.format("menu.singleplayer", new Object[0])));
+		this.buttonList.add(new GuiClearButton(2, this.width / 2 - 100, parInt1 + parInt2 * 1 + 20,
 				I18n.format("menu.multiplayer", new Object[0])));
-		this.buttonList.add(new GuiClearButton(5, this.width / 2 - 100, parInt1 + parInt2 * 2,
-				I18n.format("menu.language", new Object[0])));
 	}
 
 	/**+
@@ -322,8 +321,8 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 	 */
 	private void addDemoButtons(int parInt1, int parInt2) {
 		this.buttonList
-				.add(new GuiButton(11, this.width / 2 - 100, parInt1, I18n.format("menu.playdemo", new Object[0])));
-		this.buttonList.add(this.buttonResetDemo = new GuiButton(12, this.width / 2 - 100, parInt1 + parInt2 * 1,
+				.add(new GuiButton(11, this.width / 2 - 100, parInt1 - 20, I18n.format("menu.playdemo", new Object[0])));
+		this.buttonList.add(this.buttonResetDemo = new GuiButton(12, this.width / 2 - 100, parInt1 + parInt2 * 1 - 20,
 				I18n.format("menu.resetdemo", new Object[0])));
 		this.buttonResetDemo.enabled = this.mc.gameSettings.hasCreatedDemoWorld;
 	}
@@ -597,26 +596,29 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 		this.mc.getTextureManager().bindTexture(minecraftTitleTextures);
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		boolean minc = (double) this.updateCounter < 1.0E-4D;
-		
-		//Client title is hardcoded since we don't have an image logo.
+
 		String title = "Monsoon Client";
+
+		int logoWidth = 64;
+		int logoHeight = 64;
+		int logoX = (this.width - logoWidth) / 2;
+		int logoY = (this.height - logoHeight) / 2 - 90;
+
+		this.mc.getTextureManager().bindTexture(monsoonLogo);
+		Gui.drawScaledCustomSizeModalRect(logoX, logoY, 0.0F, 0.0F, 256, 256, logoWidth, logoHeight, 256.0F,
+				256.0F);
 
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(2.0F, 2.0F, 2.0F);
 
 		int titleWidth = this.fontRendererObj.getStringWidth(title);
-		int x = (this.width- titleWidth * 2) / 4;
-		int y = (b0 + 50) / 2 + - 10 ;
+		int x = (this.width - titleWidth * 2) / 4;
+		int y = (logoY + logoHeight + 5) / 2;
 
 		this.drawString(this.fontRendererObj, title, x, y, -1);
 
 		GlStateManager.popMatrix();
 
-		String clientDescription = "The most complete all-in-one mod library for Eaglercraft";
-		int descWidth = this.fontRendererObj.getStringWidth(clientDescription);
-		int descY = y * 2 + 25; // 5px below the bottom edge of the (2x-scaled) title
-
-		this.drawString(this.fontRendererObj, clientDescription, (this.width - descWidth) / 2, descY, 0xFF737B81);
 
 		boolean isForkLabel = ((this.openGLWarning1 != null && this.openGLWarning1.length() > 0)
 				|| (this.openGLWarning2 != null && this.openGLWarning2.length() > 0));

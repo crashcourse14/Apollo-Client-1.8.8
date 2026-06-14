@@ -2,6 +2,10 @@
 
 chmod +x ./gradlew
 
+./gradlew -stop
+
+./gradlew clean
+
 ./gradlew --no-daemon 
 
 
