@@ -90,7 +90,7 @@ public class PlatformRuntime {
 
 		PlatformAssets.readAssetsTeaVM();
 
-		byte[] finalLoadScreen = PlatformAssets.getResourceBytes("/assets/minecraft/textures/gui/title/background/panorama3.png");
+		byte[] finalLoadScreen = PlatformAssets.getResourceBytes("/assets/minecraft/textures/gui/title/background/finalLoadScreen.png");
 
 		if(finalLoadScreen != null) {
 			EarlyLoadScreen.initialize();

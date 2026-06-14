@@ -9,11 +9,9 @@ public class EaglercraftVersion {
 	
 	/// Customize these to fit your fork:
 	
-	public static final String projectForkName = "EaglercraftX";
+	public static final String projectForkName = "Monsoon Client";
 	public static final String projectForkVersion = "u53";
-	public static final String projectForkVendor = "lax1dude";
-	
-	public static final String projectForkURL = "https://gitlab.com/lax1dude/eaglercraftx-1.8";
+	public static final String projectForkVendor = "983kk";
 	
 	//////////////////////////////////////////////////////////////////////
 	
@@ -30,7 +28,7 @@ public class EaglercraftVersion {
 	
 	// Updating configuration
 	
-	public static final boolean enableUpdateService = true;
+	public static final boolean enableUpdateService = false;
 
 	public static final String updateBundlePackageName = "net.lax1dude.eaglercraft.v1_8.client";
 	public static final int updateBundlePackageVersionInt = 53;

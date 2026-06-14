@@ -68,8 +68,8 @@ public class EarlyLoadScreen {
 		
 		IShaderGL frag = _wglCreateShader(GL_FRAGMENT_SHADER);
 		_wglShaderSource(frag, gles3
-				? "#version 300 es\nprecision mediump float; precision mediump sampler2D; in vec2 v_pos; layout(location = 0) out vec4 fragColor; uniform sampler2D tex; uniform vec2 aspect; void main() { fragColor = vec4(textureLod(tex, clamp(v_pos * aspect - ((aspect - 1.0) * 0.5), 0.02, 0.98), 0.0).rgb, 1.0); }"
-				: "#version 100\nprecision mediump float; precision mediump sampler2D; varying vec2 v_pos; uniform sampler2D tex; uniform vec2 aspect; void main() { gl_FragColor = vec4(texture2D(tex, clamp(v_pos * aspect - ((aspect - 1.0) * 0.5), 0.02, 0.98)).rgb, 1.0); }");
+				? "#version 300 es\nprecision mediump float; precision mediump sampler2D; in vec2 v_pos; layout(location = 0) out vec4 fragColor; uniform sampler2D tex; uniform vec2 aspect; void main() { vec2 uv = clamp(v_pos * aspect - ((aspect - 1.0) * 0.5), vec2(0.0), vec2(1.0)); fragColor = vec4(textureLod(tex, uv, 0.0).rgb, 1.0); }"
+				: "#version 100\nprecision mediump float; precision mediump sampler2D; varying vec2 v_pos; uniform sampler2D tex; uniform vec2 aspect; void main() { vec2 uv = clamp(v_pos * aspect - ((aspect - 1.0) * 0.5), vec2(0.0), vec2(1.0)); gl_FragColor = vec4(texture2D(tex, uv).rgb, 1.0); }");
 		_wglCompileShader(frag);
 		
 		program = _wglCreateProgram();

@@ -91,7 +91,7 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter, IBootMenu
 	private boolean singleThreadMode = false;
 	private boolean enableEPKVersionCheck = true;
 	private boolean keepAliveHack = true;
-	private boolean finishOnSwap = true;
+	private boolean finishOnSwap = false;
 
 	public void loadNative(JSObject jsObject) {
 		integratedServerOpts = new JSONObject();
@@ -142,7 +142,7 @@ public class TeaVMClientConfigAdapter implements IClientConfigAdapter, IBootMenu
 		singleThreadMode = eaglercraftXOpts.getSingleThreadMode(false);
 		enableEPKVersionCheck = eaglercraftXOpts.getEnableEPKVersionCheck(true);
 		keepAliveHack = eaglercraftXOpts.getKeepAliveHack(true);
-		finishOnSwap = eaglercraftXOpts.getFinishOnSwap(true);
+		finishOnSwap = eaglercraftXOpts.getFinishOnSwap(false);
 		JSEaglercraftXOptsHooks hooksObj = eaglercraftXOpts.getHooks();
 		if(hooksObj != null) {
 			hooks.loadHooks(hooksObj);

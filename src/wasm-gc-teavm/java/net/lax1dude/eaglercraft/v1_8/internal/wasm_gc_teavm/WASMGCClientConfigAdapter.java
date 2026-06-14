@@ -81,9 +81,9 @@ public class WASMGCClientConfigAdapter implements IClientConfigAdapter {
 	private boolean eaglerNoDelay = false;
 	private boolean ramdiskMode = false;
 	private boolean singleThreadMode = false;
-	private boolean enforceVSync = true;
+	private boolean enforceVSync = false;
 	private boolean keepAliveHack = true;
-	private boolean finishOnSwap = true;
+	private boolean finishOnSwap = false;
 
 	public void loadNative(JSObject jsObject) {
 		JSEaglercraftXOptsRoot eaglercraftXOpts = (JSEaglercraftXOptsRoot)jsObject;
@@ -125,9 +125,9 @@ public class WASMGCClientConfigAdapter implements IClientConfigAdapter {
 		eaglerNoDelay = eaglercraftXOpts.getEaglerNoDelay(false);
 		ramdiskMode = eaglercraftXOpts.getRamdiskMode(false);
 		singleThreadMode = eaglercraftXOpts.getSingleThreadMode(false);
-		enforceVSync = eaglercraftXOpts.getEnforceVSync(true);
+		enforceVSync = eaglercraftXOpts.getEnforceVSync(false);
 		keepAliveHack = eaglercraftXOpts.getKeepAliveHack(true);
-		finishOnSwap = eaglercraftXOpts.getFinishOnSwap(true);
+		finishOnSwap = eaglercraftXOpts.getFinishOnSwap(false);
 		JSEaglercraftXOptsHooks hooksObj = eaglercraftXOpts.getHooks();
 		if(hooksObj != null) {
 			hooks.loadHooks(hooksObj);

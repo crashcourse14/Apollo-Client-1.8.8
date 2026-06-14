@@ -68,7 +68,7 @@ public class EarlyLoadScreen {
 		IntBuffer pixelUpload = upload.asIntBuffer();
 		pixelUpload.put(img.pixels);
 		pixelUpload.flip();
-		_wglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 192, 192, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixelUpload);
+		_wglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.width, img.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixelUpload);
 		
 		pressDeleteTexture = _wglGenTextures();
 		_wglBindTexture(GL_TEXTURE_2D, pressDeleteTexture);
@@ -111,8 +111,8 @@ public class EarlyLoadScreen {
 		
 		IShaderGL frag = _wglCreateShader(GL_FRAGMENT_SHADER);
 		_wglShaderSource(frag, gles3
-				? "#version 300 es\nprecision mediump float; precision mediump sampler2D; in vec2 v_pos; layout(location = 0) out vec4 fragColor; uniform sampler2D tex; uniform vec2 aspect; void main() { fragColor = vec4(textureLod(tex, clamp(v_pos * aspect - ((aspect - 1.0) * 0.5), 0.02, 0.98), 0.0).rgb, 1.0); }"
-				: "#version 100\nprecision mediump float; precision mediump sampler2D; varying vec2 v_pos; uniform sampler2D tex; uniform vec2 aspect; void main() { gl_FragColor = vec4(texture2D(tex, clamp(v_pos * aspect - ((aspect - 1.0) * 0.5), 0.02, 0.98)).rgb, 1.0); }");
+    			? "#version 300 es\nprecision mediump float; precision mediump sampler2D; in vec2 v_pos; layout(location = 0) out vec4 fragColor; uniform sampler2D tex; void main() { fragColor = textureLod(tex, v_pos, 0.0); }"
+    			: "#version 100\nprecision mediump float; precision mediump sampler2D; varying vec2 v_pos; uniform sampler2D tex; void main() { gl_FragColor = texture2D(tex, v_pos); }");
 		_wglCompileShader(frag);
 		
 		program = _wglCreateProgram();
@@ -182,7 +182,6 @@ public class EarlyLoadScreen {
 		_wglClear(GL_COLOR_BUFFER_BIT);
 
 		_wglUseProgram(program);
-		_wglUniform2f(_wglGetUniformLocation(program, "aspect"), x, y);
 		
 		IVertexArrayGL vao = null;
 		if(vaos) {
@@ -224,7 +223,7 @@ public class EarlyLoadScreen {
 		IntBuffer upload = PlatformRuntime.allocateIntBuffer(128*128);
 		upload.put(img.pixels);
 		upload.flip();
-		_wglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 128, 128, 0, GL_RGBA, GL_UNSIGNED_BYTE, upload);
+		_wglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.width, img.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, upload);
 		
 		PlatformRuntime.freeIntBuffer(upload);
 		
@@ -248,7 +247,6 @@ public class EarlyLoadScreen {
 		_wglClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		_wglClear(GL_COLOR_BUFFER_BIT);
 		
-		_wglUniform2f(_wglGetUniformLocation(program, "aspect"), x, y);
 
 		IVertexArrayGL vao = null;
 		if(vaos) {
@@ -322,7 +320,6 @@ public class EarlyLoadScreen {
 		_wglClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		_wglClear(GL_COLOR_BUFFER_BIT);
 		
-		_wglUniform2f(_wglGetUniformLocation(program, "aspect"), x, y);
 
 		IVertexArrayGL vao = null;
 		if(vaos) {

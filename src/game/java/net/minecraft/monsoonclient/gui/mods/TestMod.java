@@ -1,0 +1,28 @@
+package net.minecraft.monsoonclient.gui.mods;
+
+import net.minecraft.monsoonclient.Client;
+import net.minecraft.monsoonclient.gui.HudMod;
+
+public class TestMod extends HudMod {
+
+    public TestMod() {
+        super("Monsoon Client 1.8", 10, 10);
+    }
+
+    @Override
+    public void draw() {
+        fr.drawStringWithShadow("Monsoon Client 1.8", getX(), getY(), -1);
+        super.draw();
+    }
+
+    @Override
+    public int getWidth() {
+        return fr.getStringWidth("Monsoon Client 1.8");
+    }
+
+    @Override
+    public int getHeight() {
+        return fr.FONT_HEIGHT;
+    }
+
+}

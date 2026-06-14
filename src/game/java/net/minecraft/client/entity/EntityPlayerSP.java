@@ -55,6 +55,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
 
+import net.minecraft.monsoonclient.Client;
+import net.minecraft.monsoonclient.event.events.EventUpdate;
+import net.minecraft.monsoonclient.event.EventManager;
 /**+
  * This portion of EaglercraftX contains deobfuscated Minecraft 1.8 source code.
  * 
@@ -139,6 +142,10 @@ public class EntityPlayerSP extends AbstractClientPlayer {
 	 * Called to update the entity's position/logic.
 	 */
 	public void onUpdate() {
+
+		EventUpdate event = new EventUpdate();
+		eventManager.call();
+
 		if (this.worldObj.isBlockLoaded(new BlockPos(this.posX, 0.0D, this.posZ))) {
 			super.onUpdate();
 			if (this.isRiding()) {

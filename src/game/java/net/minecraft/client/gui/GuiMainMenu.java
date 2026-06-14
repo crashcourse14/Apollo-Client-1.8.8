@@ -288,19 +288,6 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 		this.buttonList.add(new GuiClearButton(4, this.width / 2 + 2, i + 72, 98, 20,
 				I18n.format("menu.editProfile", new Object[0])));
 
-		if (isFork) {
-			this.openGLWarning1 = EaglercraftVersion.mainMenuStringE;
-			this.openGLWarning2 = EaglercraftVersion.mainMenuStringF;
-			boolean line2 = this.openGLWarning2 != null && this.openGLWarning2.length() > 0;
-			this.field_92023_s = this.fontRendererObj.getStringWidth(this.openGLWarning1);
-			this.field_92024_r = this.fontRendererObj.getStringWidth(this.openGLWarning2);
-			int j = Math.max(this.field_92023_s, this.field_92024_r);
-			this.field_92022_t = (this.width - j) / 2;
-			this.field_92021_u = ((GuiButton) this.buttonList.get(0)).yPosition - (line2 ? 32 : 21);
-			this.field_92020_v = this.field_92022_t + j;
-			this.field_92019_w = this.field_92021_u + (line2 ? 24 : 11);
-		}
-
 		this.mc.func_181537_a(false);
 	}
 
@@ -352,9 +339,6 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 			this.mc.displayGuiScreen(new GuiScreenEditProfile(this));
 		}
 
-		if (parGuiButton.id == 14) {
-			EagRuntime.openLink(EaglercraftVersion.projectForkURL);
-		}
 
 		if (parGuiButton.id == 11) {
 			this.mc.displayGuiScreen(new GuiScreenDemoPlayWorldSelection(this));

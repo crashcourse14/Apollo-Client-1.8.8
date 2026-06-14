@@ -58,6 +58,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
 import net.minecraft.world.border.WorldBorder;
 
+import net.minecraft.monsoonclient.Client;
+
 /**+
  * This portion of EaglercraftX contains deobfuscated Minecraft 1.8 source code.
  * 
@@ -321,6 +323,8 @@ public class GuiIngame extends Gui {
 			this.overlayPlayerList.updatePlayerList(true);
 			this.overlayPlayerList.renderPlayerlist(i, scoreboard, scoreobjective1);
 		}
+
+		Client.INSTANCE.hudManager.renderMods();
 
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
