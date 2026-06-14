@@ -269,6 +269,7 @@ eaglercraft.command.clientStub=This command is client side!
 menu.game=Game menu
 menu.singleplayer=Singleplayer
 menu.multiplayer=Multiplayer
+menu.language=Languages
 menu.online=Minecraft Realms
 menu.options=Options...
 menu.quit=Quit Game

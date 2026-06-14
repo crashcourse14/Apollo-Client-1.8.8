@@ -281,10 +281,6 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 		} else {
 			this.addSingleplayerMultiplayerButtons(i, 24);
 		}
-		this.buttonList.add(new GuiClearButton(200, this.width / 2 - 100, i + 52, 98, 20,
-				I18n.format("PLC Options", new Object[0])));
-		this.buttonList.add(new GuiClearButton(201, this.width / 2 + 2, i + 52, 98, 20,
-				I18n.format("Cosmetics", new Object[0])));
 
 		this.buttonList.add(new GuiClearButton(0, this.width / 2 - 100, i + 72, 98, 20,
 				I18n.format("menu.options", new Object[0])));
@@ -316,7 +312,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 				.add(new GuiClearButton(1, this.width / 2 - 100, parInt1, I18n.format("menu.singleplayer", new Object[0])));
 		this.buttonList.add(new GuiClearButton(2, this.width / 2 - 100, parInt1 + parInt2 * 1,
 				I18n.format("menu.multiplayer", new Object[0])));
-		this.buttonList.add(new GuiClearButton(3, this.width / 2 - 100, parInt1 + parInt2 * 2,
+		this.buttonList.add(new GuiClearButton(5, this.width / 2 - 100, parInt1 + parInt2 * 2,
 				I18n.format("menu.language", new Object[0])));
 	}
 
