@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 public class DispatchDisplayMod extends HudMod {
 
     public DispatchDisplayMod() {
-        super("Dispatch Display", 5, 90, Category.HUD);
+        super("Dispatch Display", 5, 130, Category.HUD);
 
         this.textFormat = "Entities: %VALUE%";
 

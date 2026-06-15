@@ -12,7 +12,7 @@ import net.minecraft.util.ResourceLocation;
 public class PingMod extends HudMod {
 
     public PingMod() {
-        super("Ping", 5, 50, Category.HUD);
+        super("Ping", 5, 150, Category.HUD);
         //this.icon = new ResourceLocation(null, null);
         this.textFormat = "Ping: %VALUE%";
     }

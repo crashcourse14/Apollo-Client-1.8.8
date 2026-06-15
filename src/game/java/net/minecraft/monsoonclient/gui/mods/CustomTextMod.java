@@ -10,7 +10,7 @@ public class CustomTextMod extends HudMod {
     public String customText = "Custom Text";
 
     public CustomTextMod() {
-        super("Custom Text", 5, 90, Category.HUD);
+        super("Custom Text", 5, 110, Category.HUD);
         this.textFormat = "%VALUE%";
 
         this.icon = new ResourceLocation("minecraft:monsoonclient/textures/frames.png");

@@ -2,12 +2,12 @@ package net.minecraft.monsoonclient.gui.mods;
 
 import net.minecraft.monsoonclient.gui.HudMod;
 import net.minecraft.monsoonclient.gui.hud.Category;
-import net.minecraft.monsoonclient.util.SessionManager;
+import net.minecraft.monsoonclient.gui.SessionManager;
 
 public class SessionTimeMod extends HudMod {
 
     public SessionTimeMod() {
-        super("Session Time", 5, 85, Category.HUD);
+        super("Session Time", 5, 170, Category.HUD);
         this.textFormat = "Session: %VALUE%";
     }
 

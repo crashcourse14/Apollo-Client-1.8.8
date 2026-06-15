@@ -13,6 +13,7 @@ import net.minecraft.monsoonclient.gui.mods.ClockMod;
 import net.minecraft.monsoonclient.gui.mods.PingMod;
 import net.minecraft.monsoonclient.gui.mods.CustomTextMod;
 import net.minecraft.monsoonclient.gui.mods.SoundMod;
+import net.minecraft.monsoonclient.gui.mods.SessionTimeMod;
 
 public class HudManager {
     public ArrayList<HudMod> hudMods = new ArrayList<>();
@@ -26,6 +27,7 @@ public class HudManager {
     public PingMod pingMod;
     public CustomTextMod customTextMod;
     public SoundMod soundMod;
+    public SessionTimeMod sessionTimeMod;
 
     public CategoryManager categoryManager;
 
@@ -39,6 +41,7 @@ public class HudManager {
         hudMods.add(pingMod = new PingMod());
         hudMods.add(customTextMod = new CustomTextMod());
         hudMods.add(soundMod = new SoundMod());
+        hudMods.add(sessionTimeMod = new SessionTimeMod());
 
         categoryManager = new CategoryManager(this);
     }

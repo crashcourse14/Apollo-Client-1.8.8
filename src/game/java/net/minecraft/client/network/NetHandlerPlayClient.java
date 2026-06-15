@@ -222,7 +222,8 @@ import net.minecraft.world.WorldProviderSurface;
 import net.minecraft.world.WorldSettings;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
-import net.minecraft.client.monsoon.gui.mods.SessionTimeMod;
+import net.minecraft.monsoonclient.gui.mods.SessionTimeMod;
+import net.minecraft.monsoonclient.gui.SessionManager;
 
 /**+
  * This portion of EaglercraftX contains deobfuscated Minecraft 1.8 source code.
