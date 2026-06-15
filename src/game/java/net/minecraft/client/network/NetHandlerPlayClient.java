@@ -222,6 +222,7 @@ import net.minecraft.world.WorldProviderSurface;
 import net.minecraft.world.WorldSettings;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
+import net.minecraft.client.monsoon.gui.mods.SessionTimeMod;
 
 /**+
  * This portion of EaglercraftX contains deobfuscated Minecraft 1.8 source code.
@@ -348,6 +349,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 	 * dimension
 	 */
 	public void handleJoinGame(S01PacketJoinGame packetIn) {
+		SessionManager.startSessionTime();
 		mc.ingameGUI.getChatGUI().printChatMessage(
 			new ChatComponentText("§3[§bMSC§3] §rNotice: all client ranks aren't handled by the server!")
 		);
