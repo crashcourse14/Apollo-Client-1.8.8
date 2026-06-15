@@ -12,7 +12,6 @@ public class CoordinatesMod extends HudMod {
         // Placeholders: %X% %Y% %Z% - rearrange/relabel however you like,
         // e.g. "%X%, %Y%, %Z%" or "Pos: %X% / %Y% / %Z%"
         this.textFormat = "X: %X% Y: %Y% Z: %Z%";
-        this.description = "XYZ Position";
         this.icon = new ResourceLocation("minecraft:monsoonclient/textures/coordinates.png"); 
 
     }

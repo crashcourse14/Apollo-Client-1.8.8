@@ -37,6 +37,8 @@ import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.audio.SoundPoolEntry;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.monsoonclient.Client;
+import net.minecraft.monsoonclient.gui.mods.SoundMod;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 
@@ -345,10 +347,23 @@ public class EaglercraftSoundManager {
 	}
 	
 	private float getNormalizedVolume(ISound sound, SoundPoolEntry entry, SoundCategory category) {
-		return (float) MathHelper.clamp_double((double) sound.getVolume() * entry.getVolume(), 0.0D, 1.0D)
+		float base = (float) MathHelper.clamp_double((double) sound.getVolume() * entry.getVolume(), 0.0D, 1.0D)
 				* (category.getCategoryId() == SoundCategory.MASTER.getCategoryId() ? 1.0f
 						: categoryVolumes[category.getCategoryId()])
 				* categoryVolumes[SoundCategory.MASTER.getCategoryId()];
+
+		// Apply per-entry SoundMod multiplier if the mod is loaded and enabled
+		try {
+			SoundMod soundMod = Client.INSTANCE.hudManager.soundMod;
+			if (soundMod != null && soundMod.isEnabled()) {
+				String soundName = sound.getSoundLocation().getResourcePath();
+				base *= soundMod.getVolumeFor(soundName);
+			}
+		} catch (Exception ignored) {
+			// Fail silently — never let the audio manager crash over a client mod
+		}
+
+		return base;
 	}
 	
 	private float getNormalizedPitch(ISound sound, SoundPoolEntry entry) {

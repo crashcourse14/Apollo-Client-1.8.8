@@ -1,6 +1,7 @@
 package net.minecraft.monsoonclient.gui;
 
 import java.util.ArrayList;
+
 import net.minecraft.monsoonclient.gui.mods.TestMod;
 import net.minecraft.monsoonclient.gui.mods.CoordinatesMod;
 import net.minecraft.monsoonclient.gui.mods.FPSMod;
@@ -9,6 +10,9 @@ import net.minecraft.monsoonclient.gui.hud.Category;
 import net.minecraft.monsoonclient.gui.hud.CategoryManager;
 import net.minecraft.monsoonclient.gui.mods.DispatchDisplayMod;
 import net.minecraft.monsoonclient.gui.mods.ClockMod;
+import net.minecraft.monsoonclient.gui.mods.PingMod;
+import net.minecraft.monsoonclient.gui.mods.CustomTextMod;
+import net.minecraft.monsoonclient.gui.mods.SoundMod;
 
 public class HudManager {
     public ArrayList<HudMod> hudMods = new ArrayList<>();
@@ -19,6 +23,9 @@ public class HudManager {
     public FullBrightMod fullBrightMod;
     public DispatchDisplayMod dispatchDisplayMod;
     public ClockMod clockMod;
+    public PingMod pingMod;
+    public CustomTextMod customTextMod;
+    public SoundMod soundMod;
 
     public CategoryManager categoryManager;
 
@@ -29,6 +36,9 @@ public class HudManager {
         hudMods.add(fullBrightMod = new FullBrightMod());
         hudMods.add(dispatchDisplayMod = new DispatchDisplayMod());
         hudMods.add(clockMod = new ClockMod());
+        hudMods.add(pingMod = new PingMod());
+        hudMods.add(customTextMod = new CustomTextMod());
+        hudMods.add(soundMod = new SoundMod());
 
         categoryManager = new CategoryManager(this);
     }

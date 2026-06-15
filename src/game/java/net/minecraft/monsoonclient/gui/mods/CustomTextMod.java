@@ -11,9 +11,6 @@ public class CustomTextMod extends HudMod {
 
     public CustomTextMod() {
         super("Custom Text", 5, 90, Category.HUD);
-
-        this.description = "Displays Custom Text";
-
         this.textFormat = "%VALUE%";
 
         this.icon = new ResourceLocation("minecraft:monsoonclient/textures/frames.png");

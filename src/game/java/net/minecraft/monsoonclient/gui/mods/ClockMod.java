@@ -17,8 +17,6 @@ public class ClockMod extends HudMod {
 
         this.textFormat = "%VALUE%";
 
-        this.description = "Local Time";
-
         //Set the icon for the clock mod
         this.icon = new ResourceLocation("minecraft:monsoonclient/textures/clock.png");
     }

@@ -13,8 +13,8 @@ public class PingMod extends HudMod {
 
     public PingMod() {
         super("Ping", 5, 50, Category.HUD);
-        this.description = "Ping to a server";
         //this.icon = new ResourceLocation(null, null);
+        this.textFormat = "Ping: %VALUE%";
     }
 
     @Override

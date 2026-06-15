@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.monsoonclient.gui.hud.Category;
 import net.minecraft.monsoonclient.gui.hud.CategoryManager;
+import net.minecraft.monsoonclient.gui.ModOption;
 import net.minecraft.util.ResourceLocation;
 
 public class HudMod {
@@ -25,8 +26,18 @@ public class HudMod {
     // --- Mod list presentation ---
     // Icon shown on the mod's card. Leave null to use the placeholder.
     public ResourceLocation icon = null;
-    // Short blurb shown under the mod's name on its card.
-    public String description = "";
+
+    /**
+     * Declares which option controls GuiModList should show for this mod.
+     * Override in subclasses to restrict or extend the available controls.
+     * Default: all standard text customization options.
+     */
+    public ModOption[] supportedOptions = {
+        ModOption.TEXT_FORMAT,
+        ModOption.TEXT_COLOR,
+        ModOption.TEXT_SCALE,
+        ModOption.TEXT_SHADOW
+    };
 
     public HudMod(String name, int x, int y, Category category) {
         this.name = name;

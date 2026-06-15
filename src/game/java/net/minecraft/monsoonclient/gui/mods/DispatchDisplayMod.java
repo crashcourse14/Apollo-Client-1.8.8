@@ -13,8 +13,6 @@ public class DispatchDisplayMod extends HudMod {
 
         this.textFormat = "Entities: %VALUE%";
 
-        this.description = "Display Entities";
-
         // Place a 22x22 (or larger square) png at:
         // assets/monsoonclient/textures/mods/fps.png
         // If the file isn't found, the mod list falls back to the placeholder icon.

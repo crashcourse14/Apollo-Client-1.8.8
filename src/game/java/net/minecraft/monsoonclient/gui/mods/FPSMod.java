@@ -12,9 +12,6 @@ public class FPSMod extends HudMod {
         super("FPS", 5, 70, Category.HUD);
         // Default - change to "%VALUE% FPS" for "400 FPS" instead of "FPS: 400"
         this.textFormat = "FPS: %VALUE%";
-
-        this.description = "Frame Per Second";
-
         this.icon = new ResourceLocation("minecraft: monsoonclient/textures/frames.png");
     }
 
