@@ -2,6 +2,8 @@ package net.minecraft.monsoonclient.gui.mods;
 
 import net.minecraft.monsoonclient.gui.HudMod;
 import net.minecraft.monsoonclient.gui.hud.Category;
+import net.minecraft.util.ResourceLocation;
+
 
 public class CoordinatesMod extends HudMod {
 
@@ -10,6 +12,9 @@ public class CoordinatesMod extends HudMod {
         // Placeholders: %X% %Y% %Z% - rearrange/relabel however you like,
         // e.g. "%X%, %Y%, %Z%" or "Pos: %X% / %Y% / %Z%"
         this.textFormat = "X: %X% Y: %Y% Z: %Z%";
+        this.description = "Display coordinates and world information";
+        //this.icon = new ResourceLocation(null, null); 
+
     }
 
     @Override

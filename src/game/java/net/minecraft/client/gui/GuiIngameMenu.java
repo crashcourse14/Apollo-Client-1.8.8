@@ -79,8 +79,8 @@ public class GuiIngameMenu extends GuiScreen {
 		boolean flag = true;
 		this.buttonList.add(new GuiClearButton(1, this.width / 2 - 100, this.height / 4 + 120 + b0,
 				I18n.format("menu.returnToMenu", new Object[0])));
-		this.buttonList.add(new GuiClearButton(100, this.width / 2 - 70, this.height / 4 + 120 + b0,
-				I18n.format("Mod Menu", new Object[0])));
+		this.buttonList.add(new GuiClearButton(100, this.width / 2 - 100, this.height / 4 + 150 + b0,
+				I18n.format("Monsoon Settings", new Object[0])));
 
 		if (!this.mc.isIntegratedServerRunning()) {
 			((GuiButton) this.buttonList.get(0)).displayString = I18n.format("menu.disconnect", new Object[0]);

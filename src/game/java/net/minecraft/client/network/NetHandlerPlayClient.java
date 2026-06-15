@@ -255,6 +255,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 	public int currentServerMaxPlayers = 20;
 	private boolean field_147308_k = false;
 	private boolean isIntegratedServer = false;
+	Minecraft mc = Minecraft.getMinecraft();
 	/**+
 	 * Just an ordinary random number generator, used to randomize
 	 * audio pitch of item/orb pickup and randomize both
@@ -347,6 +348,9 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 	 * dimension
 	 */
 	public void handleJoinGame(S01PacketJoinGame packetIn) {
+		mc.ingameGUI.getChatGUI().printChatMessage(
+			new ChatComponentText("&3[&bMonsoon Client&3] &rNotice: all client ranks aren't handled by the server!")
+		);
 		this.gameController.playerController = new PlayerControllerMP(this.gameController, this);
 		this.clientWorldController = new WorldClient(this, new WorldSettings(0L, packetIn.getGameType(), false,
 				packetIn.isHardcoreMode(), packetIn.getWorldType()), packetIn.getDimension(), packetIn.getDifficulty());

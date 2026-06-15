@@ -4,11 +4,15 @@ import net.minecraft.monsoonclient.Client;
 import net.minecraft.monsoonclient.gui.HudMod;
 import net.minecraft.monsoonclient.gui.hud.Category;
 import net.minecraft.monsoonclient.gui.hud.CategoryManager;
+import net.minecraft.util.ResourceLocation;
+
 
 public class TestMod extends HudMod {
 
     public TestMod() {
         super("Monsoon Client 1.8", 5, 10, Category.HUD);
+        this.description = "Display client name and version";
+        //this.icon = new ResourceLocation(null, null);
     }
 
     @Override

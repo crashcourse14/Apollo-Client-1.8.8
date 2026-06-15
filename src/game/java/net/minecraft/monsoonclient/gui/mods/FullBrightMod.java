@@ -5,11 +5,15 @@ import net.minecraft.monsoonclient.gui.HudMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.monsoonclient.gui.hud.Category;
 import net.minecraft.monsoonclient.gui.hud.CategoryManager;
+import net.minecraft.util.ResourceLocation;
+
 
 public class FullBrightMod extends HudMod {
 
     public FullBrightMod() {
-        super("FullBright", 5, 50, Category.RENDER);
+        super("FullBright", 5, 50, Category.MECHANIC);
+        this.description = "Increase your in game brightness to the max";
+        //this.icon = new ResourceLocation(null, null);
     }
 
     @Override

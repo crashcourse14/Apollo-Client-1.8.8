@@ -899,6 +899,10 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
 				+ ", I: " + (this.countEntitiesTotal - this.countEntitiesHidden - this.countEntitiesRendered);
 	}
 
+	public int getRenderedEntityCount() {
+   		return this.countEntitiesRendered;
+	}
+
 	public void setupTerrain(Entity viewEntity, double partialTicks, ICamera camera, int frameCount,
 			boolean playerSpectator) {
 		if (this.mc.gameSettings.renderDistanceChunks != this.renderDistanceChunks) {

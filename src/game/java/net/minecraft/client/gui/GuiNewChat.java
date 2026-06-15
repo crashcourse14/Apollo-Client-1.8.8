@@ -13,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
+import net.minecraft.client.Minecaft;
 
 /**+
  * This portion of EaglercraftX contains deobfuscated Minecraft 1.8 source code.
@@ -141,6 +142,16 @@ public class GuiNewChat extends Gui {
 	 * an existing Chat Line of that ID from the GUI
 	 */
 	public void printChatMessageWithOptionalDeletion(IChatComponent parIChatComponent, int parInt1) {
+		String msg = parIChatComponent.getFormattedText();
+
+		if (msg.contains("983kk")) {
+			parIChatComponent = new ChatComponentText("§c[MSC OWNER] §r" + msg);
+		}
+
+		if (msg.contains("Justyme1")){
+			parIChatComponent = new ChatComponentText("§9[MSC VIP] §r" + msg);
+		}
+
 		this.setChatLine(parIChatComponent, parInt1, this.mc.ingameGUI.getUpdateCounter(), false);
 		logger.info("[CHAT] " + parIChatComponent.getUnformattedText());
 	}
