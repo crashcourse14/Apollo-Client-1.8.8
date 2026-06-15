@@ -3,7 +3,7 @@ package net.minecraft.monsoonclient.gui.mods;
 import net.minecraft.monsoonclient.gui.HudMod;
 import net.minecraft.monsoonclient.gui.hud.Category;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.ResourceLocation;
+
 
 
 public class FPSMod extends HudMod {
