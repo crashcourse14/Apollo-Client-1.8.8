@@ -1,28 +1,38 @@
 package net.minecraft.monsoonclient.gui.mods;
 
-import net.minecraft.monsoonclient.Client;
 import net.minecraft.monsoonclient.gui.HudMod;
+import net.minecraft.monsoonclient.gui.hud.Category;
 
 public class CoordinatesMod extends HudMod {
 
     public CoordinatesMod() {
-        super("Coordinates", 5, 30);
+        super("Coordinates", 5, 30, Category.HUD);
+        // Placeholders: %X% %Y% %Z% - rearrange/relabel however you like,
+        // e.g. "%X%, %Y%, %Z%" or "Pos: %X% / %Y% / %Z%"
+        this.textFormat = "X: %X% Y: %Y% Z: %Z%";
     }
 
     @Override
     public void draw() {
-        fr.drawStringWithShadow("X: " + (int) mc.thePlayer.posX + " Y: " + (int) mc.thePlayer.posY + " Z: " + (int) mc.thePlayer.posZ, getX(), getY(), -1);
+        drawModText(getCoordsText(), getX(), getY());
         super.draw();
     }
 
     @Override
     public int getWidth() {
-        return fr.getStringWidth("X: " + (int) mc.thePlayer.posX + " Y: " + (int) mc.thePlayer.posY + " Z: " + (int) mc.thePlayer.posZ);
+        return getTextWidth(getCoordsText());
     }
 
     @Override
     public int getHeight() {
-        return fr.FONT_HEIGHT;
+        return getTextHeight();
+    }
+
+    private String getCoordsText() {
+        return textFormat
+                .replace("%X%", String.valueOf((int) mc.thePlayer.posX))
+                .replace("%Y%", String.valueOf((int) mc.thePlayer.posY))
+                .replace("%Z%", String.valueOf((int) mc.thePlayer.posZ));
     }
 
 }

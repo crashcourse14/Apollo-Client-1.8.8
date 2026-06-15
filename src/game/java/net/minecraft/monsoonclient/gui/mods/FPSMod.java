@@ -1,29 +1,30 @@
 package net.minecraft.monsoonclient.gui.mods;
 
-import net.minecraft.monsoonclient.Client;
 import net.minecraft.monsoonclient.gui.HudMod;
+import net.minecraft.monsoonclient.gui.hud.Category;
 
 public class FPSMod extends HudMod {
 
     public FPSMod() {
-        super("FPS", 5, 50);
+        super("FPS", 5, 50, Category.HUD);
+        // Default - change to "%VALUE% FPS" for "400 FPS" instead of "FPS: 400"
+        this.textFormat = "FPS: %VALUE%";
     }
 
     @Override
     public void draw() {
-        fr.drawStringWithShadow("FPS: " + mc.getDebugFPS(), getX(), getY(), -1);
+        drawModText(formatText(String.valueOf(mc.getDebugFPS())), getX(), getY());
         super.draw();
     }
 
     @Override
     public int getWidth() {
-        return fr.getStringWidth("FPS: " + mc.getDebugFPS());
+        return getTextWidth(formatText(String.valueOf(mc.getDebugFPS())));
     }
 
     @Override
     public int getHeight() {
-        return fr.FONT_HEIGHT;
+        return getTextHeight();
     }
 
 }
-

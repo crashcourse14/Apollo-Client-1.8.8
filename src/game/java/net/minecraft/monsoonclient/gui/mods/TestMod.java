@@ -2,11 +2,13 @@ package net.minecraft.monsoonclient.gui.mods;
 
 import net.minecraft.monsoonclient.Client;
 import net.minecraft.monsoonclient.gui.HudMod;
+import net.minecraft.monsoonclient.gui.hud.Category;
+import net.minecraft.monsoonclient.gui.hud.CategoryManager;
 
 public class TestMod extends HudMod {
 
     public TestMod() {
-        super("Monsoon Client 1.8", 5, 10);
+        super("Monsoon Client 1.8", 5, 10, Category.HUD);
     }
 
     @Override
@@ -24,5 +26,7 @@ public class TestMod extends HudMod {
     public int getHeight() {
         return fr.FONT_HEIGHT;
     }
+
+
 
 }

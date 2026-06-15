@@ -102,7 +102,7 @@ public class GuiClearButton extends GuiButton {
 		}
 	}
 
-	private void drawRoundedButtonBackground(int x, int y, int width, int height, int backgroundColor,
+	protected void drawRoundedButtonBackground(int x, int y, int width, int height, int backgroundColor,
 			int borderColor) {
 		this.drawRoundedRect(x, y, x + width, y + height, 5, backgroundColor);
 		this.drawRoundedBorder(x, y, x + width, y + height, 5, 2, borderColor);

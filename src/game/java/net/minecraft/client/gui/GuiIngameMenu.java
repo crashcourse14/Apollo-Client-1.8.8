@@ -28,6 +28,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 
 import net.minecraft.client.gui.GuiClearButton;
+import net.minecraft.monsoonclient.gui.hud.GuiModList;
 
 /**+
  * This portion of EaglercraftX contains deobfuscated Minecraft 1.8 source code.
@@ -78,6 +79,9 @@ public class GuiIngameMenu extends GuiScreen {
 		boolean flag = true;
 		this.buttonList.add(new GuiClearButton(1, this.width / 2 - 100, this.height / 4 + 120 + b0,
 				I18n.format("menu.returnToMenu", new Object[0])));
+		this.buttonList.add(new GuiClearButton(100, this.width / 2 - 70, this.height / 4 + 120 + b0,
+				I18n.format("Mod Menu", new Object[0])));
+
 		if (!this.mc.isIntegratedServerRunning()) {
 			((GuiButton) this.buttonList.get(0)).displayString = I18n.format("menu.disconnect", new Object[0]);
 			if (this.mc.thePlayer != null && this.mc.thePlayer.sendQueue.getEaglerMessageProtocol().ver >= 4) {
@@ -121,88 +125,94 @@ public class GuiIngameMenu extends GuiScreen {
 	 * (Mouse pressed for buttons)
 	 */
 	protected void actionPerformed(GuiButton parGuiButton) {
-		switch (parGuiButton.id) {
-		case 0:
-			this.mc.displayGuiScreen(new GuiOptions(this, this.mc.gameSettings));
-			break;
-		case 1:
-			boolean flag = this.mc.isIntegratedServerRunning() || this.mc.isDemo();
-			parGuiButton.enabled = false;
-			this.mc.theWorld.sendQuittingDisconnectingPacket();
-			this.mc.loadWorld((WorldClient) null);
-			if (flag) {
-				this.mc.shutdownIntegratedServer(new GuiMainMenu());
-			} else {
-				this.mc.shutdownIntegratedServer(new GuiMultiplayer(new GuiMainMenu()));
-			}
-		case 2:
-		case 3:
-		default:
-			break;
-		case 4:
-			this.mc.displayGuiScreen((GuiScreen) null);
-			this.mc.setIngameFocus();
-			break;
-		case 5:
-			this.mc.displayGuiScreen(new GuiAchievements(this, this.mc.thePlayer.getStatFileWriter()));
-			break;
-		case 6:
-			this.mc.displayGuiScreen(new GuiStats(this, this.mc.thePlayer.getStatFileWriter()));
-			break;
-		case 7:
-			if (!LANServerController.supported()) {
-				mc.displayGuiScreen(new GuiScreenLANNotSupported(this));
-			} else if (LANServerController.isLANOpen()) {
-				if (LANServerController.hasPeers()) {
-					mc.displayGuiScreen(new GuiYesNo(this, I18n.format("networkSettings.delete"),
-							I18n.format("lanServer.wouldYouLikeToKick"), 0));
+		switch (parGuiButton.id) {	
+
+			case 100:
+				this.mc.displayGuiScreen(new GuiModList(this));
+				break;
+
+			case 0:
+				this.mc.displayGuiScreen(new GuiOptions(this, this.mc.gameSettings));
+				break;
+			case 1:
+				boolean flag = this.mc.isIntegratedServerRunning() || this.mc.isDemo();
+				parGuiButton.enabled = false;
+				this.mc.theWorld.sendQuittingDisconnectingPacket();
+				this.mc.loadWorld((WorldClient) null);
+				if (flag) {
+					this.mc.shutdownIntegratedServer(new GuiMainMenu());
 				} else {
-					confirmClicked(false, 0);
+					this.mc.shutdownIntegratedServer(new GuiMultiplayer(new GuiMainMenu()));
 				}
-			} else {
-				this.mc.displayGuiScreen(GuiScreenLANInfo.showLANInfoScreen(
-						new GuiShareToLan(this, this.mc.playerController.getCurrentGameType().getName())));
-			}
-			break;
-		case 8:
-			if (PauseMenuCustomizeState.discordButtonMode == PauseMenuCustomizeState.DISCORD_MODE_INVITE_URL
-					&& PauseMenuCustomizeState.discordInviteURL != null) {
-				EagRuntime.openLink(PauseMenuCustomizeState.discordInviteURL);
-			}
-			break;
-		case 9:
-			switch (PauseMenuCustomizeState.serverInfoMode) {
-			case PauseMenuCustomizeState.SERVER_INFO_MODE_EXTERNAL_URL:
-				if (PauseMenuCustomizeState.serverInfoURL != null) {
-					EagRuntime.openLink(PauseMenuCustomizeState.serverInfoURL);
-				}
-				break;
-			case PauseMenuCustomizeState.SERVER_INFO_MODE_SHOW_EMBED_OVER_HTTP:
-				if (PauseMenuCustomizeState.serverInfoURL != null) {
-					GuiScreen screen = GuiScreenServerInfo.createForCurrentState(this,
-							PauseMenuCustomizeState.serverInfoURL);
-					if (!this.mc.gameSettings.hasHiddenPhishWarning && !GuiScreenPhishingWarning.hasShownMessage) {
-						screen = new GuiScreenPhishingWarning(screen);
-					}
-					this.mc.displayGuiScreen(screen);
-				}
-				break;
-			case PauseMenuCustomizeState.SERVER_INFO_MODE_SHOW_EMBED_OVER_WS:
-				if (PauseMenuCustomizeState.serverInfoHash != null) {
-					GuiScreen screen = new GuiScreenRecieveServerInfo(this, PauseMenuCustomizeState.serverInfoHash);
-					if (!this.mc.gameSettings.hasHiddenPhishWarning && !GuiScreenPhishingWarning.hasShownMessage) {
-						screen = new GuiScreenPhishingWarning(screen);
-					}
-					this.mc.displayGuiScreen(screen);
-				}
-				break;
+			case 2:
+			case 3:
 			default:
 				break;
-			}
+			case 4:
+				this.mc.displayGuiScreen((GuiScreen) null);
+				this.mc.setIngameFocus();
+				break;
+			case 5:
+				this.mc.displayGuiScreen(new GuiAchievements(this, this.mc.thePlayer.getStatFileWriter()));
+				break;
+			case 6:
+				this.mc.displayGuiScreen(new GuiStats(this, this.mc.thePlayer.getStatFileWriter()));
+				break;
+			case 7:
+				if (!LANServerController.supported()) {
+					mc.displayGuiScreen(new GuiScreenLANNotSupported(this));
+				} else if (LANServerController.isLANOpen()) {
+					if (LANServerController.hasPeers()) {
+						mc.displayGuiScreen(new GuiYesNo(this, I18n.format("networkSettings.delete"),
+								I18n.format("lanServer.wouldYouLikeToKick"), 0));
+					} else {
+						confirmClicked(false, 0);
+					}
+				} else {
+					this.mc.displayGuiScreen(GuiScreenLANInfo.showLANInfoScreen(
+							new GuiShareToLan(this, this.mc.playerController.getCurrentGameType().getName())));
+				}
 			break;
-		case 11:
-			this.mc.displayGuiScreen(new GuiScreenNotifications(this));
+			case 8:
+				if (PauseMenuCustomizeState.discordButtonMode == PauseMenuCustomizeState.DISCORD_MODE_INVITE_URL
+						&& PauseMenuCustomizeState.discordInviteURL != null) {
+					EagRuntime.openLink(PauseMenuCustomizeState.discordInviteURL);
+				}
+				break;
+			case 9:
+				switch (PauseMenuCustomizeState.serverInfoMode) {
+				case PauseMenuCustomizeState.SERVER_INFO_MODE_EXTERNAL_URL:
+					if (PauseMenuCustomizeState.serverInfoURL != null) {
+						EagRuntime.openLink(PauseMenuCustomizeState.serverInfoURL);
+					}
+					break;
+				case PauseMenuCustomizeState.SERVER_INFO_MODE_SHOW_EMBED_OVER_HTTP:
+					if (PauseMenuCustomizeState.serverInfoURL != null) {
+						GuiScreen screen = GuiScreenServerInfo.createForCurrentState(this,
+								PauseMenuCustomizeState.serverInfoURL);
+						if (!this.mc.gameSettings.hasHiddenPhishWarning && !GuiScreenPhishingWarning.hasShownMessage) {
+							screen = new GuiScreenPhishingWarning(screen);
+						}
+						this.mc.displayGuiScreen(screen);
+					}
+					break;
+				case PauseMenuCustomizeState.SERVER_INFO_MODE_SHOW_EMBED_OVER_WS:
+					if (PauseMenuCustomizeState.serverInfoHash != null) {
+						GuiScreen screen = new GuiScreenRecieveServerInfo(this, PauseMenuCustomizeState.serverInfoHash);
+						if (!this.mc.gameSettings.hasHiddenPhishWarning && !GuiScreenPhishingWarning.hasShownMessage) {
+							screen = new GuiScreenPhishingWarning(screen);
+						}
+						this.mc.displayGuiScreen(screen);
+					}
+					break;
+				default:
+					break;
+				}
 			break;
+			case 11:
+				this.mc.displayGuiScreen(new GuiScreenNotifications(this));
+			break;
+			
 		}
 
 	}

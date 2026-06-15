@@ -2,33 +2,31 @@ package net.minecraft.monsoonclient.gui.mods;
 
 import net.minecraft.monsoonclient.Client;
 import net.minecraft.monsoonclient.gui.HudMod;
-import net.lax1dude.eaglercraft.v1_8.socket.EaglercraftNetworkManager;
+import net.minecraft.client.Minecraft;
 import net.minecraft.monsoonclient.gui.hud.Category;
 import net.minecraft.monsoonclient.gui.hud.CategoryManager;
 
+public class FullBrightMod extends HudMod {
 
-public class PingMod extends HudMod {
-
-    public PingMod() {
-        super("Ping", 5, 50, Category.HUD);
+    public FullBrightMod() {
+        super("FullBright", 5, 50, Category.RENDER);
     }
 
     @Override
     public void draw() {
-        fr.drawStringWithShadow("Ping: (In dev)", getX(), getY(), -1);
+        fr.drawStringWithShadow("FullBright", getX(), getY(), -1);
         super.draw();
     }
 
     @Override
     public int getWidth() {
-        return fr.getStringWidth("Ping: (In dev)");
+        return fr.getStringWidth("FullBright");
     }
 
     @Override
     public int getHeight() {
         return fr.FONT_HEIGHT;
     }
-
 
 
 }

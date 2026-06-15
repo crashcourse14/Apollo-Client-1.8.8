@@ -203,6 +203,7 @@ import net.optifine.Config;
 
 import net.minecraft.monsoonclient.Client;
 import net.minecraft.monsoonclient.event.EventManager;
+import net.minecraft.monsoonclient.event.events.ClientTick;
 
 /**+
  * This portion of EaglercraftX contains deobfuscated Minecraft 1.8 source code.
@@ -866,6 +867,9 @@ public class Minecraft implements IThreadListener {
 				Util.func_181617_a((FutureTask) this.scheduledTasks.remove(0), logger);
 			}
 		}
+
+		ClientTick event = new ClientTick();
+		event.call();
 
 		long l = EagRuntime.nanoTime();
 
