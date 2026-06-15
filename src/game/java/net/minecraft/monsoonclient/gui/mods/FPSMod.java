@@ -13,12 +13,9 @@ public class FPSMod extends HudMod {
         // Default - change to "%VALUE% FPS" for "400 FPS" instead of "FPS: 400"
         this.textFormat = "FPS: %VALUE%";
 
-        this.description = "Display your frames per second";
+        this.description = "Frame Per Second";
 
-        // Place a 22x22 (or larger square) png at:
-        // assets/monsoonclient/textures/mods/fps.png
-        // If the file isn't found, the mod list falls back to the placeholder icon.
-        //this.icon = new ResourceLocation("monsoonclient", "textures/mods/fps.png");
+        this.icon = new ResourceLocation("minecraft: monsoonclient/textures/frames.png");
     }
 
     @Override

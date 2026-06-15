@@ -12,6 +12,8 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.monsoonclient.gui.MonsoonBranding;
+
 
 /**+
  * This portion of EaglercraftX contains deobfuscated Minecraft 1.8 source code.
@@ -81,6 +83,7 @@ public class GuiInventory extends InventoryEffectRenderer {
 	 * mouseY, renderPartialTicks
 	 */
 	public void drawScreen(int i, int j, float f) {
+		MonsoonBranding.render(this.width, this.height);
 		super.drawScreen(i, j, f);
 		this.oldMouseX = (float) i;
 		this.oldMouseY = (float) j;

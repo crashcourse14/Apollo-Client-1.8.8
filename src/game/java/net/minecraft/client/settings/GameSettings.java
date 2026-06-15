@@ -115,7 +115,7 @@ public class GameSettings {
 	public boolean chatLinksPrompt = true;
 	public float chatOpacity = 1.0F;
 	public boolean snooperEnabled = true;
-	public boolean enableVsync = EagRuntime.getPlatformType() == EnumPlatformType.DESKTOP;
+	public boolean enableVsync = EagRuntime.getPlatformType() != EnumPlatformType.DESKTOP;
 	public boolean allowBlockAlternatives = true;
 	public boolean reducedDebugInfo = false;
 	public boolean hideServerAddress;

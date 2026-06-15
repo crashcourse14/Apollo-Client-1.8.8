@@ -349,7 +349,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 	 */
 	public void handleJoinGame(S01PacketJoinGame packetIn) {
 		mc.ingameGUI.getChatGUI().printChatMessage(
-			new ChatComponentText("&3[&bMonsoon Client&3] &rNotice: all client ranks aren't handled by the server!")
+			new ChatComponentText("§3[§bMSC§3] §rNotice: all client ranks aren't handled by the server!")
 		);
 		this.gameController.playerController = new PlayerControllerMP(this.gameController, this);
 		this.clientWorldController = new WorldClient(this, new WorldSettings(0L, packetIn.getGameType(), false,

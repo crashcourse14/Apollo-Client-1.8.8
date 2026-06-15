@@ -11,11 +11,10 @@ import net.minecraft.client.Minecraft;
  */
 public class GuiModButton extends GuiButton {
 
-    // --- Colors, tweak these to match your theme ---
-    public int enabledColor = 0xFF555751; 
+    public int enabledColor = 0xFF1B1C20; 
     public int enabledTextColor = 0xFFFFFFFF;
 
-    public int disabledColor = 0xFF2CADDC;
+    public int disabledColor = 0xFFEE4639;
     public int disabledTextColor = 0xFFFFFFFF;
 
     private boolean toggled;

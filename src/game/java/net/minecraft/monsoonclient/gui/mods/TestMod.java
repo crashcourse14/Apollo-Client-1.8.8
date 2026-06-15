@@ -11,8 +11,9 @@ public class TestMod extends HudMod {
 
     public TestMod() {
         super("Monsoon Client 1.8", 5, 10, Category.HUD);
-        this.description = "Display client name and version";
-        //this.icon = new ResourceLocation(null, null);
+        this.description = "Client name display";
+ 
+        this.icon = new ResourceLocation("minecraft:monsoonclient/textures/name.png");
     }
 
     @Override

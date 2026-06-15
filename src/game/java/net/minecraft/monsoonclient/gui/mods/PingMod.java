@@ -13,7 +13,7 @@ public class PingMod extends HudMod {
 
     public PingMod() {
         super("Ping", 5, 50, Category.HUD);
-        this.description = "Display your ping to a server";
+        this.description = "Ping to a server";
         //this.icon = new ResourceLocation(null, null);
     }
 

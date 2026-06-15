@@ -45,9 +45,22 @@ public class EaglercraftVersion {
 	public static final EaglercraftUUID clientBrandUUID = EagUtils.makeClientBrandUUID(projectForkName);
 
 	public static final EaglercraftUUID legacyClientUUIDInSharedWorld = EagUtils.makeClientBrandUUIDLegacy(projectOriginName);
+
+
+
+	private static String loadVersion() {
+		String str = EagRuntime.getResourceString(
+				"/assets/minecraft/monsoon/version/version.txt");
+
+		if (str == null || str.trim().isEmpty()) {
+			return "Monsoon Client v1.0 Patch 0";
+		}
+
+		return str.trim();
+	}
 	
 
-	public static final String mainMenuStringB = "Monsoon Client Client v1 Patch 0";
+	public static final String mainMenuStringB = loadVersion();
 	public static final String mainMenuStringC = "";
 	public static final String mainMenuStringD = "Copyright Mojang AB, and 983kk. All rights reserved.";
 

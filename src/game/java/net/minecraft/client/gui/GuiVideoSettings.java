@@ -9,6 +9,8 @@ import net.lax1dude.eaglercraft.v1_8.opengl.ext.dynamiclights.DynamicLightsState
 import net.lax1dude.eaglercraft.v1_8.recording.ScreenRecordingController;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
+import net.minecraft.monsoonclient.gui.MonsoonBranding;
+
 
 /**+
  * This portion of EaglercraftX contains deobfuscated Minecraft 1.8 source code.
@@ -170,6 +172,7 @@ public class GuiVideoSettings extends GuiScreen {
 	 * mouseY, renderPartialTicks
 	 */
 	public void drawScreen(int i, int j, float f) {
+		MonsoonBranding.render(this.width, this.height);
 		this.drawDefaultBackground();
 		this.optionsRowList.drawScreen(i, j, f);
 		this.drawCenteredString(this.fontRendererObj, this.screenTitle, this.width / 2, 5, 16777215);

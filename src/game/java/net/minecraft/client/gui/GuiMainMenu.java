@@ -287,6 +287,8 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 				I18n.format("menu.options", new Object[0])));
 		this.buttonList.add(new GuiClearButton(4, this.width / 2 + 2, i + 72, 98, 20,
 				I18n.format("menu.editProfile", new Object[0])));
+		this.buttonList.add(new GuiClearButton(101, this.width / 2 - 100, i + 104, 98, 20,
+				I18n.format("Social", new Object[0])));
 
 		this.mc.func_181537_a(false);
 	}
@@ -358,6 +360,10 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 					UpdateService.quine();
 				}
 			}
+		}
+
+		if (parGuiButton.id == 101) {
+			EagRuntime.openLink("https://fluxer.gg/qfHZffiR");
 		}
 	}
 
@@ -578,6 +584,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 			this.drawGradientRect(0, 0, this.width, this.height, 0, Integer.MIN_VALUE);
 		}
 		this.mc.getTextureManager().bindTexture(minecraftTitleTextures);
+		
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		boolean minc = (double) this.updateCounter < 1.0E-4D;
 

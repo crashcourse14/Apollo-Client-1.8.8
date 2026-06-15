@@ -12,6 +12,8 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.monsoonclient.Client;
 import net.minecraft.monsoonclient.gui.HudMod;
+import net.minecraft.monsoonclient.gui.MonsoonBranding;
+
 
 public class GuiModList extends GuiScreen {
 
@@ -36,9 +38,11 @@ public class GuiModList extends GuiScreen {
     private static final int SHADOW_CHECKBOX_ID = 500;
 
     // --- colors (fully opaque - no alpha) ---
-    private static final int COLOR_PANEL_BG = 0xFF2E2925;
-    private static final int COLOR_CARD_BG = 0xFF53554E;
-    private static final int COLOR_SELECTED = 0xFF2CADDC;
+    private static final int COLOR_PANEL_BG = 0xFF111214;
+    private static final int COLOR_CARD_BG = 0xFF1B1B1B;
+    private static final int COLOR_TEXTBOX_BG = 0xFF1C1D21;
+    private static final int COLOR_SELECTED = 0xFFDD3538;
+    private static final int COLOR_CARD_BORDER = 0xFF303030;
 
     private enum ViewMode {
         LIST, OPTIONS
@@ -71,6 +75,7 @@ public class GuiModList extends GuiScreen {
     private int colorFieldX, colorFieldY, colorFieldWidth;
     private int scaleFieldX, scaleFieldY, scaleFieldWidth;
     private int shadowCheckY;
+    
 
     public GuiModList(GuiScreen parentScreen) {
         this.parentScreen = parentScreen;
@@ -164,8 +169,7 @@ public class GuiModList extends GuiScreen {
 
             cardLayouts.add(new CardLayout(cardX, cardY, cardWidth, CARD_HEIGHT, toggleX, toggleY));
 
-            this.buttonList.add(new GuiModButton(TOGGLE_ID_BASE + i, toggleX, toggleY, TOGGLE_WIDTH, TOGGLE_HEIGHT,
-                    mod.isEnabled()));
+            this.buttonList.add(new GuiModButton(TOGGLE_ID_BASE + i, toggleX, toggleY, TOGGLE_WIDTH, TOGGLE_HEIGHT, mod.isEnabled()));
         }
     }
 
@@ -227,6 +231,7 @@ public class GuiModList extends GuiScreen {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        MonsoonBranding.render(this.width, this.height);
         this.drawDefaultBackground();
 
         drawRect(panelX, panelY, panelX + panelWidth, panelY + panelHeight, COLOR_PANEL_BG);
@@ -253,16 +258,23 @@ public class GuiModList extends GuiScreen {
         drawCloseButton(mouseX, mouseY);
 
         if (viewMode == ViewMode.LIST) {
-            drawRect(searchX, searchY, searchX + SEARCH_WIDTH, searchY + SEARCH_HEIGHT, COLOR_CARD_BG);
+            drawRect(searchX, searchY, searchX + SEARCH_WIDTH, searchY + SEARCH_HEIGHT, COLOR_TEXTBOX_BG);
             if (searchField.getText().isEmpty() && !searchField.isFocused()) {
-                this.drawString(this.fontRendererObj, "Search...", searchX, searchY + (SEARCH_HEIGHT - 8) / 2, 0xFF8A8A8A);
+                this.drawString(this.fontRendererObj, "Search...", searchX + 3, searchY + (SEARCH_HEIGHT - this.fontRendererObj.FONT_HEIGHT) / 2, 0xFF8A8A8A);
             }
-            searchField.drawTextBox();
+            if (searchField.isFocused() || !searchField.getText().isEmpty()) {
+                String txt = searchField.getText();
+
+                int textX = searchX + (SEARCH_WIDTH / 2) - (fontRendererObj.getStringWidth(txt) / 2);
+
+                drawString(fontRendererObj, txt, textX, searchY + (SEARCH_HEIGHT - 8) / 2, 0xFFFFFFFF);
+            }
         }
     }
 
     private void drawCard(HudMod mod, CardLayout c) {
         drawRect(c.x, c.y, c.x + c.width, c.y + c.height, COLOR_CARD_BG);
+        drawRect(c.x - 1, c.y - 1, c.x + c.width + 1, c.y + c.height + 1, COLOR_CARD_BORDER);
 
         int iconX = c.x + 4;
         int iconY = c.y + (c.height - ICON_SIZE) / 2;
@@ -270,7 +282,7 @@ public class GuiModList extends GuiScreen {
         if (mod.icon != null) {
             GlStateManager.color(1F, 1F, 1F, 1F);
             this.mc.getTextureManager().bindTexture(mod.icon);
-            drawModalRectWithCustomSizedTexture(iconX, iconY, 0, 0, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
+             drawScaledCustomSizeModalRect(iconX, iconY, 0, 0, 50, 50, 22, 22, 50, 50);
         } else {
             drawRect(iconX, iconY, iconX + ICON_SIZE, iconY + ICON_SIZE, COLOR_SELECTED);
             String glyph = mod.name.length() > 0 ? mod.name.substring(0, 1).toUpperCase() : "?";
@@ -289,7 +301,7 @@ public class GuiModList extends GuiScreen {
             GlStateManager.translate(textX, c.y + 16, 0);
             GlStateManager.scale(0.7f, 0.7f, 1.0f);
             for (int i = 0; i < Math.min(2, lines.size()); i++) {
-                this.fontRendererObj.drawString(lines.get(i), 0, i * 9, 0xFFAFAFAF);
+                this.fontRendererObj.drawString(lines.get(i), 0, i * 9, 0x7A7B7D);
             }
             GlStateManager.popMatrix();
         }
@@ -314,8 +326,12 @@ public class GuiModList extends GuiScreen {
 
     private void drawFormRow(String label, int fieldX, int fieldY, int fieldWidth, GuiTextField field) {
         this.drawString(this.fontRendererObj, label, panelX + PADDING, fieldY + (FIELD_HEIGHT - 8) / 2, 0xFFCFCFCF);
-        drawRect(fieldX, fieldY, fieldX + fieldWidth, fieldY + FIELD_HEIGHT, COLOR_CARD_BG);
-        field.drawTextBox();
+        drawRect(fieldX, fieldY, fieldX + fieldWidth, fieldY + FIELD_HEIGHT, COLOR_TEXTBOX_BG);
+        String txt = field.getText();
+
+        int centeredX = fieldX + (fieldWidth / 2) - (fontRendererObj.getStringWidth(txt) / 2);
+
+        drawString(fontRendererObj, txt, centeredX, fieldY + (FIELD_HEIGHT - 8) / 2, 0xFFFFFFFF);
     }
 
     private void drawCloseButton(int mouseX, int mouseY) {

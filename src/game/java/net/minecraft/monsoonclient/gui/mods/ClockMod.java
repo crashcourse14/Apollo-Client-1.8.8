@@ -17,10 +17,10 @@ public class ClockMod extends HudMod {
 
         this.textFormat = "%VALUE%";
 
-        this.description = "Display local current time";
+        this.description = "Local Time";
 
         //Set the icon for the clock mod
-        //this.icon = new ResourceLocation(null, null);
+        this.icon = new ResourceLocation("minecraft:monsoonclient/textures/clock.png");
     }
 
     private String getCurrentTime() {

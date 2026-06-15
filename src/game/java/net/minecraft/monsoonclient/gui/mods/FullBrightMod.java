@@ -12,8 +12,8 @@ public class FullBrightMod extends HudMod {
 
     public FullBrightMod() {
         super("FullBright", 5, 50, Category.MECHANIC);
-        this.description = "Increase your in game brightness to the max";
-        //this.icon = new ResourceLocation(null, null);
+        this.description = "Increase Brightness";
+        this.icon = new ResourceLocation("minecraft:monsoonclient/textures/fullbright.png");
     }
 
     @Override

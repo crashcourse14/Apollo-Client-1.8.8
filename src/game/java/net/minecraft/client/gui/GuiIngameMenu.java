@@ -29,6 +29,7 @@ import net.minecraft.util.ResourceLocation;
 
 import net.minecraft.client.gui.GuiClearButton;
 import net.minecraft.monsoonclient.gui.hud.GuiModList;
+import net.minecraft.monsoonclient.gui.MonsoonBranding;
 
 /**+
  * This portion of EaglercraftX contains deobfuscated Minecraft 1.8 source code.
@@ -81,14 +82,6 @@ public class GuiIngameMenu extends GuiScreen {
 				I18n.format("menu.returnToMenu", new Object[0])));
 		this.buttonList.add(new GuiClearButton(100, this.width / 2 - 100, this.height / 4 + 150 + b0,
 				I18n.format("Monsoon Settings", new Object[0])));
-
-		if (!this.mc.isIntegratedServerRunning()) {
-			((GuiButton) this.buttonList.get(0)).displayString = I18n.format("menu.disconnect", new Object[0]);
-			if (this.mc.thePlayer != null && this.mc.thePlayer.sendQueue.getEaglerMessageProtocol().ver >= 4) {
-				this.buttonList.add(notifBellButton = new GuiButtonNotifBell(11, width - 22, height - 22));
-				notifBellButton.setUnread(mc.thePlayer.sendQueue.getNotifManager().getUnread());
-			}
-		}
 
 		this.buttonList.add(new GuiClearButton(4, this.width / 2 - 100, this.height / 4 + 24 + b0,
 				I18n.format("menu.returnToGame", new Object[0])));
@@ -239,6 +232,7 @@ public class GuiIngameMenu extends GuiScreen {
 	 * mouseY, renderPartialTicks
 	 */
 	public void drawScreen(int i, int j, float f) {
+		MonsoonBranding.render(this.width, this.height);
 		this.drawDefaultBackground();
 		String titleStr = I18n.format("menu.game", new Object[0]);
 		int titleStrWidth = fontRendererObj.getStringWidth(titleStr);
