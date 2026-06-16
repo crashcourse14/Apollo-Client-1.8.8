@@ -13,21 +13,34 @@ public class ConfigManager {
     private static final String STORAGE_KEY = "monsoon_config";
 
     public void save() {
-        logger.info("Saving client mod configurations to single key using org.json...");
+        logger.info("Saving client mod configurations...");
+
         try {
             JSONObject configJson = new JSONObject();
             JSONObject modsJson = new JSONObject();
 
             for (HudMod mod : Client.INSTANCE.hudManager.hudMods) {
-                modsJson.put(mod.name, mod.isEnabled());
+
+                JSONObject modJson = new JSONObject();
+
+                modJson.put("enabled", mod.isEnabled());
+                modJson.put("x", mod.getX());
+                modJson.put("y", mod.getY());
+                modJson.put("textFormat", mod.textFormat);
+                modJson.put("textColor", mod.textColor);
+                modJson.put("textShadow", mod.textShadow);
+                modJson.put("textScale", mod.textScale);
+
+                modsJson.put(mod.name, modJson);
             }
+
             configJson.put("mods", modsJson);
 
-            // Convert JSON directly to standard bytes without double-encoding in Base64
             String jsonString = configJson.toString();
             byte[] rawBytes = jsonString.getBytes(StandardCharsets.UTF_8);
 
             PlatformApplication.setLocalStorage(STORAGE_KEY, rawBytes);
+
         } catch (Exception e) {
             logger.error("Failed to save unified client configuration!", e);
         }
@@ -51,10 +64,20 @@ public class ConfigManager {
                 JSONObject modsJson = configJson.getJSONObject("mods");
 
                 for (HudMod mod : Client.INSTANCE.hudManager.hudMods) {
-                    if (modsJson.has(mod.name)) {
-                        boolean isEnabled = modsJson.getBoolean(mod.name);
-                        mod.setEnabled(isEnabled);
+
+                    if (!modsJson.has(mod.name)) {
+                        continue;
                     }
+
+                    JSONObject modJson = modsJson.getJSONObject(mod.name);
+
+                    mod.enabled = modJson.optBoolean("enabled", false);
+                    mod.x = modJson.optInt("x", mod.x);
+                    mod.y = modJson.optInt("y", mod.y);
+                    mod.textFormat = modJson.optString("textFormat", mod.textFormat);
+                    mod.textColor = modJson.optInt("textColor", mod.textColor);
+                    mod.textShadow = modJson.optBoolean("textShadow", mod.textShadow);
+                    mod.textScale = (float) modJson.optDouble("textScale", mod.textScale);
                 }
             }
         } catch (Exception e) {

@@ -73,6 +73,14 @@ public class HudMod {
         return this.y;
     }
 
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
 

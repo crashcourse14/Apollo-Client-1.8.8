@@ -2,16 +2,12 @@ package net.minecraft.client.gui;
 
 import static net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums.*;
 
-import static net.lax1dude.eaglercraft.v1_8.internal.PlatformOpenGL.*;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 
 import net.lax1dude.eaglercraft.v1_8.EagRuntime;
 import net.lax1dude.eaglercraft.v1_8.EagUtils;
@@ -27,7 +23,6 @@ import net.lax1dude.eaglercraft.v1_8.crypto.SHA1Digest;
 import net.lax1dude.eaglercraft.v1_8.internal.EnumCursorType;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
-import net.lax1dude.eaglercraft.v1_8.minecraft.MainMenuSkyboxTexture;
 import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 import net.lax1dude.eaglercraft.v1_8.opengl.WorldRenderer;
@@ -45,7 +40,6 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.ISaveFormat;
 
@@ -81,13 +75,6 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 			-69, -107, 113, -93, -101, -79, 32 };
 	private String splashText;
 	private GuiButton buttonResetDemo;
-	private int panoramaTimer;
-	/**+
-	 * Texture allocated for the current viewport of the main menu's
-	 * panorama background.
-	 */
-	private static MainMenuSkyboxTexture viewportTexture = null;
-	private static MainMenuSkyboxTexture viewportTexture2 = null;
 	private boolean field_175375_v = true;
 	private String openGLWarning1;
 	private String openGLWarning2;
@@ -95,30 +82,16 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 	private static final ResourceLocation monsoonLogo = new ResourceLocation("monsoon/title/logo.png");
 	private static final ResourceLocation minecraftTitleTextures = new ResourceLocation(
 			"textures/gui/title/minecraft.png");
-	private static final ResourceLocation minecraftTitleBlurFlag = new ResourceLocation(
-			"textures/gui/title/background/enable_blur.txt");
 	private static final ResourceLocation eaglerGuiTextures = new ResourceLocation("eagler:gui/eagler_gui.png");
-	/**+
-	 * An array of all the paths to the panorama pictures.
-	 */
-	private static final ResourceLocation[] titlePanoramaPaths = new ResourceLocation[] {
-			new ResourceLocation("textures/gui/title/background/panorama0.png"),
-			new ResourceLocation("textures/gui/title/background/panorama1.png"),
-			new ResourceLocation("textures/gui/title/background/panorama2.png"),
-			new ResourceLocation("textures/gui/title/background/panorama3.png"),
-			new ResourceLocation("textures/gui/title/background/panorama4.png"),
-			new ResourceLocation("textures/gui/title/background/panorama5.png") };
+	private static final ResourceLocation backgroundImage = new ResourceLocation("monsoon/textures/background.png");
 	private int field_92024_r;
 	private int field_92023_s;
 	private int field_92022_t;
 	private int field_92021_u;
 	private int field_92020_v;
 	private int field_92019_w;
-	private static ResourceLocation backgroundTexture = null;
-	private static ResourceLocation backgroundTexture2 = null;
 	private GuiUpdateCheckerOverlay updateCheckerOverlay;
 	private GuiButton downloadOfflineButton;
-	private boolean enableBlur = true;
 	private boolean shouldReload = false;
 
 	private static GuiMainMenu instance = null;
@@ -193,26 +166,6 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 				}
 			}
 		}
-
-		this.enableBlur = true;
-
-		try {
-			byte[] bytes = EaglerInputStream.inputStreamToBytesQuiet(
-					Minecraft.getMinecraft().getResourceManager().getResource(minecraftTitleBlurFlag).getInputStream());
-			if (bytes != null) {
-				String[] blurCfg = EagUtils.linesArray(new String(bytes, StandardCharsets.UTF_8));
-				for (int i = 0; i < blurCfg.length; ++i) {
-					String s = blurCfg[i];
-					if (s.startsWith("enable_blur=")) {
-						s = s.substring(12).trim();
-						this.enableBlur = s.equals("1") || s.equals("true");
-						break;
-					}
-				}
-			}
-		} catch (IOException e) {
-			;
-		}
 	}
 
 	public static void doResourceReloadHack() {
@@ -225,7 +178,6 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 	 * Called from the main game loop to update the screen.
 	 */
 	public void updateScreen() {
-		++this.panoramaTimer;
 		if (downloadOfflineButton != null) {
 			downloadOfflineButton.enabled = !UpdateService.shouldDisableDownloadButton();
 		}
@@ -258,61 +210,58 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 	 * window resizes, the buttonList is cleared beforehand.
 	 */
 	public void initGui() {
-		if (viewportTexture == null) {
-			viewportTexture = new MainMenuSkyboxTexture(256, 256);
-			backgroundTexture = this.mc.getTextureManager().getDynamicTextureLocation("background", viewportTexture);
-			viewportTexture2 = new MainMenuSkyboxTexture(256, 256);
-			backgroundTexture2 = this.mc.getTextureManager().getDynamicTextureLocation("background", viewportTexture2);
-		}
 		this.updateCheckerOverlay.setResolution(mc, width, height);
-		/*Calendar calendar = Calendar.getInstance();
-		calendar.setTime(new Date());*/
 
+		// Clean centered column layout
+		// Buttons stack vertically in the lower-center of the screen
+		final int btnW = 200;
+		final int btnH = 20;
+		final int btnGap = 6;  // gap between buttons
+		final int cx = this.width / 2 - btnW / 2;
 
-		int i = this.height / 4 + 48;
-
-		boolean isFork = !EaglercraftVersion.projectOriginAuthor.equalsIgnoreCase(EaglercraftVersion.projectForkVendor);
-
-		if (isFork && EaglercraftVersion.mainMenuStringF != null && EaglercraftVersion.mainMenuStringF.length() > 0) {
-			i += 11;
-		}
+		// Start buttons below vertical midpoint so logo/title has breathing room
+		int startY = this.height / 2 + 20;
 
 		if (this.mc.isDemo()) {
-			this.addDemoButtons(i, 24);
+			this.addDemoButtons(startY, btnH + btnGap);
+		
 		} else {
-			this.addSingleplayerMultiplayerButtons(i, 24);
+			// Singleplayer
+			this.buttonList.add(new GuiClearButton(1, cx, startY, btnW, btnH,
+					I18n.format("menu.singleplayer", new Object[0])));
+			startY += btnH + btnGap;
+			// Multiplayer
+			this.buttonList.add(new GuiClearButton(2, cx, startY, btnW, btnH,
+					I18n.format("menu.multiplayer", new Object[0])));
+			startY += btnH + btnGap;
 		}
 
-		this.buttonList.add(new GuiClearButton(0, this.width / 2 - 100, i + 72, 98, 20,
+		// Options | Edit Profile — side by side, half-width each
+		final int halfW = (btnW - 4) / 2;
+		this.buttonList.add(new GuiClearButton(0, cx, startY, halfW, btnH,
 				I18n.format("menu.options", new Object[0])));
-		this.buttonList.add(new GuiClearButton(4, this.width / 2 + 2, i + 72, 98, 20,
+		this.buttonList.add(new GuiClearButton(4, cx + halfW + 4, startY, halfW, btnH,
 				I18n.format("menu.editProfile", new Object[0])));
-		this.buttonList.add(new GuiClearButton(101, this.width / 2 - 100, i + 104, 98, 20,
-				I18n.format("Social", new Object[0])));
+		startY += btnH + btnGap;
+
+		// Social — full width
+		this.buttonList.add(new GuiClearButton(101, cx, startY, btnW, btnH, "Social"));
 
 		this.mc.func_181537_a(false);
 	}
 
 
 	/**+
-	 * Adds Singleplayer and Multiplayer buttons on Main Menu for
-	 * players who have bought the game.
-	 */
-	private void addSingleplayerMultiplayerButtons(int parInt1, int parInt2) {
-		this.buttonList
-				.add(new GuiClearButton(1, this.width / 2 - 100, parInt1 + 20, I18n.format("menu.singleplayer", new Object[0])));
-		this.buttonList.add(new GuiClearButton(2, this.width / 2 - 100, parInt1 + parInt2 * 1 + 20,
-				I18n.format("menu.multiplayer", new Object[0])));
-	}
-
-	/**+
 	 * Adds Demo buttons on Main Menu for players who are playing
 	 * Demo.
 	 */
-	private void addDemoButtons(int parInt1, int parInt2) {
-		this.buttonList
-				.add(new GuiButton(11, this.width / 2 - 100, parInt1 - 20, I18n.format("menu.playdemo", new Object[0])));
-		this.buttonList.add(this.buttonResetDemo = new GuiButton(12, this.width / 2 - 100, parInt1 + parInt2 * 1 - 20,
+	private void addDemoButtons(int startY, int step) {
+		final int btnW = 200;
+		final int btnH = 20;
+		final int cx = this.width / 2 - btnW / 2;
+		this.buttonList.add(new GuiButton(11, cx, startY, btnW, btnH,
+				I18n.format("menu.playdemo", new Object[0])));
+		this.buttonList.add(this.buttonResetDemo = new GuiButton(12, cx, startY + step, btnW, btnH,
 				I18n.format("menu.resetdemo", new Object[0])));
 		this.buttonResetDemo.enabled = this.mc.gameSettings.hasCreatedDemoWorld;
 	}
@@ -382,236 +331,48 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 	}
 
 	/**+
-	 * Draws the main menu panorama
-	 */
-	private void drawPanorama(int parInt1, int parInt2, float parFloat1) {
-		Tessellator tessellator = Tessellator.getInstance();
-		WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-		GlStateManager.matrixMode(GL_PROJECTION);
-		GlStateManager.pushMatrix();
-		GlStateManager.loadIdentity();
-		if (enableBlur) {
-			GlStateManager.gluPerspective(120.0F, 1.0F, 0.05F, 10.0F);
-		} else {
-			GlStateManager.gluPerspective(85.0F, (float) width / (float) height, 0.05F, 10.0F);
-		}
-		GlStateManager.matrixMode(GL_MODELVIEW);
-		GlStateManager.pushMatrix();
-		GlStateManager.loadIdentity();
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		GlStateManager.rotate(180.0F, 1.0F, 0.0F, 0.0F);
-		if (enableBlur) {
-			GlStateManager.rotate(90.0F, 0.0F, 0.0F, 1.0F);
-		}
-		GlStateManager.enableBlend();
-		GlStateManager.disableAlpha();
-		GlStateManager.disableCull();
-		GlStateManager.depthMask(false);
-		GlStateManager.tryBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, 1, 0);
-		byte b0 = enableBlur ? (byte) 4 : (byte) 1;
-
-		for (int i = 0; i < b0 * b0; ++i) {
-			GlStateManager.pushMatrix();
-			float f = ((float) (i % b0) / (float) b0 - 0.5F) / 64.0F;
-			float f1 = ((float) (i / b0) / (float) b0 - 0.5F) / 64.0F;
-			float f2 = 0.0F;
-			GlStateManager.translate(f, f1, f2);
-			GlStateManager.rotate(MathHelper.sin(((float) this.panoramaTimer + parFloat1) / 400.0F) * 25.0F + 20.0F,
-					1.0F, 0.0F, 0.0F);
-			GlStateManager.rotate(-((float) this.panoramaTimer + parFloat1) * 0.1F, 0.0F, 1.0F, 0.0F);
-
-			for (int j = 0; j < 6; ++j) {
-				GlStateManager.pushMatrix();
-				if (j == 1) {
-					GlStateManager.rotate(90.0F, 0.0F, 1.0F, 0.0F);
-				}
-
-				if (j == 2) {
-					GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
-				}
-
-				if (j == 3) {
-					GlStateManager.rotate(-90.0F, 0.0F, 1.0F, 0.0F);
-				}
-
-				if (j == 4) {
-					GlStateManager.rotate(90.0F, 1.0F, 0.0F, 0.0F);
-				}
-
-				if (j == 5) {
-					GlStateManager.rotate(-90.0F, 1.0F, 0.0F, 0.0F);
-				}
-
-				this.mc.getTextureManager().bindTexture(titlePanoramaPaths[j]);
-				worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-				int k = 255 / (i + 1);
-				float f3 = 0.0F;
-				worldrenderer.pos(-1.0D, -1.0D, 1.0D).tex(0.0D, 0.0D).color(255, 255, 255, k).endVertex();
-				worldrenderer.pos(1.0D, -1.0D, 1.0D).tex(1.0D, 0.0D).color(255, 255, 255, k).endVertex();
-				worldrenderer.pos(1.0D, 1.0D, 1.0D).tex(1.0D, 1.0D).color(255, 255, 255, k).endVertex();
-				worldrenderer.pos(-1.0D, 1.0D, 1.0D).tex(0.0D, 1.0D).color(255, 255, 255, k).endVertex();
-				tessellator.draw();
-				GlStateManager.popMatrix();
-			}
-
-			GlStateManager.popMatrix();
-			GlStateManager.colorMask(true, true, true, false);
-		}
-
-		worldrenderer.setTranslation(0.0D, 0.0D, 0.0D);
-		GlStateManager.colorMask(true, true, true, true);
-		GlStateManager.matrixMode(GL_PROJECTION);
-		GlStateManager.popMatrix();
-		GlStateManager.matrixMode(GL_MODELVIEW);
-		GlStateManager.popMatrix();
-		GlStateManager.depthMask(true);
-		GlStateManager.enableCull();
-		GlStateManager.enableDepth();
-	}
-
-	/**+
-	 * Rotate and blurs the skybox view in the main menu
-	 */
-	private void rotateAndBlurSkybox(float parFloat1) {
-		EaglercraftGPU.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		EaglercraftGPU.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		// EaglercraftGPU.glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, 256, 256);
-		GlStateManager.enableBlend();
-		GlStateManager.tryBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, 1, 0);
-		GlStateManager.colorMask(true, true, true, false);
-		Tessellator tessellator = Tessellator.getInstance();
-		WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-		worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-		GlStateManager.disableAlpha();
-		byte b0 = 3;
-
-		for (int i = 0; i < b0; ++i) {
-			float f = 1.0F / (float) (i + 1);
-			int j = this.width;
-			int k = this.height;
-			float f1 = (float) (i - b0 / 2) / 256.0F;
-			worldrenderer.pos((double) j, (double) k, (double) this.zLevel).tex((double) (0.0F + f1), 1.0D)
-					.color(1.0F, 1.0F, 1.0F, f).endVertex();
-			worldrenderer.pos((double) j, 0.0D, (double) this.zLevel).tex((double) (1.0F + f1), 1.0D)
-					.color(1.0F, 1.0F, 1.0F, f).endVertex();
-			worldrenderer.pos(0.0D, 0.0D, (double) this.zLevel).tex((double) (1.0F + f1), 0.0D)
-					.color(1.0F, 1.0F, 1.0F, f).endVertex();
-			worldrenderer.pos(0.0D, (double) k, (double) this.zLevel).tex((double) (0.0F + f1), 0.0D)
-					.color(1.0F, 1.0F, 1.0F, f).endVertex();
-		}
-
-		tessellator.draw();
-		GlStateManager.enableAlpha();
-		GlStateManager.colorMask(true, true, true, true);
-	}
-
-	/**+
-	 * Renders the skybox in the main menu
-	 */
-	private void renderSkybox(int parInt1, int parInt2, float parFloat1) {
-		viewportTexture.bindFramebuffer();
-		GlStateManager.viewport(0, 0, 256, 256);
-		GlStateManager.clearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		GlStateManager.clear(GL_COLOR_BUFFER_BIT);
-		this.drawPanorama(parInt1, parInt2, parFloat1);
-		viewportTexture2.bindFramebuffer();
-		GlStateManager.clearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		GlStateManager.clear(GL_COLOR_BUFFER_BIT);
-		this.mc.getTextureManager().bindTexture(backgroundTexture);
-		this.rotateAndBlurSkybox(parFloat1);
-		viewportTexture.bindFramebuffer();
-		this.mc.getTextureManager().bindTexture(backgroundTexture2);
-		this.rotateAndBlurSkybox(parFloat1);
-		viewportTexture2.bindFramebuffer();
-		this.mc.getTextureManager().bindTexture(backgroundTexture);
-		this.rotateAndBlurSkybox(parFloat1);
-		viewportTexture.bindFramebuffer();
-		this.mc.getTextureManager().bindTexture(backgroundTexture2);
-		this.rotateAndBlurSkybox(parFloat1);
-		viewportTexture2.bindFramebuffer();
-		this.mc.getTextureManager().bindTexture(backgroundTexture);
-		this.rotateAndBlurSkybox(parFloat1);
-		viewportTexture.bindFramebuffer();
-		this.mc.getTextureManager().bindTexture(backgroundTexture2);
-		this.rotateAndBlurSkybox(parFloat1);
-
-		// Notch fucked up, the last iteration is not necessary, in the vanilla renderer
-		// it is unintentionally discarded and the previous iteration is used
-
-		// viewportTexture2.bindFramebuffer();
-		// this.mc.getTextureManager().bindTexture(backgroundTexture);
-		// this.rotateAndBlurSkybox(parFloat1);
-
-		_wglBindFramebuffer(0x8D40, null);
-
-		this.mc.getTextureManager().bindTexture(backgroundTexture);
-		GlStateManager.viewport(0, 0, this.mc.displayWidth, this.mc.displayHeight);
-		float f = this.width > this.height ? 120.0F / (float) this.width : 120.0F / (float) this.height;
-		float f1 = (float) this.height * f / 256.0F;
-		float f2 = (float) this.width * f / 256.0F;
-		int i = this.width;
-		int j = this.height;
-		Tessellator tessellator = Tessellator.getInstance();
-		WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-		worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-		worldrenderer.pos(0.0D, (double) j, (double) this.zLevel).tex((double) (0.5F - f1), (double) (0.5F + f2))
-				.color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
-		worldrenderer.pos((double) i, (double) j, (double) this.zLevel).tex((double) (0.5F - f1), (double) (0.5F - f2))
-				.color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
-		worldrenderer.pos((double) i, 0.0D, (double) this.zLevel).tex((double) (0.5F + f1), (double) (0.5F - f2))
-				.color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
-		worldrenderer.pos(0.0D, 0.0D, (double) this.zLevel).tex((double) (0.5F + f1), (double) (0.5F + f2))
-				.color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
-		tessellator.draw();
-	}
-
-	/**+
 	 * Draws the screen and all the components in it. Args : mouseX,
 	 * mouseY, renderPartialTicks
 	 */
 	public void drawScreen(int i, int j, float f) {
+		// Draw fullscreen background image (animated red wallpaper)
 		GlStateManager.disableAlpha();
-		if (enableBlur) {
-			this.renderSkybox(i, j, f);
-		} else {
-			this.drawPanorama(i, j, f);
-		}
-		GlStateManager.enableAlpha();
-		short short1 = 274;
-		int k = this.width / 2 - short1 / 2;
-		byte b0 = 30;
-		if (enableBlur) {
-			this.drawGradientRect(0, 0, this.width, this.height, -2130706433, 16777215);
-			this.drawGradientRect(0, 0, this.width, this.height, 0, Integer.MIN_VALUE);
-		}
-		this.mc.getTextureManager().bindTexture(minecraftTitleTextures);
-		
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		boolean minc = (double) this.updateCounter < 1.0E-4D;
+		this.mc.getTextureManager().bindTexture(backgroundImage);
+		Tessellator tessellator = Tessellator.getInstance();
+		WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+		worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+		worldrenderer.pos(0, this.height, this.zLevel).tex(0.0D, 1.0D).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
+		worldrenderer.pos(this.width, this.height, this.zLevel).tex(1.0D, 1.0D).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
+		worldrenderer.pos(this.width, 0, this.zLevel).tex(1.0D, 0.0D).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
+		worldrenderer.pos(0, 0, this.zLevel).tex(0.0D, 0.0D).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
+		tessellator.draw();
+		GlStateManager.enableAlpha();
 
-		String title = "Monsoon Client";
+		// Subtle dark vignette so text and buttons pop cleanly
+		this.drawGradientRect(0, 0, this.width, this.height, 0x55000000, 0x88000000);
 
-		int logoWidth = 64;
-		int logoHeight = 64;
-		int logoX = (this.width - logoWidth) / 2;
-		int logoY = (this.height - logoHeight) / 2 - 90;
+		// ── Logo ──────────────────────────────────────────────────────────────
+		final int logoSize = 72;
+		final int logoX = (this.width - logoSize) / 2;
+		// Position logo in upper third, well above the buttons
+		final int logoY = this.height / 2 - 110;
 
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		this.mc.getTextureManager().bindTexture(monsoonLogo);
-		Gui.drawScaledCustomSizeModalRect(logoX, logoY, 0.0F, 0.0F, 256, 256, logoWidth, logoHeight, 256.0F,
-				256.0F);
+		Gui.drawScaledCustomSizeModalRect(logoX, logoY, 0.0F, 0.0F, 256, 256, logoSize, logoSize, 256.0F, 256.0F);
 
+		// ── Title text (2× scale, centered below logo) ────────────────────────
+		final String title = "Monsoon Client";
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(2.0F, 2.0F, 2.0F);
-
 		int titleWidth = this.fontRendererObj.getStringWidth(title);
-		int x = (this.width - titleWidth * 2) / 4;
-		int y = (logoY + logoHeight + 5) / 2;
-
-		this.drawString(this.fontRendererObj, title, x, y, -1);
-
+		int titleX = (this.width - titleWidth * 2) / 4;
+		int titleY = (logoY + logoSize + 6) / 2;
+		this.drawString(this.fontRendererObj, title, titleX, titleY, 0xFFFFFFFF);
 		GlStateManager.popMatrix();
 
-
+		// ── OpenGL warning (if present) ────────────────────────────────────────
 		boolean isForkLabel = ((this.openGLWarning1 != null && this.openGLWarning1.length() > 0)
 				|| (this.openGLWarning2 != null && this.openGLWarning2.length() > 0));
 
@@ -625,17 +386,18 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 						this.field_92021_u + 12, -1);
 		}
 
+		// ── Footer version strings ─────────────────────────────────────────────
 		String s = EaglercraftVersion.mainMenuStringB;
-		this.drawString(this.fontRendererObj, s, 2, this.height - 10, 0xFF737B81);
+		this.drawString(this.fontRendererObj, s, 2, this.height - 10, 0xFFAAAAAA);
 
 		String s1 = EaglercraftVersion.mainMenuStringC;
-		this.drawString(this.fontRendererObj, s1, this.width - this.fontRendererObj.getStringWidth(s1) - 2,
-				this.height - 20, 0xFF737B81);
+		this.drawString(this.fontRendererObj, s1,
+				this.width - this.fontRendererObj.getStringWidth(s1) - 2, this.height - 20, 0xFFAAAAAA);
 		s1 = EaglercraftVersion.mainMenuStringD;
-		this.drawString(this.fontRendererObj, s1, this.width - this.fontRendererObj.getStringWidth(s1) - 2,
-				this.height - 10, 0xFF737B81);
+		this.drawString(this.fontRendererObj, s1,
+				this.width - this.fontRendererObj.getStringWidth(s1) - 2, this.height - 10, 0xFFAAAAAA);
 
-
+		// ── CREDITS link (top-right, minimal) ─────────────────────────────────
 		String lbl = "CREDITS.txt";
 		int w = fontRendererObj.getStringWidth(lbl) * 3 / 4;
 
@@ -643,13 +405,13 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 			Mouse.showCursor(EnumCursorType.HAND);
 			drawRect((this.width - w - 4), 0, this.width, 10, 0x55000099);
 		} else {
-			drawRect((this.width - w - 4), 0, this.width, 10, 0x55200000);
+			drawRect((this.width - w - 4), 0, this.width, 10, 0x33000000);
 		}
 
 		GlStateManager.pushMatrix();
 		GlStateManager.translate((this.width - w - 2), 2.0f, 0.0f);
 		GlStateManager.scale(0.75f, 0.75f, 0.75f);
-		drawString(fontRendererObj, lbl, 0, 0, 16777215);
+		drawString(fontRendererObj, lbl, 0, 0, 0xFFCCCCCC);
 		GlStateManager.popMatrix();
 
 		this.updateCheckerOverlay.drawScreen(i, j, f);

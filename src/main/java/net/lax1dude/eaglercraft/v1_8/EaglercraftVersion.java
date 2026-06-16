@@ -53,7 +53,7 @@ public class EaglercraftVersion {
 				"/assets/minecraft/monsoon/version/version.txt");
 
 		if (str == null || str.trim().isEmpty()) {
-			return "Monsoon Client v1.0 Patch 0";
+			return "Monsoon Client v1";
 		}
 
 		return str.trim();
@@ -62,7 +62,7 @@ public class EaglercraftVersion {
 
 	public static final String mainMenuStringB = loadVersion();
 	public static final String mainMenuStringC = "";
-	public static final String mainMenuStringD = "Copyright Mojang AB, and 983kk. All rights reserved.";
+	public static final String mainMenuStringD = "Copyright Mojang AB, and 983kk.";
 
 	public static final String mainMenuStringE = projectForkName + " " + projectForkVersion;
 	public static final String mainMenuStringF = "Made by " + projectForkVendor;

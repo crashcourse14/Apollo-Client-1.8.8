@@ -58,9 +58,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
 import net.minecraft.world.border.WorldBorder;
 import net.minecraft.monsoonclient.gui.NotificationManager;
+import net.lax1dude.eaglercraft.v1_8.Keyboard;
+
 
 
 import net.minecraft.monsoonclient.Client;
+import net.minecraft.monsoonclient.gui.hud.GuiHudEditor;
 
 /**+
  * This portion of EaglercraftX contains deobfuscated Minecraft 1.8 source code.
@@ -303,6 +306,10 @@ public class GuiIngame extends Gui {
 
 		if (this.mc.currentScreen == null) {
 			this.mc.voiceOverlay.drawOverlay();
+		}
+
+		if (Keyboard.isKeyDown(54)) {
+			mc.displayGuiScreen(new GuiHudEditor());
 		}
 
 		GlStateManager.enableBlend();
