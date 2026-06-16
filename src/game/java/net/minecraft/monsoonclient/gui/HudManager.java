@@ -14,6 +14,9 @@ import net.minecraft.monsoonclient.gui.mods.PingMod;
 import net.minecraft.monsoonclient.gui.mods.CustomTextMod;
 import net.minecraft.monsoonclient.gui.mods.SoundMod;
 import net.minecraft.monsoonclient.gui.mods.SessionTimeMod;
+import net.minecraft.monsoonclient.gui.mods.FriendAlertMod;
+import net.minecraft.monsoonclient.gui.NotificationManager;
+import net.minecraft.client.Minecraft;
 
 public class HudManager {
     public ArrayList<HudMod> hudMods = new ArrayList<>();
@@ -28,8 +31,10 @@ public class HudManager {
     public CustomTextMod customTextMod;
     public SoundMod soundMod;
     public SessionTimeMod sessionTimeMod;
+    public FriendAlertMod friendAlertMod;
 
     public CategoryManager categoryManager;
+    public NotificationManager notificationManager; 
 
     public HudManager() {
         hudMods.add(testMod = new TestMod());
@@ -42,7 +47,9 @@ public class HudManager {
         hudMods.add(customTextMod = new CustomTextMod());
         hudMods.add(soundMod = new SoundMod());
         hudMods.add(sessionTimeMod = new SessionTimeMod());
+        hudMods.add(friendAlertMod = new FriendAlertMod()); 
 
+        notificationManager = new NotificationManager(Minecraft.getMinecraft());
         categoryManager = new CategoryManager(this);
     }
 

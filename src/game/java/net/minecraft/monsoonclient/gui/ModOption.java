@@ -15,5 +15,7 @@ public enum ModOption {
     /** Toggle text drop-shadow */
     TEXT_SHADOW,
     /** Per-category sound volume sliders */
-    SOUND_SLIDERS
+    SOUND_SLIDERS,
+
+    WATCH_NAMES
 }

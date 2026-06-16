@@ -7,6 +7,8 @@ import net.minecraft.inventory.ContainerWorkbench;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraft.monsoonclient.gui.MonsoonBranding;
+
 
 /**+
  * This portion of EaglercraftX contains deobfuscated Minecraft 1.8 source code.
@@ -45,6 +47,7 @@ public class GuiCrafting extends GuiContainer {
 	 * front of the items). Args : mouseX, mouseY
 	 */
 	protected void drawGuiContainerForegroundLayer(int var1, int var2) {
+		MonsoonBranding.render(this.width, this.height);
 		this.fontRendererObj.drawString(I18n.format("container.crafting", new Object[0]), 28, 6, 4210752);
 		this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 96 + 2,
 				4210752);

@@ -20,6 +20,8 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.C17PacketCustomPayload;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraft.monsoonclient.gui.MonsoonBranding;
+
 
 /**+
  * This portion of EaglercraftX contains deobfuscated Minecraft 1.8 source code.
@@ -87,6 +89,7 @@ public class GuiRepair extends GuiContainer implements ICrafting {
 	 * front of the items). Args : mouseX, mouseY
 	 */
 	protected void drawGuiContainerForegroundLayer(int var1, int var2) {
+		MonsoonBranding.render(this.width, this.height);
 		GlStateManager.disableLighting();
 		GlStateManager.disableBlend();
 		this.fontRendererObj.drawString(I18n.format("container.repair", new Object[0]), 60, 6, 4210752);

@@ -3,6 +3,8 @@ package net.minecraft.client.gui;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.network.play.client.C00PacketKeepAlive;
+import net.minecraft.monsoonclient.gui.MonsoonBranding;
+
 
 /**+
  * This portion of EaglercraftX contains deobfuscated Minecraft 1.8 source code.
@@ -66,6 +68,7 @@ public class GuiDownloadTerrain extends GuiScreen {
 	 * mouseY, renderPartialTicks
 	 */
 	public void drawScreen(int i, int j, float f) {
+        MonsoonBranding.render(this.width, this.height);
 		this.drawBackground(0);
 		this.drawCenteredString(this.fontRendererObj, I18n.format("multiplayer.downloadingTerrain", new Object[0]),
 				this.width / 2, this.height / 2 - 50, 16777215);

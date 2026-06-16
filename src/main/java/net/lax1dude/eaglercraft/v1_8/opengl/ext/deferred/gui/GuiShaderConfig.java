@@ -27,6 +27,8 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.monsoonclient.gui.MonsoonBranding;
+
 
 public class GuiShaderConfig extends GuiScreen {
 
@@ -120,6 +122,7 @@ public class GuiShaderConfig extends GuiScreen {
 	}
 
 	public void drawScreen(int i, int j, float f) {
+		MonsoonBranding.render(this.width, this.height);
 		this.drawBackground(0);
 		listView.drawScreen(i, j, f);
 		drawCenteredString(this.fontRendererObj, title, this.width / 2, 15, 16777215);

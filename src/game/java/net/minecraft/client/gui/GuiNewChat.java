@@ -13,6 +13,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
+import net.minecraft.monsoonclient.Client;
+import net.minecraft.monsoonclient.gui.mods.FriendAlertMod;
+import net.minecraft.monsoonclient.gui.NotificationManager;
+
 
 /**+
  * This portion of EaglercraftX contains deobfuscated Minecraft 1.8 source code.
@@ -141,15 +145,34 @@ public class GuiNewChat extends Gui {
 	 * an existing Chat Line of that ID from the GUI
 	 */
 	public void printChatMessageWithOptionalDeletion(IChatComponent parIChatComponent, int parInt1) {
-		String msg = parIChatComponent.getFormattedText();
 
-		if (msg.contains("983kk")) {
-			parIChatComponent = new ChatComponentText("§3[§bMSC§3] §4✪§r " + msg);
-		}
+		// Friend Alert — check if a watched name joined the game
+		try {
+			FriendAlertMod mod = Client.INSTANCE.hudManager.friendAlertMod;
+			if (mod != null && mod.isEnabled()) {
+				String plain = parIChatComponent.getUnformattedText();
+				// Vanilla join message format: "PlayerName joined the game"
+				if (plain.endsWith(" joined the game")) {
+					String joiner = plain.replace(" joined the game", "").trim();
+					if (mod.isWatched(joiner)) {
+						this.setChatLine(new ChatComponentText(
+							"§3[§bMSC§3] §aAlert: §e" + joiner + " §ajoined the game!"),
+							0, this.mc.ingameGUI.getUpdateCounter(), false);
+							NotificationManager.push("Friend Joined", joiner + " is online!");
+					}
+				}
 
-		if (msg.contains("Justyme1")){
-			parIChatComponent = new ChatComponentText("§3[§bMSC§3] §9✪§r " + msg);
-		}
+				if (plain.endsWith(" left the game")) {
+					String disconnecter = plain.replace(" left the game", "").trim();
+					if (mod.isWatched(disconnecter)) {
+						this.setChatLine(new ChatComponentText(
+							"§3[§bMSC§3] §aAlert: §e" + disconnecter + " §aleft the game!"),
+							0, this.mc.ingameGUI.getUpdateCounter(), false);
+							NotificationManager.push("Friend left", disconnecter + " left!");
+					}
+				}
+			}
+		} catch (Exception ignored) {}
 
 		this.setChatLine(parIChatComponent, parInt1, this.mc.ingameGUI.getUpdateCounter(), false);
 		logger.info("[CHAT] " + parIChatComponent.getUnformattedText());

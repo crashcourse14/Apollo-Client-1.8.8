@@ -57,6 +57,8 @@ import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
 import net.minecraft.world.border.WorldBorder;
+import net.minecraft.monsoonclient.gui.NotificationManager;
+
 
 import net.minecraft.monsoonclient.Client;
 
@@ -325,6 +327,7 @@ public class GuiIngame extends Gui {
 		}
 
 		Client.INSTANCE.hudManager.renderMods();
+		Client.INSTANCE.hudManager.notificationManager.render(partialTicks);
 
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 

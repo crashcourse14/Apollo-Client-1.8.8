@@ -36,6 +36,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.monsoonclient.gui.MonsoonBranding;
+
 
 /**+
  * This portion of EaglercraftX contains deobfuscated Minecraft 1.8 source code.
@@ -348,6 +350,7 @@ public class GuiContainerCreative extends InventoryEffectRenderer {
 	 * front of the items). Args : mouseX, mouseY
 	 */
 	protected void drawGuiContainerForegroundLayer(int var1, int var2) {
+		MonsoonBranding.render(this.width, this.height);
 		CreativeTabs creativetabs = CreativeTabs.creativeTabArray[selectedTabIndex];
 		if (creativetabs.drawInForegroundOfTab()) {
 			GlStateManager.disableBlend();

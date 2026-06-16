@@ -22,7 +22,7 @@ public class GuiModButton extends GuiButton {
     private String disabledText;
 
     public GuiModButton(int buttonId, int x, int y, int widthIn, int heightIn, boolean toggled) {
-        this(buttonId, x, y, widthIn, heightIn, "Remove", "Add", toggled);
+        this(buttonId, x, y, widthIn, heightIn, "Enabled", "Disabled", toggled);
     }
 
     public GuiModButton(int buttonId, int x, int y, int widthIn, int heightIn, String enabledText,

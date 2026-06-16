@@ -6,10 +6,16 @@ import net.minecraft.monsoonclient.gui.hud.Category;
 import net.minecraft.monsoonclient.gui.hud.CategoryManager;
 import net.minecraft.monsoonclient.gui.ModOption;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.monsoonclient.Client;
+
+
+
+
 
 public class HudMod {
 
     public Minecraft mc = Minecraft.getMinecraft();
+
 
     public FontRenderer fr = mc.fontRendererObj;
     public String name;
@@ -43,7 +49,7 @@ public class HudMod {
         this.name = name;
         this.x = x;
         this.y = y;
-        this.enabled = true;
+        this.enabled = false;
         this.category = category;
     }
 
@@ -69,6 +75,10 @@ public class HudMod {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+
+        if (Client.INSTANCE.configManager != null) {
+            Client.INSTANCE.configManager.save();
+        }
     }
 
     public void toggle() {

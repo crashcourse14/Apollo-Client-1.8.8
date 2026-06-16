@@ -293,6 +293,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 		this.mc.func_181537_a(false);
 	}
 
+
 	/**+
 	 * Adds Singleplayer and Multiplayer buttons on Main Menu for
 	 * players who have bought the game.
