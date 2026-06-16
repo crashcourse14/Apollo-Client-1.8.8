@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 public class TestMod extends HudMod {
 
     public TestMod() {
-        super("Monsoon Client 1.8", 5, 10, Category.HUD);
+        super("Client Name", 5, 10, Category.HUD);
  
         this.icon = new ResourceLocation("minecraft:monsoonclient/textures/name.png");
     }

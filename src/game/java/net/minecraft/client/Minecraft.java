@@ -204,6 +204,8 @@ import net.optifine.Config;
 import net.minecraft.monsoonclient.Client;
 import net.minecraft.monsoonclient.event.EventManager;
 import net.minecraft.monsoonclient.event.events.ClientTick;
+import net.minecraft.monsoonclient.config.ConfigManager;
+
 
 /**+
  * This portion of EaglercraftX contains deobfuscated Minecraft 1.8 source code.
@@ -506,7 +508,14 @@ public class Minecraft implements IThreadListener {
 		SkinPreviewRenderer.initialize();
 		this.checkGLError("Post startup");
 		this.ingameGUI = new GuiIngame(this);
-		Client.INSTANCE.startUp();
+		try {
+			logger.debug("BEFORE STARTUP");
+			Client.INSTANCE.startUp();
+			logger.debug("AFTER STARTUP");
+		} catch (Throwable t) {
+			logger.fatal("Client start up failed!", t);
+		}
+				
 
 		this.mouseGrabSupported = Mouse.isMouseGrabSupported();
 		PointerInputAbstraction.init(this);
@@ -811,6 +820,7 @@ public class Minecraft implements IThreadListener {
 		try {
 			Client.INSTANCE.shutDown();
 			logger.info("Stopping!");
+			new ConfigManager().save();
 
 			try {
 				this.loadWorld((WorldClient) null);

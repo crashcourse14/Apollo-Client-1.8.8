@@ -7,7 +7,7 @@ import net.minecraft.monsoonclient.gui.SessionManager;
 public class SessionTimeMod extends HudMod {
 
     public SessionTimeMod() {
-        super("Session Time", 5, 170, Category.HUD);
+        super("Session Timer", 5, 170, Category.HUD);
         this.textFormat = "Session: %VALUE%";
     }
 

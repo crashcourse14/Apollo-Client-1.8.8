@@ -224,6 +224,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
 import net.minecraft.monsoonclient.gui.mods.SessionTimeMod;
 import net.minecraft.monsoonclient.gui.SessionManager;
+import net.minecraft.monsoonclient.config.ConfigManager;
 
 /**+
  * This portion of EaglercraftX contains deobfuscated Minecraft 1.8 source code.
@@ -830,6 +831,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 	 * describing the reason for termination
 	 */
 	public void onDisconnect(IChatComponent ichatcomponent) {
+		new ConfigManager().save();
 		VoiceClientController.handleServerDisconnect();
 		Minecraft.getMinecraft().getRenderManager()
 				.setEnableFNAWSkins(this.gameController.gameSettings.enableFNAWSkins);
