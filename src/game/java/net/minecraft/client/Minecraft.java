@@ -243,7 +243,7 @@ public class Minecraft implements IThreadListener {
 	public int displayHeight;
 	public float displayDPI;
 	private boolean field_181541_X = false;
-	private Timer timer = new Timer(20.0F);
+	public Timer timer = new Timer(20.0F);
 	public WorldClient theWorld;
 	public RenderGlobal renderGlobal;
 	private RenderManager renderManager;

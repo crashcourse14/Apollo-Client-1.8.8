@@ -17,5 +17,9 @@ public enum ModOption {
     /** Per-category sound volume sliders */
     SOUND_SLIDERS,
 
-    WATCH_NAMES
+    WATCH_NAMES,
+
+    OUTLINE_COLOR,
+    
+    HOVER_COLOR,
 }

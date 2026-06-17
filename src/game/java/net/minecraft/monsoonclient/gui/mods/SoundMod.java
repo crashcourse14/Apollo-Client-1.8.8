@@ -29,7 +29,7 @@ public class SoundMod extends HudMod {
     public final List<SoundEntry> soundEntries = new ArrayList<>();
 
     public SoundMod() {
-        super("Sound Mixer", 0, 0, Category.MISC);
+        super("Audio Manager", 0, 0, Category.MISC);
         this.icon = new ResourceLocation("minecraft:monsoonclient/textures/sound.png");
 
         // Only expose the sound-slider panel — no text format / color / etc.

@@ -15,6 +15,8 @@ import net.minecraft.monsoonclient.gui.mods.CustomTextMod;
 import net.minecraft.monsoonclient.gui.mods.SoundMod;
 import net.minecraft.monsoonclient.gui.mods.SessionTimeMod;
 import net.minecraft.monsoonclient.gui.mods.FriendAlertMod;
+import net.minecraft.monsoonclient.gui.mods.BlockOverlayMod;
+import net.minecraft.monsoonclient.gui.mods.ItemCounterMod;
 import net.minecraft.monsoonclient.gui.NotificationManager;
 import net.minecraft.client.Minecraft;
 
@@ -32,9 +34,11 @@ public class HudManager {
     public SoundMod soundMod;
     public SessionTimeMod sessionTimeMod;
     public FriendAlertMod friendAlertMod;
+    public BlockOverlayMod blockOverlayMod;
+    public ItemCounterMod itemCounterMod;
 
     public CategoryManager categoryManager;
-    public NotificationManager notificationManager; 
+    public NotificationManager notificationManager;
 
     public HudManager() {
         hudMods.add(testMod = new TestMod());
@@ -47,10 +51,12 @@ public class HudManager {
         hudMods.add(customTextMod = new CustomTextMod());
         hudMods.add(soundMod = new SoundMod());
         hudMods.add(sessionTimeMod = new SessionTimeMod());
-        hudMods.add(friendAlertMod = new FriendAlertMod()); 
+        hudMods.add(friendAlertMod = new FriendAlertMod());
+        hudMods.add(blockOverlayMod = new BlockOverlayMod());
+        hudMods.add(itemCounterMod = new ItemCounterMod());
 
         notificationManager = new NotificationManager(Minecraft.getMinecraft());
-        categoryManager = new CategoryManager(this);
+        categoryManager     = new CategoryManager(this);
     }
 
     public void renderMods() {
@@ -60,5 +66,4 @@ public class HudManager {
             }
         }
     }
-
 }

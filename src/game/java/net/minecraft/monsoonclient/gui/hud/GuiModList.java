@@ -15,6 +15,7 @@ import net.minecraft.monsoonclient.gui.HudMod;
 import net.minecraft.monsoonclient.gui.ModOption;
 import net.minecraft.monsoonclient.gui.MonsoonBranding;
 import net.minecraft.monsoonclient.gui.SoundEntry;
+import net.minecraft.monsoonclient.gui.mods.BlockOverlayMod;
 import net.minecraft.monsoonclient.gui.mods.SoundMod;
 
 public class GuiModList extends GuiScreen {
@@ -98,6 +99,8 @@ public class GuiModList extends GuiScreen {
     private int scaleFX,  scaleFY,  scaleFW;
     private int shadowCY;
     private int watchFX,  watchFY,  watchFW;
+    private int outlineFX, outlineFY, outlineFW;
+    private int hoverFX,   hoverFY,   hoverFW;
 
     // Text fields
     private GuiTextField searchField;
@@ -105,6 +108,8 @@ public class GuiModList extends GuiScreen {
     private GuiTextField colorField;
     private GuiTextField scaleField;
     private GuiTextField watchNamesField;
+    private GuiTextField outlineColorField;
+    private GuiTextField hoverColorField;
 
     // Scrolling — list view
     private int scrollRow    = 0; // first fully-visible ROW index
@@ -188,6 +193,7 @@ public class GuiModList extends GuiScreen {
         scrollRow = 0;
 
         String q = searchField != null ? searchField.getText().trim().toLowerCase() : "";
+
         for (HudMod m : Client.INSTANCE.hudManager.hudMods) {
             if ((selectedCategory == null || m.category == selectedCategory)
                     && (q.isEmpty() || m.name.toLowerCase().contains(q))) {
@@ -225,6 +231,15 @@ public class GuiModList extends GuiScreen {
     // ── Options form ──────────────────────────────────────────────────────
     private void buildOptionsForm() {
         buttonList.clear();
+        // Reset all option fields so stale references from a previous mod
+        // don't bleed through when switching between mods.
+        formatField      = null;
+        colorField       = null;
+        scaleField       = null;
+        watchNamesField  = null;
+        outlineColorField = null;
+        hoverColorField   = null;
+
         if (activeMod == null) return;
 
         int bx = panelX + PADDING;
@@ -244,7 +259,7 @@ public class GuiModList extends GuiScreen {
             colorFX = bx + FORM_LABEL_W; colorFY = fy; colorFW = 70;
             colorField = new GuiTextField(2, fontRendererObj, colorFX, colorFY, colorFW, FIELD_H);
             colorField.setEnableBackgroundDrawing(false); colorField.setMaxStringLength(9);
-            colorField.setText(String.format("%06X", activeMod.textColor & 0xFFFFFF));
+            colorField.setText(String.format("%08X", activeMod.textColor));
             fy += FIELD_H + FIELD_SPACING + 4;
         }
         if (supports(ModOption.TEXT_SCALE)) {
@@ -264,6 +279,22 @@ public class GuiModList extends GuiScreen {
             watchNamesField = new GuiTextField(4, fontRendererObj, watchFX, watchFY, watchFW, FIELD_H);
             watchNamesField.setEnableBackgroundDrawing(false); watchNamesField.setMaxStringLength(256);
             watchNamesField.setText(((net.minecraft.monsoonclient.gui.mods.FriendAlertMod) activeMod).watchNames);
+            fy += FIELD_H + FIELD_SPACING + 4;
+        }
+        if (supports(ModOption.OUTLINE_COLOR) && activeMod instanceof BlockOverlayMod) {
+            outlineFX = bx + FORM_LABEL_W; outlineFY = fy; outlineFW = 80;
+            outlineColorField = new GuiTextField(5, fontRendererObj, outlineFX, outlineFY, outlineFW, FIELD_H);
+            outlineColorField.setEnableBackgroundDrawing(false);
+            outlineColorField.setMaxStringLength(8);
+            outlineColorField.setText(String.format("%08X", ((BlockOverlayMod) activeMod).outlineColor));
+            fy += FIELD_H + FIELD_SPACING + 4;
+        }
+        if (supports(ModOption.HOVER_COLOR) && activeMod instanceof BlockOverlayMod) {
+            hoverFX = bx + FORM_LABEL_W; hoverFY = fy; hoverFW = 80;
+            hoverColorField = new GuiTextField(6, fontRendererObj, hoverFX, hoverFY, hoverFW, FIELD_H);
+            hoverColorField.setEnableBackgroundDrawing(false);
+            hoverColorField.setMaxStringLength(8);
+            hoverColorField.setText(String.format("%08X", ((BlockOverlayMod) activeMod).hoverColor));
             fy += FIELD_H + FIELD_SPACING + 4;
         }
         if (supports(ModOption.SOUND_SLIDERS) && activeMod instanceof SoundMod) {
@@ -426,17 +457,37 @@ public class GuiModList extends GuiScreen {
         int divY = backBtnY + backBtnSize + 4;
         drawRect(panelX + PADDING, divY, panelX + panelW - PADDING, divY + 1, C_BORDER);
 
-        if (supports(ModOption.TEXT_FORMAT) && formatField != null)
+        if (supports(ModOption.TEXT_FORMAT) && formatField != null){
             drawFormRow("Text Format",  formatFX,  formatFY,  formatFW,  formatField);
-        if (supports(ModOption.TEXT_COLOR) && colorField != null)
+        }
+        if (supports(ModOption.TEXT_COLOR) && colorField != null){
             drawFormRow("Text Color",   colorFX,   colorFY,   colorFW,   colorField);
-        if (supports(ModOption.TEXT_SCALE) && scaleField != null)
+            drawRect(colorFX + colorFW + 4, colorFY, colorFX + colorFW + 4 + FIELD_H, colorFY + FIELD_H, activeMod.textColor);
+
+        }
+        if (supports(ModOption.TEXT_SCALE) && scaleField != null){
             drawFormRow("Text Scale",   scaleFX,   scaleFY,   scaleFW,   scaleField);
-        if (supports(ModOption.TEXT_SHADOW))
+        }
+        if (supports(ModOption.TEXT_SHADOW)){
             drawString(fontRendererObj, "Text Shadow", panelX + PADDING, shadowCY + (FIELD_H - 8) / 2, 0xFFCFCFCF);
+        }
         if (supports(ModOption.WATCH_NAMES) && watchNamesField != null) {
             drawFormRow("Watch Names", watchFX, watchFY, watchFW, watchNamesField);
             drawString(fontRendererObj, "§7e.g. friend1,friend2", watchFX, watchFY + FIELD_H + 2, 0xFFAAAAAA);
+        }
+        if (supports(ModOption.OUTLINE_COLOR) && outlineColorField != null) {
+            drawFormRow("Outline Color (ARGB)", outlineFX, outlineFY, outlineFW, outlineColorField);
+            // Live preview swatch
+            if (activeMod instanceof BlockOverlayMod)
+                drawRect(outlineFX + outlineFW + 4, outlineFY, outlineFX + outlineFW + 4 + FIELD_H, outlineFY + FIELD_H,
+                         ((BlockOverlayMod) activeMod).outlineColor);
+        }
+        if (supports(ModOption.HOVER_COLOR) && hoverColorField != null) {
+            drawFormRow("Hover Color (ARGB)", hoverFX, hoverFY, hoverFW, hoverColorField);
+            // Live preview swatch
+            if (activeMod instanceof BlockOverlayMod)
+                drawRect(hoverFX + hoverFW + 4, hoverFY, hoverFX + hoverFW + 4 + FIELD_H, hoverFY + FIELD_H,
+                         ((BlockOverlayMod) activeMod).hoverColor);
         }
         if (supports(ModOption.SOUND_SLIDERS) && activeMod instanceof SoundMod)
             drawSoundSliders((SoundMod) activeMod, mx, my);
@@ -519,10 +570,12 @@ public class GuiModList extends GuiScreen {
         }
 
         if (viewMode == ViewMode.OPTIONS) {
-            if (supports(ModOption.TEXT_FORMAT)  && formatField    != null) formatField.mouseClicked(mx, my, btn);
-            if (supports(ModOption.TEXT_COLOR)   && colorField     != null) colorField.mouseClicked(mx, my, btn);
-            if (supports(ModOption.TEXT_SCALE)   && scaleField     != null) scaleField.mouseClicked(mx, my, btn);
-            if (supports(ModOption.WATCH_NAMES)  && watchNamesField!= null) watchNamesField.mouseClicked(mx, my, btn);
+            if (supports(ModOption.TEXT_FORMAT)    && formatField      != null) formatField.mouseClicked(mx, my, btn);
+            if (supports(ModOption.TEXT_COLOR)     && colorField       != null) colorField.mouseClicked(mx, my, btn);
+            if (supports(ModOption.TEXT_SCALE)     && scaleField       != null) scaleField.mouseClicked(mx, my, btn);
+            if (supports(ModOption.WATCH_NAMES)    && watchNamesField  != null) watchNamesField.mouseClicked(mx, my, btn);
+            if (supports(ModOption.OUTLINE_COLOR)  && outlineColorField!= null) outlineColorField.mouseClicked(mx, my, btn);
+            if (supports(ModOption.HOVER_COLOR)    && hoverColorField  != null) hoverColorField.mouseClicked(mx, my, btn);
             if (supports(ModOption.SOUND_SLIDERS) && activeMod instanceof SoundMod) {
                 int idx = sliderAt(mx, my, (SoundMod) activeMod);
                 if (idx >= 0) { draggingSlider = idx; updateSlider(mx, (SoundMod) activeMod, idx); return; }
@@ -584,24 +637,36 @@ public class GuiModList extends GuiScreen {
     @Override
     protected void keyTyped(char c, int key) {
         if (viewMode == ViewMode.OPTIONS) {
-            if (supports(ModOption.TEXT_FORMAT)  && formatField    != null && formatField.isFocused()) {
+            if (supports(ModOption.TEXT_FORMAT) && formatField != null && formatField.isFocused()) {
                 if (key == 1) { formatField.setFocused(false); return; }
                 formatField.textboxKeyTyped(c, key); activeMod.textFormat = formatField.getText(); return;
             }
-            if (supports(ModOption.TEXT_COLOR)   && colorField     != null && colorField.isFocused()) {
+            if (supports(ModOption.TEXT_COLOR) && colorField != null && colorField.isFocused()) {
                 if (key == 1) { colorField.setFocused(false); return; }
                 colorField.textboxKeyTyped(c, key);
                 Integer p = parseHex(colorField.getText()); if (p != null) activeMod.textColor = p; return;
             }
-            if (supports(ModOption.TEXT_SCALE)   && scaleField     != null && scaleField.isFocused()) {
+            if (supports(ModOption.TEXT_SCALE) && scaleField != null && scaleField.isFocused()) {
                 if (key == 1) { scaleField.setFocused(false); return; }
                 scaleField.textboxKeyTyped(c, key);
                 try { float s = Float.parseFloat(scaleField.getText()); if (s > 0) activeMod.textScale = s; } catch (NumberFormatException ignored) {} return;
             }
-            if (supports(ModOption.WATCH_NAMES)  && watchNamesField!= null && watchNamesField.isFocused()) {
+            if (supports(ModOption.WATCH_NAMES) && watchNamesField != null && watchNamesField.isFocused()) {
                 if (key == 1) { watchNamesField.setFocused(false); return; }
                 watchNamesField.textboxKeyTyped(c, key);
                 ((net.minecraft.monsoonclient.gui.mods.FriendAlertMod) activeMod).watchNames = watchNamesField.getText(); return;
+            }
+            if (supports(ModOption.OUTLINE_COLOR) && outlineColorField != null && outlineColorField.isFocused()) {
+                if (key == 1) { outlineColorField.setFocused(false); return; }
+                outlineColorField.textboxKeyTyped(c, key);
+                Integer p = parseArgbHex(outlineColorField.getText());
+                if (p != null) { ((BlockOverlayMod) activeMod).outlineColor = p; saveConfig(); } return;
+            }
+            if (supports(ModOption.HOVER_COLOR) && hoverColorField != null && hoverColorField.isFocused()) {
+                if (key == 1) { hoverColorField.setFocused(false); return; }
+                hoverColorField.textboxKeyTyped(c, key);
+                Integer p = parseArgbHex(hoverColorField.getText());
+                if (p != null) { ((BlockOverlayMod) activeMod).hoverColor = p; saveConfig(); } return;
             }
             if (key == 1) { viewMode = ViewMode.LIST; draggingSlider = -1; initGui(); }
             return;
@@ -619,10 +684,12 @@ public class GuiModList extends GuiScreen {
         if (viewMode == ViewMode.LIST) {
             searchField.updateCursorCounter();
         } else {
-            if (supports(ModOption.TEXT_FORMAT)  && formatField    != null) formatField.updateCursorCounter();
-            if (supports(ModOption.TEXT_COLOR)   && colorField     != null) colorField.updateCursorCounter();
-            if (supports(ModOption.TEXT_SCALE)   && scaleField     != null) scaleField.updateCursorCounter();
-            if (supports(ModOption.WATCH_NAMES)  && watchNamesField!= null) watchNamesField.updateCursorCounter();
+            if (supports(ModOption.TEXT_FORMAT)   && formatField      != null) formatField.updateCursorCounter();
+            if (supports(ModOption.TEXT_COLOR)    && colorField       != null) colorField.updateCursorCounter();
+            if (supports(ModOption.TEXT_SCALE)    && scaleField       != null) scaleField.updateCursorCounter();
+            if (supports(ModOption.WATCH_NAMES)   && watchNamesField  != null) watchNamesField.updateCursorCounter();
+            if (supports(ModOption.OUTLINE_COLOR) && outlineColorField != null) outlineColorField.updateCursorCounter();
+            if (supports(ModOption.HOVER_COLOR)   && hoverColorField  != null) hoverColorField.updateCursorCounter();
         }
     }
 
@@ -650,11 +717,36 @@ public class GuiModList extends GuiScreen {
     }
 
     // ── Misc helpers ──────────────────────────────────────────────────────
+
+    /**
+     * Parses a 6-digit RGB or 8-digit ARGB hex string.
+     * Returns null if the string is invalid.
+     * 6-digit input is treated as fully opaque (alpha = FF).
+     */
     private Integer parseHex(String h) {
         h = h.trim().replace("#", "");
         if (h.length() != 6 && h.length() != 8) return null;
         try { long v = Long.parseLong(h, 16); return (int)(h.length() == 6 ? v | 0xFF000000L : v); }
         catch (NumberFormatException e) { return null; }
+    }
+
+    /**
+     * Parses a strictly 8-digit ARGB hex string.
+     * Used for outlineColor / hoverColor where the alpha channel is meaningful.
+     * Returns null if the string isn't exactly 8 hex digits.
+     */
+    private Integer parseArgbHex(String h) {
+        h = h.trim().replace("#", "");
+        if (h.length() != 8) return null;
+        try { return (int) Long.parseLong(h, 16); }
+        catch (NumberFormatException e) { return null; }
+    }
+
+    /** Convenience: persist config whenever a colour changes live. */
+    private void saveConfig() {
+        if (Client.INSTANCE.configManager != null) {
+            Client.INSTANCE.configManager.save();
+        }
     }
 
     private boolean isIn(int mx, int my, int x, int y, int w, int h) {
@@ -682,4 +774,3 @@ public class GuiModList extends GuiScreen {
         }
     }
 }
-

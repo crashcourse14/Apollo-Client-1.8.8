@@ -2,10 +2,10 @@ package net.minecraft.monsoonclient.gui.mods;
 
 import net.minecraft.monsoonclient.Client;
 import net.minecraft.monsoonclient.gui.HudMod;
-import net.lax1dude.eaglercraft.v1_8.socket.EaglercraftNetworkManager;
 import net.minecraft.monsoonclient.gui.hud.Category;
 import net.minecraft.monsoonclient.gui.hud.CategoryManager;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.network.NetworkPlayerInfo;
+import net.minecraft.client.Minecraft;
 
 
 
@@ -19,13 +19,22 @@ public class PingMod extends HudMod {
 
     @Override
     public void draw() {
-        fr.drawStringWithShadow("Ping: (In dev)", getX(), getY(), -1);
+        NetworkPlayerInfo info = mc.getNetHandler().getPlayerInfo(mc.thePlayer.getUniqueID());
+
+        int ping = info != null ? info.getResponseTime() : 0;
+
+        drawModText(formatText(String.valueOf(ping)), getX(), getY());
+
         super.draw();
     }
 
     @Override
     public int getWidth() {
-        return fr.getStringWidth("Ping: (In dev)");
+        NetworkPlayerInfo info = mc.getNetHandler().getPlayerInfo(mc.thePlayer.getUniqueID());
+
+        int ping = info != null ? info.getResponseTime() : 0;
+
+        return getTextWidth(formatText(String.valueOf(ping)));
     }
 
     @Override
