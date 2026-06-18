@@ -14,10 +14,9 @@ public class ClockMod extends HudMod {
 
     public ClockMod() {
         super("Clock", 5, 90, Category.HUD);
-
+        this.renderBackground = true;
+        this.backgroundOpacity = 0.3f;
         this.textFormat = "%VALUE%";
-
-        //Set the icon for the clock mod
         this.icon = new ResourceLocation("minecraft:monsoonclient/textures/clock.png");
     }
 

@@ -2,7 +2,9 @@ package net.minecraft.monsoonclient.gui.hud;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 import net.minecraft.client.gui.GuiButton;
@@ -15,8 +17,8 @@ import net.minecraft.monsoonclient.gui.HudMod;
 import net.minecraft.monsoonclient.gui.ModOption;
 import net.minecraft.monsoonclient.gui.MonsoonBranding;
 import net.minecraft.monsoonclient.gui.SoundEntry;
-import net.minecraft.monsoonclient.gui.mods.BlockOverlayMod;
 import net.minecraft.monsoonclient.gui.mods.SoundMod;
+import net.minecraft.monsoonclient.gui.ModOption;
 
 public class GuiModList extends GuiScreen {
 
@@ -26,37 +28,30 @@ public class GuiModList extends GuiScreen {
     private static final int CAT_BTN_H       = 18;
     private static final int CAT_SPACING     = 3;
 
-    // Card new design
-    // Each card is a tall tile: icon row + name + two buttons
-    private static final int CARD_W          = 80;  // fixed width, 3 cols typical
+    private static final int CARD_W          = 80;
     private static final int CARD_H          = 90;
     private static final int CARD_SPACING    = 6;
     private static final int ICON_SIZE       = 28;
     private static final int CARD_BTN_H      = 14;
     private static final int CARD_BTN_W      = 60;
 
-    // Options form
     private static final int FORM_LABEL_W    = 100;
     private static final int FIELD_H         = 14;
     private static final int FIELD_SPACING   = 6;
 
-    // Search
     private static final int SEARCH_W        = 90;
     private static final int SEARCH_H        = 14;
 
-    // Scrollbar
     private static final int SB_W            = 5;
     private static final int SB_PAD          = 3;
 
-    // Sound sliders
     private static final int SLIDER_H        = 10;
     private static final int SLIDER_LABEL_W  = 90;
     private static final int SLIDER_ROW_H    = SLIDER_H + 6;
 
-    // Button IDs
-    private static final int ID_OPTIONS_BASE = 2000; // OPTIONS_BASE + i → open options
-    private static final int ID_TOGGLE_BASE  = 1000; // TOGGLE_BASE  + i → enable/disable
-    private static final int ID_SHADOW_CB    = 500;
+    private static final int ID_OPTIONS_BASE = 2000;
+    private static final int ID_TOGGLE_BASE  = 1000;
+    private static final int ID_CHECKBOX_BASE= 500; // Dynamic base for checkboxes
 
     // ── Colors ────────────────────────────────────────────────────────────
     private static final int C_PANEL         = 0xCC0D0E10;
@@ -85,47 +80,34 @@ public class GuiModList extends GuiScreen {
     private final List<TabInfo>    categoryTabs = new ArrayList<>();
     private final List<CardLayout> cardLayouts  = new ArrayList<>();
 
-    // Computed layout
     private int panelX, panelY, panelW, panelH;
     private int catColX, catColY, catColW;
     private int modsAreaX, modsAreaY, modsAreaW, modsAreaH;
     private int searchX, searchY;
     private int closeX, closeY, closeSize;
 
-    // Options view layout
+    // Options view dynamic layout
     private int backBtnX, backBtnY, backBtnSize;
-    private int formatFX, formatFY, formatFW;
-    private int colorFX,  colorFY,  colorFW;
-    private int scaleFX,  scaleFY,  scaleFW;
-    private int shadowCY;
-    private int watchFX,  watchFY,  watchFW;
-    private int outlineFX, outlineFY, outlineFW;
-    private int hoverFX,   hoverFY,   hoverFW;
 
-    // Text fields
+    // Dynamic Fields replaced hardcoded ones!
     private GuiTextField searchField;
-    private GuiTextField formatField;
-    private GuiTextField colorField;
-    private GuiTextField scaleField;
-    private GuiTextField watchNamesField;
-    private GuiTextField outlineColorField;
-    private GuiTextField hoverColorField;
+    private final Map<ModOption, GuiTextField> optionTextFields = new HashMap<>();
+    private final Map<ModOption, GuiCheckboxButton> optionCheckboxes = new HashMap<>();
+    private int nextDynamicBtnId = ID_CHECKBOX_BASE;
 
-    // Scrolling — list view
-    private int scrollRow    = 0; // first fully-visible ROW index
+    // Scrolling
+    private int scrollRow    = 0;
     private int totalRows    = 0;
     private int visibleRows  = 0;
     private int cols         = 3;
 
-    // Scrolling — options (sound sliders)
     private int optionsScrollOffset = 0;
     private int optionsTotalHeight  = 0;
     private int draggingSlider      = -1;
 
-    // ── Constructor ───────────────────────────────────────────────────────
+    // ── Constructor & Init ───────────────────────────────────────────────
     public GuiModList(GuiScreen parent) { this.parentScreen = parent; }
 
-    // ── Init ──────────────────────────────────────────────────────────────
     @Override
     public void initGui() {
         computeLayout();
@@ -146,7 +128,6 @@ public class GuiModList extends GuiScreen {
             optionsScrollOffset = 0;
             buildOptionsForm();
         }
-
         super.initGui();
     }
 
@@ -173,7 +154,7 @@ public class GuiModList extends GuiScreen {
         modsAreaH = panelY + panelH - PADDING - modsAreaY;
     }
 
-    // ── Category tabs ─────────────────────────────────────────────────────
+    // ── List View Logic ──────────────────────────────────────────────────
     private void buildTabs() {
         categoryTabs.clear();
         String[]   labels = { "ALL", "HUD", "MISC", "MECHANIC" };
@@ -185,7 +166,6 @@ public class GuiModList extends GuiScreen {
         }
     }
 
-    // ── Mod card layout ───────────────────────────────────────────────────
     private void rebuildMods() {
         buttonList.clear();
         currentMods.clear();
@@ -201,7 +181,6 @@ public class GuiModList extends GuiScreen {
             }
         }
 
-        // How many cards fit per row given fixed CARD_W
         cols = Math.max(1, modsAreaW / (CARD_W + CARD_SPACING));
         totalRows   = (int) Math.ceil((double) currentMods.size() / cols);
         visibleRows = modsAreaH / (CARD_H + CARD_SPACING);
@@ -212,33 +191,23 @@ public class GuiModList extends GuiScreen {
             int cx  = modsAreaX + col * (CARD_W + CARD_SPACING);
             int cy  = modsAreaY + row * (CARD_H + CARD_SPACING);
 
-            // Options button: centered top half of card
             int optBtnX = cx + (CARD_W - CARD_BTN_W) / 2;
             int optBtnY = cy + ICON_SIZE + PADDING + fontRendererObj.FONT_HEIGHT + 3;
-
-            // Toggle button: centered below options button
             int togBtnX = cx + (CARD_W - CARD_BTN_W) / 2;
             int togBtnY = optBtnY + CARD_BTN_H + 3;
 
             cardLayouts.add(new CardLayout(cx, cy, col, row, optBtnX, optBtnY, togBtnX, togBtnY));
-
-            // Add buttons — visibility set each frame
             this.buttonList.add(new GuiOptionButton(ID_OPTIONS_BASE + i, optBtnX, optBtnY, CARD_BTN_W, CARD_BTN_H, "Options"));
             this.buttonList.add(new GuiModButton  (ID_TOGGLE_BASE  + i, togBtnX, togBtnY, CARD_BTN_W, CARD_BTN_H, currentMods.get(i).isEnabled()));
         }
     }
 
-    // ── Options form ──────────────────────────────────────────────────────
+    // ── Dynamic Options Form ─────────────────────────────────────────────
     private void buildOptionsForm() {
         buttonList.clear();
-        // Reset all option fields so stale references from a previous mod
-        // don't bleed through when switching between mods.
-        formatField      = null;
-        colorField       = null;
-        scaleField       = null;
-        watchNamesField  = null;
-        outlineColorField = null;
-        hoverColorField   = null;
+        optionTextFields.clear();
+        optionCheckboxes.clear();
+        nextDynamicBtnId = ID_CHECKBOX_BASE;
 
         if (activeMod == null) return;
 
@@ -248,59 +217,42 @@ public class GuiModList extends GuiScreen {
 
         int fy = backBtnY + backBtnSize + PADDING + 2;
 
-        if (supports(ModOption.TEXT_FORMAT)) {
-            formatFX = bx + FORM_LABEL_W; formatFY = fy; formatFW = bw - FORM_LABEL_W;
-            formatField = new GuiTextField(1, fontRendererObj, formatFX, formatFY, formatFW, FIELD_H);
-            formatField.setEnableBackgroundDrawing(false); formatField.setMaxStringLength(64);
-            formatField.setText(activeMod.textFormat);
-            fy += FIELD_H + FIELD_SPACING + 4;
-        }
-        if (supports(ModOption.TEXT_COLOR)) {
-            colorFX = bx + FORM_LABEL_W; colorFY = fy; colorFW = 70;
-            colorField = new GuiTextField(2, fontRendererObj, colorFX, colorFY, colorFW, FIELD_H);
-            colorField.setEnableBackgroundDrawing(false); colorField.setMaxStringLength(9);
-            colorField.setText(String.format("%08X", activeMod.textColor));
-            fy += FIELD_H + FIELD_SPACING + 4;
-        }
-        if (supports(ModOption.TEXT_SCALE)) {
-            scaleFX = bx + FORM_LABEL_W; scaleFY = fy; scaleFW = 50;
-            scaleField = new GuiTextField(3, fontRendererObj, scaleFX, scaleFY, scaleFW, FIELD_H);
-            scaleField.setEnableBackgroundDrawing(false); scaleField.setMaxStringLength(6);
-            scaleField.setText(String.valueOf(activeMod.textScale));
-            fy += FIELD_H + FIELD_SPACING + 4;
-        }
-        if (supports(ModOption.TEXT_SHADOW)) {
-            shadowCY = fy;
-            buttonList.add(new GuiCheckboxButton(ID_SHADOW_CB, bx + FORM_LABEL_W, shadowCY, FIELD_H, activeMod.textShadow));
-            fy += FIELD_H + FIELD_SPACING + 4;
-        }
-        if (supports(ModOption.WATCH_NAMES) && activeMod instanceof net.minecraft.monsoonclient.gui.mods.FriendAlertMod) {
-            watchFX = bx + FORM_LABEL_W; watchFY = fy; watchFW = bw - FORM_LABEL_W;
-            watchNamesField = new GuiTextField(4, fontRendererObj, watchFX, watchFY, watchFW, FIELD_H);
-            watchNamesField.setEnableBackgroundDrawing(false); watchNamesField.setMaxStringLength(256);
-            watchNamesField.setText(((net.minecraft.monsoonclient.gui.mods.FriendAlertMod) activeMod).watchNames);
-            fy += FIELD_H + FIELD_SPACING + 4;
-        }
-        if (supports(ModOption.OUTLINE_COLOR) && activeMod instanceof BlockOverlayMod) {
-            outlineFX = bx + FORM_LABEL_W; outlineFY = fy; outlineFW = 80;
-            outlineColorField = new GuiTextField(5, fontRendererObj, outlineFX, outlineFY, outlineFW, FIELD_H);
-            outlineColorField.setEnableBackgroundDrawing(false);
-            outlineColorField.setMaxStringLength(8);
-            outlineColorField.setText(String.format("%08X", ((BlockOverlayMod) activeMod).outlineColor));
-            fy += FIELD_H + FIELD_SPACING + 4;
-        }
-        if (supports(ModOption.HOVER_COLOR) && activeMod instanceof BlockOverlayMod) {
-            hoverFX = bx + FORM_LABEL_W; hoverFY = fy; hoverFW = 80;
-            hoverColorField = new GuiTextField(6, fontRendererObj, hoverFX, hoverFY, hoverFW, FIELD_H);
-            hoverColorField.setEnableBackgroundDrawing(false);
-            hoverColorField.setMaxStringLength(8);
-            hoverColorField.setText(String.format("%08X", ((BlockOverlayMod) activeMod).hoverColor));
-            fy += FIELD_H + FIELD_SPACING + 4;
-        }
-        if (supports(ModOption.SOUND_SLIDERS) && activeMod instanceof SoundMod) {
-            optionsTotalHeight = ((SoundMod) activeMod).soundEntries.size() * SLIDER_ROW_H;
-        } else {
-            optionsTotalHeight = 0;
+        // Dynamically generate UI components based on supported options
+        for (ModOption opt : activeMod.supportedOptions) {
+            int fieldX = bx + FORM_LABEL_W;
+            int fieldW = bw - FORM_LABEL_W;
+            int maxLen = 32;
+
+            if (opt.type == ModOption.OptionType.COLOR) {
+                fieldW = 70; maxLen = 9;
+            } else if (opt.type == ModOption.OptionType.NUMBER) {
+                fieldW = 50; maxLen = 6;
+            } else if (opt.type == ModOption.OptionType.STRING) {
+                maxLen = 256;
+            }
+
+            if (opt.type == ModOption.OptionType.BOOLEAN) {
+                GuiCheckboxButton cb = new GuiCheckboxButton(nextDynamicBtnId++, fieldX, fy, FIELD_H, activeMod.getOptionBoolean(opt));
+                optionCheckboxes.put(opt, cb);
+                buttonList.add(cb);
+                fy += FIELD_H + FIELD_SPACING + 4;
+            } else if (opt.type != ModOption.OptionType.CUSTOM) {
+                GuiTextField field = new GuiTextField(nextDynamicBtnId++, fontRendererObj, fieldX, fy, fieldW, FIELD_H);
+                field.setEnableBackgroundDrawing(false);
+                field.setMaxStringLength(maxLen);
+
+                if (opt.type == ModOption.OptionType.STRING) field.setText(activeMod.getOptionString(opt));
+                else if (opt.type == ModOption.OptionType.COLOR) field.setText(String.format("%08X", activeMod.getOptionColor(opt)));
+                else if (opt.type == ModOption.OptionType.NUMBER) field.setText(String.valueOf(activeMod.getOptionNumber(opt)));
+
+                optionTextFields.put(opt, field);
+                fy += FIELD_H + FIELD_SPACING + 4;
+            } else {
+                // Custom rendering (like sound sliders)
+                if (opt == ModOption.SOUND_SLIDERS && activeMod instanceof SoundMod) {
+                    optionsTotalHeight = ((SoundMod) activeMod).soundEntries.size() * SLIDER_ROW_H;
+                }
+            }
         }
     }
 
@@ -310,34 +262,23 @@ public class GuiModList extends GuiScreen {
         return false;
     }
 
-    // ── Draw ──────────────────────────────────────────────────────────────
+    // ── Drawing ──────────────────────────────────────────────────────────
     @Override
     public void drawScreen(int mx, int my, float pt) {
         MonsoonBranding.render(width, height);
         this.drawDefaultBackground();
 
-        // Panel
         drawRect(panelX, panelY, panelX + panelW, panelY + panelH, C_PANEL);
-        // Header bar
         drawRect(panelX, panelY, panelX + panelW, panelY + HEADER_HEIGHT, C_HEADER);
-        // Header accent line
         drawRect(panelX, panelY + HEADER_HEIGHT - 1, panelX + panelW, panelY + HEADER_HEIGHT, C_ACCENT);
-        // Title
         drawString(fontRendererObj, "§cMonsoon§r Client", panelX + PADDING, panelY + (HEADER_HEIGHT - 8) / 2, C_TEXT);
 
-        if (viewMode == ViewMode.LIST) {
-            drawListView(mx, my);
-        } else {
-            drawOptionsView(mx, my);
-        }
+        if (viewMode == ViewMode.LIST) drawListView(mx, my);
+        else drawOptionsView(mx, my);
 
-        // Render buttons + fields on top
         super.drawScreen(mx, my, pt);
-
-        // Close button drawn last (always on top)
         drawCloseButton(mx, my);
 
-        // Search field drawn on top of everything
         if (viewMode == ViewMode.LIST) {
             drawRect(searchX - 1, searchY - 1, searchX + SEARCH_W + 1, searchY + SEARCH_H + 1, C_BORDER);
             drawRect(searchX, searchY, searchX + SEARCH_W, searchY + SEARCH_H, C_TEXTBOX);
@@ -350,30 +291,25 @@ public class GuiModList extends GuiScreen {
     }
 
     private void drawListView(int mx, int my) {
-        // Category sidebar
         for (TabInfo t : categoryTabs) {
             boolean active = t.category == selectedCategory;
             boolean hov    = isIn(mx, my, t.x, t.y, t.w, t.h);
             drawRect(t.x, t.y, t.x + t.w, t.y + t.h, active ? C_SELECTED_CAT : (hov ? C_CARD_HOVER : C_CAT));
-            if (active) drawRect(t.x, t.y, t.x + 2, t.y + t.h, C_ACCENT); // left accent
+            if (active) drawRect(t.x, t.y, t.x + 2, t.y + t.h, C_ACCENT);
             drawCenteredString(fontRendererObj, t.label, t.x + t.w / 2, t.y + (t.h - 8) / 2, C_TEXT);
         }
 
-        // Cards — only render rows that are fully within the visible area
         for (int i = 0; i < currentMods.size(); i++) {
             CardLayout c = cardLayouts.get(i);
-            // Skip rows above or at/beyond visible window
             if (c.row < scrollRow || c.row >= scrollRow + visibleRows) {
                 hideCardButtons(i);
                 continue;
             }
-            // Screen-space Y for this card
             int screenY = modsAreaY + (c.row - scrollRow) * (CARD_H + CARD_SPACING);
             drawCard(i, c.x, screenY, mx, my);
             positionCardButtons(i, c, screenY);
         }
 
-        // Scrollbar
         if (totalRows > visibleRows) {
             int sbX = modsAreaX + modsAreaW + SB_PAD;
             drawRect(sbX, modsAreaY, sbX + SB_W, modsAreaY + modsAreaH, C_CAT);
@@ -384,7 +320,6 @@ public class GuiModList extends GuiScreen {
             drawRect(sbX + 1, thumbY, sbX + SB_W - 1, thumbY + thumbH, C_ACCENT);
         }
 
-        // Overdraw mask — covers any partial card bleed at top/bottom of mods area
         drawRect(modsAreaX - 1, panelY + HEADER_HEIGHT, modsAreaX + modsAreaW + SB_W + SB_PAD + 1, modsAreaY, C_PANEL);
         drawRect(modsAreaX - 1, modsAreaY + modsAreaH, modsAreaX + modsAreaW + SB_W + SB_PAD + 1, panelY + panelH, C_PANEL);
     }
@@ -393,29 +328,23 @@ public class GuiModList extends GuiScreen {
         HudMod mod = currentMods.get(i);
         boolean hov = isIn(mx, my, cx, cy, CARD_W, CARD_H);
 
-        // Card background + border
         drawRect(cx - 1, cy - 1, cx + CARD_W + 1, cy + CARD_H + 1, C_BORDER);
         drawRect(cx, cy, cx + CARD_W, cy + CARD_H, hov ? C_CARD_HOVER : C_CARD);
-        // Top accent line
         drawRect(cx, cy, cx + CARD_W, cy + 2, mod.isEnabled() ? C_ACCENT : C_DISABLED);
 
-        // Icon area (centered)
         int iconX = cx + (CARD_W - ICON_SIZE) / 2;
         int iconY = cy + 6;
         drawRect(iconX, iconY, iconX + ICON_SIZE, iconY + ICON_SIZE, C_TEXTBOX);
         drawRect(iconX - 1, iconY - 1, iconX + ICON_SIZE + 1, iconY + ICON_SIZE + 1, C_BORDER);
-        // Placeholder icon label (first letter)
         String initial = mod.name.substring(0, 1).toUpperCase();
         drawCenteredString(fontRendererObj, initial, iconX + ICON_SIZE / 2, iconY + (ICON_SIZE - 8) / 2, C_TEXT);
 
-        // Mod name (centered, trimmed)
         int nameY = iconY + ICON_SIZE + 4;
         String trimmed = fontRendererObj.trimStringToWidth(mod.name, CARD_W - 4);
         drawCenteredString(fontRendererObj, trimmed, cx + CARD_W / 2, nameY, C_TEXT);
     }
 
     private void positionCardButtons(int i, CardLayout c, int screenY) {
-        // Recalculate button Y based on current scroll
         int optBtnY = screenY + ICON_SIZE + PADDING + fontRendererObj.FONT_HEIGHT + 3;
         int togBtnY = optBtnY + CARD_BTN_H + 3;
 
@@ -442,55 +371,48 @@ public class GuiModList extends GuiScreen {
         }
     }
 
-    // ── Options view ──────────────────────────────────────────────────────
+    // ── Dynamic Options Drawing ──────────────────────────────────────────
     private void drawOptionsView(int mx, int my) {
-        // Back button
         boolean backHov = isIn(mx, my, backBtnX, backBtnY, backBtnSize * 3, backBtnSize);
         drawRect(backBtnX, backBtnY, backBtnX + backBtnSize * 3, backBtnY + backBtnSize, backHov ? C_SELECTED_CAT : C_CAT);
         drawString(fontRendererObj, "< Back", backBtnX + 4, backBtnY + (backBtnSize - 8) / 2, C_TEXT);
 
-        // Mod name header
         drawString(fontRendererObj, "§c" + activeMod.name + " §rOptions",
                 backBtnX + backBtnSize * 3 + PADDING, backBtnY + (backBtnSize - 8) / 2, C_TEXT);
 
-        // Divider
         int divY = backBtnY + backBtnSize + 4;
         drawRect(panelX + PADDING, divY, panelX + panelW - PADDING, divY + 1, C_BORDER);
 
-        if (supports(ModOption.TEXT_FORMAT) && formatField != null){
-            drawFormRow("Text Format",  formatFX,  formatFY,  formatFW,  formatField);
+        for (ModOption opt : activeMod.supportedOptions) {
+            if (optionTextFields.containsKey(opt)) {
+                GuiTextField field = optionTextFields.get(opt);
+                drawFormRow(prettifyName(opt.name()), field.xPosition, field.yPosition, field.width, field);
+                
+                if (opt.type == ModOption.OptionType.COLOR) {
+                    drawRect(field.xPosition + field.width + 4, field.yPosition, 
+                             field.xPosition + field.width + 4 + FIELD_H, field.yPosition + FIELD_H, activeMod.getOptionColor(opt));
+                }
+                if (opt == ModOption.WATCH_NAMES) {
+                    drawString(fontRendererObj, "§7e.g. friend1,friend2", field.xPosition, field.yPosition + FIELD_H + 2, 0xFFAAAAAA);
+                }
+            } else if (optionCheckboxes.containsKey(opt)) {
+                GuiCheckboxButton cb = optionCheckboxes.get(opt);
+                drawString(fontRendererObj, prettifyName(opt.name()), panelX + PADDING, cb.yPosition + (FIELD_H - 8) / 2, 0xFFCFCFCF);
+            } else if (opt == ModOption.SOUND_SLIDERS && activeMod instanceof SoundMod) {
+                drawSoundSliders((SoundMod) activeMod, mx, my);
+            }
         }
-        if (supports(ModOption.TEXT_COLOR) && colorField != null){
-            drawFormRow("Text Color",   colorFX,   colorFY,   colorFW,   colorField);
-            drawRect(colorFX + colorFW + 4, colorFY, colorFX + colorFW + 4 + FIELD_H, colorFY + FIELD_H, activeMod.textColor);
+    }
 
+    private String prettifyName(String name) {
+        String[] parts = name.toLowerCase().split("_");
+        StringBuilder sb = new StringBuilder();
+        for (String p : parts) {
+            if (p.length() > 0) {
+                sb.append(Character.toUpperCase(p.charAt(0))).append(p.substring(1)).append(" ");
+            }
         }
-        if (supports(ModOption.TEXT_SCALE) && scaleField != null){
-            drawFormRow("Text Scale",   scaleFX,   scaleFY,   scaleFW,   scaleField);
-        }
-        if (supports(ModOption.TEXT_SHADOW)){
-            drawString(fontRendererObj, "Text Shadow", panelX + PADDING, shadowCY + (FIELD_H - 8) / 2, 0xFFCFCFCF);
-        }
-        if (supports(ModOption.WATCH_NAMES) && watchNamesField != null) {
-            drawFormRow("Watch Names", watchFX, watchFY, watchFW, watchNamesField);
-            drawString(fontRendererObj, "§7e.g. friend1,friend2", watchFX, watchFY + FIELD_H + 2, 0xFFAAAAAA);
-        }
-        if (supports(ModOption.OUTLINE_COLOR) && outlineColorField != null) {
-            drawFormRow("Outline Color (ARGB)", outlineFX, outlineFY, outlineFW, outlineColorField);
-            // Live preview swatch
-            if (activeMod instanceof BlockOverlayMod)
-                drawRect(outlineFX + outlineFW + 4, outlineFY, outlineFX + outlineFW + 4 + FIELD_H, outlineFY + FIELD_H,
-                         ((BlockOverlayMod) activeMod).outlineColor);
-        }
-        if (supports(ModOption.HOVER_COLOR) && hoverColorField != null) {
-            drawFormRow("Hover Color (ARGB)", hoverFX, hoverFY, hoverFW, hoverColorField);
-            // Live preview swatch
-            if (activeMod instanceof BlockOverlayMod)
-                drawRect(hoverFX + hoverFW + 4, hoverFY, hoverFX + hoverFW + 4 + FIELD_H, hoverFY + FIELD_H,
-                         ((BlockOverlayMod) activeMod).hoverColor);
-        }
-        if (supports(ModOption.SOUND_SLIDERS) && activeMod instanceof SoundMod)
-            drawSoundSliders((SoundMod) activeMod, mx, my);
+        return sb.toString().trim();
     }
 
     private void drawFormRow(String label, int fx, int fy, int fw, GuiTextField field) {
@@ -542,7 +464,7 @@ public class GuiModList extends GuiScreen {
         drawCenteredString(fontRendererObj, "✕", closeX + closeSize / 2, closeY + (closeSize - 8) / 2, C_TEXT);
     }
 
-    // ── Input ─────────────────────────────────────────────────────────────
+    // ── Input Handling ───────────────────────────────────────────────────
     @Override
     public void handleMouseInput() throws IOException {
         super.handleMouseInput();
@@ -570,12 +492,8 @@ public class GuiModList extends GuiScreen {
         }
 
         if (viewMode == ViewMode.OPTIONS) {
-            if (supports(ModOption.TEXT_FORMAT)    && formatField      != null) formatField.mouseClicked(mx, my, btn);
-            if (supports(ModOption.TEXT_COLOR)     && colorField       != null) colorField.mouseClicked(mx, my, btn);
-            if (supports(ModOption.TEXT_SCALE)     && scaleField       != null) scaleField.mouseClicked(mx, my, btn);
-            if (supports(ModOption.WATCH_NAMES)    && watchNamesField  != null) watchNamesField.mouseClicked(mx, my, btn);
-            if (supports(ModOption.OUTLINE_COLOR)  && outlineColorField!= null) outlineColorField.mouseClicked(mx, my, btn);
-            if (supports(ModOption.HOVER_COLOR)    && hoverColorField  != null) hoverColorField.mouseClicked(mx, my, btn);
+            for (GuiTextField field : optionTextFields.values()) field.mouseClicked(mx, my, btn);
+            
             if (supports(ModOption.SOUND_SLIDERS) && activeMod instanceof SoundMod) {
                 int idx = sliderAt(mx, my, (SoundMod) activeMod);
                 if (idx >= 0) { draggingSlider = idx; updateSlider(mx, (SoundMod) activeMod, idx); return; }
@@ -628,45 +546,32 @@ public class GuiModList extends GuiScreen {
                     ((GuiModButton) button).setToggled(currentMods.get(i).isEnabled());
                 }
             }
-        } else if (id == ID_SHADOW_CB) {
-            activeMod.textShadow = !activeMod.textShadow;
-            ((GuiCheckboxButton) button).setChecked(activeMod.textShadow);
+        } else {
+            // Handle dynamically generated checkboxes
+            for (Map.Entry<ModOption, GuiCheckboxButton> entry : optionCheckboxes.entrySet()) {
+                if (entry.getValue() == button) {
+                    boolean newVal = !activeMod.getOptionBoolean(entry.getKey());
+                    activeMod.setOptionBoolean(entry.getKey(), newVal);
+                    entry.getValue().setChecked(newVal);
+                    saveConfig();
+                    return;
+                }
+            }
         }
     }
 
     @Override
     protected void keyTyped(char c, int key) {
         if (viewMode == ViewMode.OPTIONS) {
-            if (supports(ModOption.TEXT_FORMAT) && formatField != null && formatField.isFocused()) {
-                if (key == 1) { formatField.setFocused(false); return; }
-                formatField.textboxKeyTyped(c, key); activeMod.textFormat = formatField.getText(); return;
-            }
-            if (supports(ModOption.TEXT_COLOR) && colorField != null && colorField.isFocused()) {
-                if (key == 1) { colorField.setFocused(false); return; }
-                colorField.textboxKeyTyped(c, key);
-                Integer p = parseHex(colorField.getText()); if (p != null) activeMod.textColor = p; return;
-            }
-            if (supports(ModOption.TEXT_SCALE) && scaleField != null && scaleField.isFocused()) {
-                if (key == 1) { scaleField.setFocused(false); return; }
-                scaleField.textboxKeyTyped(c, key);
-                try { float s = Float.parseFloat(scaleField.getText()); if (s > 0) activeMod.textScale = s; } catch (NumberFormatException ignored) {} return;
-            }
-            if (supports(ModOption.WATCH_NAMES) && watchNamesField != null && watchNamesField.isFocused()) {
-                if (key == 1) { watchNamesField.setFocused(false); return; }
-                watchNamesField.textboxKeyTyped(c, key);
-                ((net.minecraft.monsoonclient.gui.mods.FriendAlertMod) activeMod).watchNames = watchNamesField.getText(); return;
-            }
-            if (supports(ModOption.OUTLINE_COLOR) && outlineColorField != null && outlineColorField.isFocused()) {
-                if (key == 1) { outlineColorField.setFocused(false); return; }
-                outlineColorField.textboxKeyTyped(c, key);
-                Integer p = parseArgbHex(outlineColorField.getText());
-                if (p != null) { ((BlockOverlayMod) activeMod).outlineColor = p; saveConfig(); } return;
-            }
-            if (supports(ModOption.HOVER_COLOR) && hoverColorField != null && hoverColorField.isFocused()) {
-                if (key == 1) { hoverColorField.setFocused(false); return; }
-                hoverColorField.textboxKeyTyped(c, key);
-                Integer p = parseArgbHex(hoverColorField.getText());
-                if (p != null) { ((BlockOverlayMod) activeMod).hoverColor = p; saveConfig(); } return;
+            for (Map.Entry<ModOption, GuiTextField> entry : optionTextFields.entrySet()) {
+                ModOption opt = entry.getKey();
+                GuiTextField field = entry.getValue();
+                if (field.isFocused()) {
+                    if (key == 1) { field.setFocused(false); return; }
+                    field.textboxKeyTyped(c, key);
+                    saveOptionFromField(opt, field);
+                    return;
+                }
             }
             if (key == 1) { viewMode = ViewMode.LIST; draggingSlider = -1; initGui(); }
             return;
@@ -678,22 +583,36 @@ public class GuiModList extends GuiScreen {
         if (key == 1) mc.displayGuiScreen(parentScreen);
     }
 
+    private void saveOptionFromField(ModOption opt, GuiTextField field) {
+        String text = field.getText();
+        try {
+            switch (opt.type) {
+                case STRING: activeMod.setOptionString(opt, text); break;
+                case COLOR:
+                    Integer p = (opt == ModOption.OUTLINE_COLOR || opt == ModOption.HOVER_COLOR) 
+                                ? parseArgbHex(text) : parseHex(text);
+                    if (p != null) activeMod.setOptionColor(opt, p);
+                    break;
+                case NUMBER:
+                    float s = Float.parseFloat(text);
+                    activeMod.setOptionNumber(opt, s);
+                    break;
+            }
+            saveConfig();
+        } catch (Exception e) { /* Ignore invalid input while typing */ }
+    }
+
     @Override
     public void updateScreen() {
         super.updateScreen();
         if (viewMode == ViewMode.LIST) {
             searchField.updateCursorCounter();
         } else {
-            if (supports(ModOption.TEXT_FORMAT)   && formatField      != null) formatField.updateCursorCounter();
-            if (supports(ModOption.TEXT_COLOR)    && colorField       != null) colorField.updateCursorCounter();
-            if (supports(ModOption.TEXT_SCALE)    && scaleField       != null) scaleField.updateCursorCounter();
-            if (supports(ModOption.WATCH_NAMES)   && watchNamesField  != null) watchNamesField.updateCursorCounter();
-            if (supports(ModOption.OUTLINE_COLOR) && outlineColorField != null) outlineColorField.updateCursorCounter();
-            if (supports(ModOption.HOVER_COLOR)   && hoverColorField  != null) hoverColorField.updateCursorCounter();
+            for (GuiTextField field : optionTextFields.values()) field.updateCursorCounter();
         }
     }
 
-    // ── Slider helpers ────────────────────────────────────────────────────
+    // ── Slider & Misc Helpers ────────────────────────────────────────────
     private int sliderAt(int mx, int my, SoundMod mod) {
         int aX = panelX + PADDING;
         int aY = panelY + HEADER_HEIGHT + PADDING + backBtnSize + PADDING + 6;
@@ -716,13 +635,6 @@ public class GuiModList extends GuiScreen {
         mod.soundEntries.get(i).volume = Math.round(t * 20) / 20.0f;
     }
 
-    // ── Misc helpers ──────────────────────────────────────────────────────
-
-    /**
-     * Parses a 6-digit RGB or 8-digit ARGB hex string.
-     * Returns null if the string is invalid.
-     * 6-digit input is treated as fully opaque (alpha = FF).
-     */
     private Integer parseHex(String h) {
         h = h.trim().replace("#", "");
         if (h.length() != 6 && h.length() != 8) return null;
@@ -730,11 +642,6 @@ public class GuiModList extends GuiScreen {
         catch (NumberFormatException e) { return null; }
     }
 
-    /**
-     * Parses a strictly 8-digit ARGB hex string.
-     * Used for outlineColor / hoverColor where the alpha channel is meaningful.
-     * Returns null if the string isn't exactly 8 hex digits.
-     */
     private Integer parseArgbHex(String h) {
         h = h.trim().replace("#", "");
         if (h.length() != 8) return null;
@@ -742,18 +649,15 @@ public class GuiModList extends GuiScreen {
         catch (NumberFormatException e) { return null; }
     }
 
-    /** Convenience: persist config whenever a colour changes live. */
     private void saveConfig() {
-        if (Client.INSTANCE.configManager != null) {
-            Client.INSTANCE.configManager.save();
-        }
+        if (Client.INSTANCE.configManager != null) Client.INSTANCE.configManager.save();
     }
 
     private boolean isIn(int mx, int my, int x, int y, int w, int h) {
         return mx >= x && mx < x + w && my >= y && my < y + h;
     }
 
-    // ── Inner classes ─────────────────────────────────────────────────────
+    // ── Inner Classes ────────────────────────────────────────────────────
     private static class TabInfo {
         final String label; final Category category; final int x, y, w, h;
         TabInfo(String l, Category c, int x, int y, int w, int h) { label=l; category=c; this.x=x; this.y=y; this.w=w; this.h=h; }
@@ -767,7 +671,6 @@ public class GuiModList extends GuiScreen {
         }
     }
 
-    /** Simple labeled button for "Options" — reuses GuiButton styling. */
     private static class GuiOptionButton extends GuiButton {
         GuiOptionButton(int id, int x, int y, int w, int h, String label) {
             super(id, x, y, w, h, label);

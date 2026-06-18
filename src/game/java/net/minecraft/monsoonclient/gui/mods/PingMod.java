@@ -13,7 +13,8 @@ public class PingMod extends HudMod {
 
     public PingMod() {
         super("Ping", 5, 150, Category.HUD);
-        //this.icon = new ResourceLocation(null, null);
+        this.renderBackground = true;
+        this.backgroundOpacity = 0.3f;
         this.textFormat = "Ping: %VALUE%";
     }
 

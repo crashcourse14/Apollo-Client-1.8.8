@@ -1,25 +1,22 @@
 package net.minecraft.monsoonclient.gui;
 
-/**
- * Declares which options a HudMod supports.
- * Each mod specifies a subset of these in its supportedOptions array.
- * GuiModList reads this array and only renders the relevant controls.
- */
 public enum ModOption {
-    /** Text format string with %VALUE% placeholder */
-    TEXT_FORMAT,
-    /** Hex color picker for the rendered text */
-    TEXT_COLOR,
-    /** Float scale multiplier for the rendered text */
-    TEXT_SCALE,
-    /** Toggle text drop-shadow */
-    TEXT_SHADOW,
-    /** Per-category sound volume sliders */
-    SOUND_SLIDERS,
+    TEXT_FORMAT(OptionType.STRING),
+    TEXT_COLOR(OptionType.COLOR),
+    TEXT_SCALE(OptionType.NUMBER),
+    TEXT_SHADOW(OptionType.BOOLEAN),
+    RENDER_BACKGROUND(OptionType.BOOLEAN),
+    BACKGROUND_COLOR(OptionType.COLOR),
+    BACKGROUND_OPACITY(OptionType.NUMBER),
+    WATCH_NAMES(OptionType.STRING),
+    OUTLINE_COLOR(OptionType.COLOR),
+    HOVER_COLOR(OptionType.COLOR),
+    SOUND_SLIDERS(OptionType.CUSTOM);
 
-    WATCH_NAMES,
+    public enum OptionType { STRING, COLOR, NUMBER, BOOLEAN, CUSTOM }
+    public final OptionType type;
 
-    OUTLINE_COLOR,
-    
-    HOVER_COLOR,
+    ModOption(OptionType type) {
+        this.type = type;
+    }
 }

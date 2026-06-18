@@ -1,4 +1,4 @@
 #!/bin/sh
 cd ../
 chmod +x gradlew
-./gradlew target_teavm_wasm_gc:assembleMainComponents
+./gradlew --no-daemon target_teavm_wasm_gc:assembleMainComponents

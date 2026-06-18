@@ -9,6 +9,8 @@ public class SessionTimeMod extends HudMod {
     public SessionTimeMod() {
         super("Session Timer", 5, 170, Category.HUD);
         this.textFormat = "Session: %VALUE%";
+        this.renderBackground = true;
+        this.backgroundOpacity = 0.3f;
     }
 
     @Override

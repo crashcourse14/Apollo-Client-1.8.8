@@ -13,10 +13,9 @@ public class DispatchDisplayMod extends HudMod {
 
         this.textFormat = "Entities: %VALUE%";
 
-        // Place a 22x22 (or larger square) png at:
-        // assets/monsoonclient/textures/mods/fps.png
-        // If the file isn't found, the mod list falls back to the placeholder icon.
-        this.icon = new ResourceLocation("minecraft: monsoonclient/textures/dispatch.png");
+        this.renderBackground = true;
+        this.backgroundOpacity = 0.3f;
+        this.icon = new ResourceLocation("minecraft: monsoonclient/textures/frames.png");
     }
 
     @Override

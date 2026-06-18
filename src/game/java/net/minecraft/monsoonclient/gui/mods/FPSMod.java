@@ -3,22 +3,26 @@ package net.minecraft.monsoonclient.gui.mods;
 import net.minecraft.monsoonclient.gui.HudMod;
 import net.minecraft.monsoonclient.gui.hud.Category;
 import net.minecraft.util.ResourceLocation;
-
-
+import net.minecraft.client.Minecraft;
 
 public class FPSMod extends HudMod {
 
     public FPSMod() {
         super("FPS", 5, 70, Category.HUD);
-        // Default - change to "%VALUE% FPS" for "400 FPS" instead of "FPS: 400"
+        
         this.textFormat = "FPS: %VALUE%";
-        this.icon = new ResourceLocation("minecraft: monsoonclient/textures/frames.png");
+        this.icon = new ResourceLocation("monsoonclient:textures/frames.png");
+        this.renderBackground = true;
+        this.backgroundOpacity = 0.3f;
+
     }
 
     @Override
     public void draw() {
-        drawModText(formatText(String.valueOf(mc.getDebugFPS())), getX(), getY());
+    
         super.draw();
+        String displayText = formatText(String.valueOf(mc.getDebugFPS()));
+        drawModText(displayText, getX(), getY());
     }
 
     @Override
@@ -30,5 +34,4 @@ public class FPSMod extends HudMod {
     public int getHeight() {
         return getTextHeight();
     }
-
 }

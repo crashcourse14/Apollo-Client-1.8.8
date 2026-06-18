@@ -1,7 +1,7 @@
 package net.minecraft.monsoonclient.config;
 
 import net.minecraft.monsoonclient.gui.HudMod;
-import net.minecraft.monsoonclient.gui.mods.BlockOverlayMod;
+import net.minecraft.monsoonclient.gui.ModOption;
 import net.minecraft.monsoonclient.Client;
 import net.lax1dude.eaglercraft.v1_8.internal.PlatformApplication;
 import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
@@ -23,19 +23,36 @@ public class ConfigManager {
             for (HudMod mod : Client.INSTANCE.hudManager.hudMods) {
                 JSONObject modJson = new JSONObject();
 
+                // Save standard positioning and state
+                modJson.put("enabled", mod.isEnabled());
+                modJson.put("x", mod.getX());
+                modJson.put("y", mod.getY());
 
-                modJson.put("enabled",    mod.isEnabled());
-                modJson.put("x",          mod.getX());
-                modJson.put("y",          mod.getY());
-                modJson.put("textFormat", mod.textFormat);
-                modJson.put("textColor",  mod.textColor);
-                modJson.put("textShadow", mod.textShadow);
-                modJson.put("textScale",  mod.textScale);
-                if (mod instanceof BlockOverlayMod) {
-                    BlockOverlayMod bom = (BlockOverlayMod) mod;
-                    modJson.put("outlineColor", bom.outlineColor);
-                    modJson.put("hoverColor",   bom.hoverColor);
+                // Dynamically save all supported options
+                for (ModOption opt : mod.supportedOptions) {
+                    String key = opt.name(); // e.g., "TEXT_FORMAT"
+                    
+                    // Skip custom types, they are handled by the mod itself
+                    if (opt.type == ModOption.OptionType.CUSTOM) continue;
+
+                    switch (opt.type) {
+                        case STRING:
+                            modJson.put(key, mod.getOptionString(opt));
+                            break;
+                        case COLOR:
+                            modJson.put(key, mod.getOptionColor(opt));
+                            break;
+                        case NUMBER:
+                            modJson.put(key, mod.getOptionNumber(opt));
+                            break;
+                        case BOOLEAN:
+                            modJson.put(key, mod.getOptionBoolean(opt));
+                            break;
+                    }
                 }
+
+                // Let the mod save any custom data (like SoundMod's sound entries)
+                mod.saveCustomOptions(modJson);
 
                 modsJson.put(mod.name, modJson);
             }
@@ -73,21 +90,35 @@ public class ConfigManager {
 
                     JSONObject modJson = modsJson.getJSONObject(mod.name);
 
+                    // Load standard positioning and state
+                    mod.setEnabled(modJson.optBoolean("enabled", mod.isEnabled()));
+                    mod.setX(modJson.optInt("x", mod.getX()));
+                    mod.setY(modJson.optInt("y", mod.getY()));
 
-                    mod.enabled    = modJson.optBoolean("enabled",    false);
-                    mod.x          = modJson.optInt    ("x",          mod.x);
-                    mod.y          = modJson.optInt    ("y",          mod.y);
-                    mod.textFormat = modJson.optString ("textFormat", mod.textFormat);
-                    mod.textColor  = modJson.optInt    ("textColor",  mod.textColor);
-                    mod.textShadow = modJson.optBoolean("textShadow", mod.textShadow);
-                    mod.textScale  = (float) modJson.optDouble("textScale", mod.textScale);
+                    // Dynamically load all supported options
+                    for (ModOption opt : mod.supportedOptions) {
+                        String key = opt.name();
 
+                        if (opt.type == ModOption.OptionType.CUSTOM) continue;
 
-                    if (mod instanceof BlockOverlayMod) {
-                        BlockOverlayMod bom = (BlockOverlayMod) mod;
-                        bom.outlineColor = modJson.optInt("outlineColor", bom.outlineColor);
-                        bom.hoverColor   = modJson.optInt("hoverColor",   bom.hoverColor);
+                        switch (opt.type) {
+                            case STRING:
+                                mod.setOptionString(opt, modJson.optString(key, mod.getOptionString(opt)));
+                                break;
+                            case COLOR:
+                                mod.setOptionColor(opt, modJson.optInt(key, mod.getOptionColor(opt)));
+                                break;
+                            case NUMBER:
+                                mod.setOptionNumber(opt, (float) modJson.optDouble(key, mod.getOptionNumber(opt)));
+                                break;
+                            case BOOLEAN:
+                                mod.setOptionBoolean(opt, modJson.optBoolean(key, mod.getOptionBoolean(opt)));
+                                break;
+                        }
                     }
+
+                    // Let the mod load any custom data
+                    mod.loadCustomOptions(modJson);
                 }
             }
         } catch (Exception e) {

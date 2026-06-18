@@ -38,7 +38,7 @@ public class GuiTextField extends Gui {
 	private final FontRenderer fontRendererInstance;
 	public int xPosition;
 	public int yPosition;
-	private final int width;
+	public final int width;
 	private final int height;
 	/**+
 	 * Has the current text being edited on the textbox.

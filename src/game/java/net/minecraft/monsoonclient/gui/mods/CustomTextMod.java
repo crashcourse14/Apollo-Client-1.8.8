@@ -13,6 +13,8 @@ public class CustomTextMod extends HudMod {
         super("Custom Text", 5, 110, Category.HUD);
         this.textFormat = "%VALUE%";
 
+        this.renderBackground = true;
+        this.backgroundOpacity = 0.3f;
         this.icon = new ResourceLocation("minecraft:monsoonclient/textures/frames.png");
     }
 

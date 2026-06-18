@@ -21,9 +21,6 @@ import net.minecraft.util.ResourceLocation;
  */
 public class SoundMod extends HudMod {
 
-    // -----------------------------------------------------------------------
-    // Sound categories
-    // -----------------------------------------------------------------------
 
     /** All configurable sound entries, in the order they appear in the UI. */
     public final List<SoundEntry> soundEntries = new ArrayList<>();

@@ -9,8 +9,9 @@ public class ItemCounterMod extends HudMod {
 
     public ItemCounterMod() {
         super("Item Count", 5, 90, Category.HUD);
-
         this.textFormat = "%VALUE%";
+        this.renderBackground = true;
+        this.backgroundOpacity = 0.3f;
     }
 
     private int getHeldItemCount() {

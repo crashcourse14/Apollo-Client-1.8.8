@@ -7,10 +7,13 @@ import net.minecraft.monsoonclient.gui.hud.CategoryManager;
 import net.minecraft.util.ResourceLocation;
 
 
+
 public class TestMod extends HudMod {
 
     public TestMod() {
         super("Client Name", 5, 10, Category.HUD);
+        this.renderBackground = true;
+        this.backgroundOpacity = 0.3f;
  
         this.icon = new ResourceLocation("minecraft:monsoonclient/textures/name.png");
     }
