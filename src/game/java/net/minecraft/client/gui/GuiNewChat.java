@@ -14,6 +14,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
 import net.minecraft.monsoonclient.Client;
+import net.minecraft.monsoonclient.gui.mods.AntiSpamMod;
 import net.minecraft.monsoonclient.gui.mods.FriendAlertMod;
 import net.minecraft.monsoonclient.gui.NotificationManager;
 
@@ -136,10 +137,47 @@ public class GuiNewChat extends Gui {
 		this.sentMessages.clear();
 	}
 
-	public void printChatMessage(IChatComponent parIChatComponent) {
-		this.printChatMessageWithOptionalDeletion(parIChatComponent, 0);
-	}
-
+	    public void printChatMessage(IChatComponent chatComponent) {
+        // --- Monsoon Anti-Spam Hook ---
+        if (net.minecraft.monsoonclient.Client.INSTANCE != null && 
+            net.minecraft.monsoonclient.Client.INSTANCE.hudManager.antiSpamMod.isEnabled()) {
+            
+            String msg = chatComponent.getUnformattedText();
+            
+            if (msg.equals(AntiSpamMod.lastMessage)) {
+                // It's a duplicate!
+                AntiSpamMod.duplicateCount++;
+                
+                this.deleteChatLine(AntiSpamMod.lastUsedChatId);
+                
+                // Append the [Nx] tag in yellow
+                chatComponent.appendText(" " + net.minecraft.util.EnumChatFormatting.YELLOW + "[" + AntiSpamMod.duplicateCount + "x]");
+                
+                // Print it using the SAME ID so we can delete it again next time
+                this.printChatMessageWithOptionalDeletion(chatComponent, AntiSpamMod.lastUsedChatId);
+                return;
+            } else {
+                // It's a new message, reset the tracker
+                AntiSpamMod.lastMessage = msg;
+                AntiSpamMod.duplicateCount = 1;
+                
+                // Increment the ID so it gets a unique ID (prevents deleting older messages)
+                AntiSpamMod.lastUsedChatId++;
+                
+                // Reset the ID if it gets too high to prevent integer overflow
+                if (AntiSpamMod.lastUsedChatId > 99000) {
+                    AntiSpamMod.lastUsedChatId = 1000;
+                }
+                
+                // Print it using the new unique ID
+                this.printChatMessageWithOptionalDeletion(chatComponent, AntiSpamMod.lastUsedChatId);
+                return;
+            }
+        }
+        
+        // Vanilla fallback (if mod is disabled or client is still loading)
+        this.printChatMessageWithOptionalDeletion(chatComponent, 0);
+    }
 	/**+
 	 * prints the ChatComponent to Chat. If the ID is not 0, deletes
 	 * an existing Chat Line of that ID from the GUI

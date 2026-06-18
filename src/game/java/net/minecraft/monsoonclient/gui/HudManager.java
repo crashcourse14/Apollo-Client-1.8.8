@@ -17,7 +17,11 @@ import net.minecraft.monsoonclient.gui.mods.SessionTimeMod;
 import net.minecraft.monsoonclient.gui.mods.FriendAlertMod;
 import net.minecraft.monsoonclient.gui.mods.BlockOverlayMod;
 import net.minecraft.monsoonclient.gui.mods.ItemCounterMod;
+import net.minecraft.monsoonclient.gui.mods.ToggleSprintMod;
 import net.minecraft.monsoonclient.config.ConfigManager; 
+import net.minecraft.monsoonclient.gui.mods.AntiSpamMod;
+import net.minecraft.monsoonclient.gui.mods.SelfNameTagMod;
+
 import net.minecraft.client.Minecraft;
 
 public class HudManager {
@@ -36,9 +40,13 @@ public class HudManager {
     public FriendAlertMod friendAlertMod;
     public BlockOverlayMod blockOverlayMod;
     public ItemCounterMod itemCounterMod;
+    public ToggleSprintMod toggleSprintMod;
+    public AntiSpamMod antiSpamMod;
+    public SelfNameTagMod selfNameTagMod;
 
     public CategoryManager categoryManager;
     public NotificationManager notificationManager;
+
 
     public HudManager() {
         hudMods.add(testMod = new TestMod());
@@ -54,6 +62,9 @@ public class HudManager {
         hudMods.add(friendAlertMod = new FriendAlertMod());
         hudMods.add(blockOverlayMod = new BlockOverlayMod());
         hudMods.add(itemCounterMod = new ItemCounterMod());
+        hudMods.add(toggleSprintMod = new ToggleSprintMod());
+        hudMods.add(selfNameTagMod = new SelfNameTagMod());
+        hudMods.add(antiSpamMod = new AntiSpamMod());
 
         notificationManager = new NotificationManager(Minecraft.getMinecraft());
         categoryManager     = new CategoryManager(this);

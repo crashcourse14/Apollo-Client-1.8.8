@@ -10,10 +10,11 @@ public class FPSMod extends HudMod {
     public FPSMod() {
         super("FPS", 5, 70, Category.HUD);
         
-        this.textFormat = "FPS: %VALUE%";
+        this.textFormat = "%VALUE% FPS";
         this.icon = new ResourceLocation("monsoonclient:textures/frames.png");
         this.renderBackground = true;
         this.backgroundOpacity = 0.3f;
+        this.enabled = true;
 
     }
 

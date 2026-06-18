@@ -288,7 +288,7 @@ public class WorldClient extends World {
 				&& itemstack != null && Block.getBlockFromItem(itemstack.getItem()) == Blocks.barrier;
 		BlockPos blockpos$mutableblockpos = new BlockPos();
 
-		for (int i = 0; i < 1000; ++i) {
+		for (int i = 0; i < 100; ++i) {
 			int j = parInt1 + this.rand.nextInt(b0) - this.rand.nextInt(b0);
 			int k = parInt2 + this.rand.nextInt(b0) - this.rand.nextInt(b0);
 			int l = parInt3 + this.rand.nextInt(b0) - this.rand.nextInt(b0);
