@@ -333,8 +333,7 @@ public class GuiIngame extends Gui {
 			this.overlayPlayerList.renderPlayerlist(i, scoreboard, scoreobjective1);
 		}
 
-		Client.INSTANCE.hudManager.renderMods();
-		Client.INSTANCE.hudManager.notificationManager.render(partialTicks);
+		Client.INSTANCE.hudManager.renderMods(partialTicks);
 
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 

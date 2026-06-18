@@ -44,7 +44,6 @@ public class GuiHudEditor extends GuiScreen {
         this.drawString(this.fontRendererObj, title, titleX, titleY, 0xFFFFFFFF);
         GlStateManager.popMatrix();
 
-        // Draw helper text (Added this in since it was missing in your code!)
         int helperWidth = this.fontRendererObj.getStringWidth(helper);
         int helperX = (this.width - helperWidth) / 2;
         int helperY = (logoY + logoSize + 6) + 24; // Position it below the scaled title
@@ -78,7 +77,8 @@ public class GuiHudEditor extends GuiScreen {
             new GuiClearButton(100, cx, startY, 200, 20, I18n.format("Monsoon Settings", new Object[0])));
     }
 
-    // --- This is the method that handles GUI button clicks ---
+    
+
     @Override
     protected void actionPerformed(GuiButton button) {
         if (button.id == 100) {

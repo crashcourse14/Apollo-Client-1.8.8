@@ -8,6 +8,7 @@ import net.lax1dude.eaglercraft.v1_8.log4j.Logger;
 import net.lax1dude.eaglercraft.v1_8.log4j.LogManager;
 import java.nio.charset.StandardCharsets;
 import org.json.JSONObject;
+import net.minecraft.monsoonclient.gui.NotificationManager;
 
 public class ConfigManager {
     private static final Logger logger = LogManager.getLogger();
@@ -15,6 +16,7 @@ public class ConfigManager {
 
     public void save() {
         logger.info("Saving client mod configurations...");
+        NotificationManager.push("Local Storage", "Saving current configurations");
 
         try {
             JSONObject configJson = new JSONObject();
@@ -50,11 +52,11 @@ public class ConfigManager {
                             break;
                     }
                 }
-
-                // Let the mod save any custom data (like SoundMod's sound entries)
                 mod.saveCustomOptions(modJson);
 
                 modsJson.put(mod.name, modJson);
+                NotificationManager.push("Local Storage", "Configurations saved successfully");
+
             }
 
             configJson.put("mods", modsJson);
@@ -66,6 +68,7 @@ public class ConfigManager {
 
         } catch (Exception e) {
             logger.error("Failed to save unified client configuration!", e);
+            NotificationManager.push("Local Storage Failed", "Failed to save local storage! Error" + e);
         }
     }
 

@@ -17,7 +17,7 @@ import net.minecraft.monsoonclient.gui.mods.SessionTimeMod;
 import net.minecraft.monsoonclient.gui.mods.FriendAlertMod;
 import net.minecraft.monsoonclient.gui.mods.BlockOverlayMod;
 import net.minecraft.monsoonclient.gui.mods.ItemCounterMod;
-import net.minecraft.monsoonclient.gui.NotificationManager;
+import net.minecraft.monsoonclient.config.ConfigManager; 
 import net.minecraft.client.Minecraft;
 
 public class HudManager {
@@ -59,11 +59,17 @@ public class HudManager {
         categoryManager     = new CategoryManager(this);
     }
 
-    public void renderMods() {
+    // Pass partialTicks so the notification manager can calculate smooth slide animations
+    public void renderMods(float partialTicks) {
         for (HudMod m : hudMods) {
             if (m.isEnabled()) {
                 m.draw();
             }
+        }
+        
+        // Render the notification on top of everything else
+        if (notificationManager != null) {
+            notificationManager.render(partialTicks);
         }
     }
 }

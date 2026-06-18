@@ -225,6 +225,8 @@ import net.minecraft.world.storage.MapData;
 import net.minecraft.monsoonclient.gui.mods.SessionTimeMod;
 import net.minecraft.monsoonclient.gui.SessionManager;
 import net.minecraft.monsoonclient.config.ConfigManager;
+import net.minecraft.monsoonclient.gui.NotificationManager;
+
 
 /**+
  * This portion of EaglercraftX contains deobfuscated Minecraft 1.8 source code.
@@ -352,6 +354,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 	 */
 	public void handleJoinGame(S01PacketJoinGame packetIn) {
 		SessionManager.startSessionTime();
+		NotificationManager.push("Notice", " Client ranked aren't handled by the server!");
 		mc.ingameGUI.getChatGUI().printChatMessage(
 			new ChatComponentText("§3[§bMSC§3] §rNotice: all client ranks aren't handled by the server!")
 		);

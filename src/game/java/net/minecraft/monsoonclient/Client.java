@@ -62,9 +62,5 @@ public class Client {
                 oldGamma = -1;
             }
         }
-
-        if (hudManager.notificationManager != null) {
-            hudManager.notificationManager.tick();
-        }
     }
 }

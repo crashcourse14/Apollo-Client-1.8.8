@@ -9,32 +9,29 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 
 /**
- * Renders slide-in notifications in the top-right corner of the screen.
- * Call NotificationManager.push(title, body) from anywhere to send one.
- *
- * Layout (all values in GUI pixels):
- *   WIDTH       = 160
- *   PADDING     = 6
- *   BORDER_W    = 3   (right edge, accent color)
- *   SLIDE_TICKS = 8   (ticks to fully slide in / out)
- *   HOLD_TICKS  = 60  (ticks the notification stays fully visible)
+ * Renders slide-in notifications in the bottom-right corner of the screen.
+ * Uses system time for perfect animations without needing a tick event!
  */
 public class NotificationManager extends Gui {
 
-    private static final int WIDTH       = 160;
-    private static final int PADDING     = 6;
+    // Increased WIDTH and PADDING for a larger notification
+    private static final int WIDTH       = 220;
+    private static final int PADDING     = 10;
     private static final int BORDER_W    = 3;
-    private static final int SLIDE_TICKS = 8;
-    private static final int HOLD_TICKS  = 60;
+    
+    // Using real time instead of ticks makes the animation buttery smooth
+    private static final long SLIDE_MS = 400L; // 0.4 seconds to slide in/out
+    private static final long HOLD_MS  = 3000L; // 3.0 seconds to hold
 
-    private static final int COLOR_BG     = 0x66111214;
-    private static final int COLOR_BORDER = 0x33EE4639;
+    // Updated Colors as requested
+    private static final int COLOR_BG     = 0xCC0D0E10;
+    private static final int COLOR_BORDER = 0xFFDD3538;
     private static final int COLOR_TITLE  = 0xFFFFFFFF;
     private static final int COLOR_BODY   = 0xFFAAAAAA;
 
     private static final Queue<Notification> queue = new ArrayDeque<>();
     private static Notification current = null;
-    private static int ticksAlive = 0;   // ticks since current notification appeared
+    private static long startTime = 0L;
 
     private final Minecraft mc;
 
@@ -42,73 +39,76 @@ public class NotificationManager extends Gui {
         this.mc = mc;
     }
 
-
-    /** Queue a notification. Safe to call from any thread/tick. */
+    /** Queue a notification. Safe to call from anywhere. */
     public static void push(String title, String body) {
         queue.add(new Notification(title, body));
     }
 
-
-    public void tick() {
-        if (current == null) {
-            current = queue.poll();
-            ticksAlive = 0;
-        } else {
-            ticksAlive++;
-            int total = SLIDE_TICKS + HOLD_TICKS + SLIDE_TICKS;
-            if (ticksAlive >= total) {
-                current = null;
-            }
-        }
-    }
-
-
     public void render(float partialTicks) {
+        long now = System.currentTimeMillis();
+
+        // If there is no active notification, grab one from the queue
+        if (current == null && !queue.isEmpty()) {
+            current = queue.poll();
+            startTime = now;
+        }
+
         if (current == null) return;
 
-        ScaledResolution sr = mc.scaledResolution;
+        long elapsed = now - startTime;
+        long totalLife = SLIDE_MS + HOLD_MS + SLIDE_MS;
+
+        // If the notification has finished its cycle, clear it and wait for next frame
+        if (elapsed >= totalLife) {
+            current = null;
+            return;
+        }
+
+        ScaledResolution sr = new ScaledResolution(mc);
         int screenW = sr.getScaledWidth();
         int screenH = sr.getScaledHeight();
 
-        // Measure text to determine height
+        // Measure text to determine height (increased gap between title and body from 3 to 5)
         int bodyLines = mc.fontRendererObj.listFormattedStringToWidth(current.body, WIDTH - PADDING * 2 - BORDER_W).size();
         int height = PADDING + mc.fontRendererObj.FONT_HEIGHT          
-                   + 3                                                  
+                   + 5                                                  
                    + bodyLines * mc.fontRendererObj.FONT_HEIGHT          
                    + PADDING;
 
-        // Slide offset: 0 = fully visible, WIDTH = fully off-screen right
-        float animTick = ticksAlive + partialTicks;
+        // Calculate slide offset based on real time
         float slideOffset;
-        if (animTick < SLIDE_TICKS) {
-            float t = animTick / SLIDE_TICKS;
+        if (elapsed < SLIDE_MS) {
+            float t = (float) elapsed / SLIDE_MS;
             slideOffset = (1f - easeOut(t)) * (WIDTH + 4);
-        } else if (animTick < SLIDE_TICKS + HOLD_TICKS) {
+        } else if (elapsed < SLIDE_MS + HOLD_MS) {
             slideOffset = 0f;
         } else {
-            float t = (animTick - SLIDE_TICKS - HOLD_TICKS) / SLIDE_TICKS;
+            float t = (float) (elapsed - SLIDE_MS - HOLD_MS) / SLIDE_MS;
             slideOffset = easeIn(t) * (WIDTH + 4);
         }
 
         int margin = 4;
         int x = (int) (screenW - WIDTH - margin + slideOffset);
-        int y = margin;
+        int y = screenH - height - margin;
 
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 
+        // 1. Draw background (shifted right by BORDER_W to make room for left border)
+        drawRect(x + BORDER_W, y, x + WIDTH, y + height, COLOR_BG);
+        
+        // 2. Draw border on the LEFT side
+        drawRect(x, y, x + BORDER_W, y + height, COLOR_BORDER);
 
-        drawRect(x, y, x + WIDTH - BORDER_W, y + height, COLOR_BG);
-        drawRect(x + WIDTH - BORDER_W, y, x + WIDTH, y + height, COLOR_BORDER);
-
+        // 3. Draw title (shifted right by BORDER_W so it doesn't overlap the border)
         mc.fontRendererObj.drawStringWithShadow(current.title,
-                x + PADDING, y + PADDING, COLOR_TITLE);
+                x + BORDER_W + PADDING, y + PADDING, COLOR_TITLE);
 
-        // Body (word-wrapped)
-        int bodyY = y + PADDING + mc.fontRendererObj.FONT_HEIGHT + 3;
+        // 4. Draw body (shifted right by BORDER_W)
+        int bodyY = y + PADDING + mc.fontRendererObj.FONT_HEIGHT + 5;
         for (String line : mc.fontRendererObj.listFormattedStringToWidth(
                 current.body, WIDTH - PADDING * 2 - BORDER_W)) {
-            mc.fontRendererObj.drawStringWithShadow(line, x + PADDING, bodyY, COLOR_BODY);
+            mc.fontRendererObj.drawStringWithShadow(line, x + BORDER_W + PADDING, bodyY, COLOR_BODY);
             bodyY += mc.fontRendererObj.FONT_HEIGHT;
         }
 
@@ -122,7 +122,6 @@ public class NotificationManager extends Gui {
     private static float easeIn(float t) {
         return t * t;
     }
-
 
     private static class Notification {
         final String title;
