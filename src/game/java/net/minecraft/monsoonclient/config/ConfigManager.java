@@ -16,7 +16,6 @@ public class ConfigManager {
 
     public void save() {
         logger.info("Saving client mod configurations...");
-        NotificationManager.push("Local Storage", "Saving current configurations");
 
         try {
             JSONObject configJson = new JSONObject();
@@ -55,7 +54,6 @@ public class ConfigManager {
                 mod.saveCustomOptions(modJson);
 
                 modsJson.put(mod.name, modJson);
-                NotificationManager.push("Local Storage", "Configurations saved successfully");
 
             }
 

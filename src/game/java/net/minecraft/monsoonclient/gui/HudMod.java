@@ -8,9 +8,7 @@ import net.minecraft.monsoonclient.gui.ModOption;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.monsoonclient.Client;
 import org.json.JSONObject;
-
-import org.json.JSONObject;
-
+import net.minecraft.monsoonclient.gui.NotificationManager;
 import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 
 public abstract class HudMod {
@@ -23,18 +21,14 @@ public abstract class HudMod {
     public boolean enabled;
     public Category category;
 
-    // --- Display customization ---
     public String textFormat = "%VALUE%";
     public int textColor = 0xFFFFFFFF;
     public boolean textShadow = true;
     public float textScale = 1.0f;
-
-    // --- Background customization ---
     public boolean renderBackground = false; // Default to false so text mods don't get ugly boxes unless wanted
     public int backgroundColor = 0x000000;   // RGB
     public float backgroundOpacity = 0.5f;   // 0.0 to 1.0
 
-    // --- Mod list presentation ---
     public ResourceLocation icon = null;
 
     public ModOption[] supportedOptions = {
@@ -90,7 +84,10 @@ public abstract class HudMod {
         }
     }
 
-    public void toggle() { this.enabled = !this.enabled; }
+    public void toggle() { 
+        this.enabled = !this.enabled; 
+        NotificationManager.push("Monsoon Client", this.name + " was " + (this.enabled ? "enabled" : "disabled"));
+    }
     public boolean isEnabled() { return enabled; }
 
     protected String formatText(String value) {

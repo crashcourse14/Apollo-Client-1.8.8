@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.management.Notification;
+
 import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiCheckboxButton;
@@ -19,6 +21,8 @@ import net.minecraft.monsoonclient.gui.MonsoonBranding;
 import net.minecraft.monsoonclient.gui.SoundEntry;
 import net.minecraft.monsoonclient.gui.mods.SoundMod;
 import net.minecraft.monsoonclient.gui.ModOption;
+import net.minecraft.monsoonclient.gui.NotificationManager;
+
 
 public class GuiModList extends GuiScreen {
 
@@ -650,7 +654,11 @@ public class GuiModList extends GuiScreen {
     }
 
     private void saveConfig() {
-        if (Client.INSTANCE.configManager != null) Client.INSTANCE.configManager.save();
+        if (Client.INSTANCE.configManager != null) {
+            Client.INSTANCE.configManager.save();
+        } else {
+            NotificationManager.push("Local Storage", "saveConfig() failed. Is the storage key set?");
+        }
     }
 
     private boolean isIn(int mx, int my, int x, int y, int w, int h) {
