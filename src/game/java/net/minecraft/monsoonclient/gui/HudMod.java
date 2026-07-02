@@ -23,6 +23,8 @@ public abstract class HudMod {
 
     public String textFormat = "%VALUE%";
     public int textColor = 0xFFFFFFFF;
+    public int clickColor = 0xFFFF0000;
+    public float hoverOpacity = 0.95f;
     public boolean textShadow = true;
     public float textScale = 1.0f;
     public boolean renderBackground = false; // Default to false so text mods don't get ugly boxes unless wanted
@@ -139,12 +141,14 @@ public abstract class HudMod {
     public int getOptionColor(ModOption opt) {
         if (opt == ModOption.TEXT_COLOR) return textColor;
         if (opt == ModOption.BACKGROUND_COLOR) return backgroundColor;
+        if (opt == ModOption.CLICK_COLOR) return clickColor;
         return 0xFFFFFFFF;
     }
 
     public float getOptionNumber(ModOption opt) {
         if (opt == ModOption.TEXT_SCALE) return textScale;
         if (opt == ModOption.BACKGROUND_OPACITY) return backgroundOpacity;
+        if (opt == ModOption.HOVER_OPACITY) return hoverOpacity;
         return 0;
     }
 
@@ -161,11 +165,13 @@ public abstract class HudMod {
     public void setOptionColor(ModOption opt, int val) {
         if (opt == ModOption.TEXT_COLOR) textColor = val;
         else if (opt == ModOption.BACKGROUND_COLOR) backgroundColor = val;
+        else if (opt == ModOption.CLICK_COLOR) clickColor = val;
     }
 
     public void setOptionNumber(ModOption opt, float val) {
         if (opt == ModOption.TEXT_SCALE) textScale = val;
         else if (opt == ModOption.BACKGROUND_OPACITY) backgroundOpacity = val;
+        else if (opt == ModOption.HOVER_OPACITY) hoverOpacity = val;
     }
 
     public void setOptionBoolean(ModOption opt, boolean val) {

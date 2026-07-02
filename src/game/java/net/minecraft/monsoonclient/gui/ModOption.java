@@ -11,6 +11,8 @@ public enum ModOption {
     WATCH_NAMES(OptionType.STRING),
     OUTLINE_COLOR(OptionType.COLOR),
     HOVER_COLOR(OptionType.COLOR),
+    HOVER_OPACITY(OptionType.NUMBER),
+    CLICK_COLOR(OptionType.COLOR),
     SOUND_SLIDERS(OptionType.CUSTOM);
 
     public enum OptionType { STRING, COLOR, NUMBER, BOOLEAN, CUSTOM }

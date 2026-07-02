@@ -386,6 +386,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 						this.field_92021_u + 12, -1);
 		}
 
+
 		// ── Footer version strings ─────────────────────────────────────────────
 		String s = EaglercraftVersion.mainMenuStringB;
 		this.drawString(this.fontRendererObj, s, 2, this.height - 10, 0xFFAAAAAA);

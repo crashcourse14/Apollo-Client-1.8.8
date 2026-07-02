@@ -21,6 +21,7 @@ import net.minecraft.monsoonclient.gui.mods.ToggleSprintMod;
 import net.minecraft.monsoonclient.config.ConfigManager; 
 import net.minecraft.monsoonclient.gui.mods.AntiSpamMod;
 import net.minecraft.monsoonclient.gui.mods.SelfNameTagMod;
+import net.minecraft.monsoonclient.gui.mods.ModernKeystrokesMod;
 
 import net.minecraft.client.Minecraft;
 
@@ -43,6 +44,7 @@ public class HudManager {
     public ToggleSprintMod toggleSprintMod;
     public AntiSpamMod antiSpamMod;
     public SelfNameTagMod selfNameTagMod;
+    public ModernKeystrokesMod modernKeystrokesMod;
 
     public CategoryManager categoryManager;
     public NotificationManager notificationManager;
@@ -65,6 +67,7 @@ public class HudManager {
         hudMods.add(toggleSprintMod = new ToggleSprintMod());
         hudMods.add(selfNameTagMod = new SelfNameTagMod());
         hudMods.add(antiSpamMod = new AntiSpamMod());
+        hudMods.add(modernKeystrokesMod = new ModernKeystrokesMod());
 
         notificationManager = new NotificationManager(Minecraft.getMinecraft());
         categoryManager     = new CategoryManager(this);
