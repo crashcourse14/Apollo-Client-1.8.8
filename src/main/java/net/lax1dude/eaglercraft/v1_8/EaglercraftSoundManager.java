@@ -37,8 +37,8 @@ import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.audio.SoundPoolEntry;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.monsoonclient.Client;
-import net.minecraft.monsoonclient.gui.mods.SoundMod;
+import net.minecraft.apolloclient.Client;
+import net.minecraft.apolloclient.gui.mods.SoundMod;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 

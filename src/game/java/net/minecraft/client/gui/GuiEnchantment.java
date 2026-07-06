@@ -25,7 +25,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IWorldNameable;
 import net.minecraft.world.World;
-import net.minecraft.monsoonclient.gui.MonsoonBranding;
+import net.minecraft.apolloclient.gui.ApolloBranding;
 
 
 /**+
@@ -94,7 +94,7 @@ public class GuiEnchantment extends GuiContainer {
 	 * front of the items). Args : mouseX, mouseY
 	 */
 	protected void drawGuiContainerForegroundLayer(int var1, int var2) {
-		MonsoonBranding.render(this.width, this.height);
+		ApolloBranding.render(this.width, this.height);
 		this.fontRendererObj.drawString(this.field_175380_I.getDisplayName().getUnformattedText(), 12, 5, 4210752);
 		this.fontRendererObj.drawString(this.playerInventory.getDisplayName().getUnformattedText(), 8,
 				this.ySize - 96 + 2, 4210752);

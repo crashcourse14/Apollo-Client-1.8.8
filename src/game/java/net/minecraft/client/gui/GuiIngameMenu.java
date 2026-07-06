@@ -28,8 +28,8 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 
 import net.minecraft.client.gui.GuiClearButton;
-import net.minecraft.monsoonclient.gui.hud.GuiModList;
-import net.minecraft.monsoonclient.gui.MonsoonBranding;
+import net.minecraft.apolloclient.gui.hud.GuiModList;
+import net.minecraft.apolloclient.gui.ApolloBranding;
 
 /**+
  * This portion of EaglercraftX contains deobfuscated Minecraft 1.8 source code.
@@ -81,7 +81,7 @@ public class GuiIngameMenu extends GuiScreen {
 		this.buttonList.add(new GuiClearButton(1, this.width / 2 - 100, this.height / 4 + 120 + b0,
 				I18n.format("menu.returnToMenu", new Object[0])));
 		this.buttonList.add(new GuiClearButton(100, this.width / 2 - 100, this.height / 4 + 150 + b0,
-				I18n.format("Monsoon Settings", new Object[0])));
+				I18n.format("Apollo Settings", new Object[0])));
 
 		this.buttonList.add(new GuiClearButton(4, this.width / 2 - 100, this.height / 4 + 24 + b0,
 				I18n.format("menu.returnToGame", new Object[0])));
@@ -232,7 +232,7 @@ public class GuiIngameMenu extends GuiScreen {
 	 * mouseY, renderPartialTicks
 	 */
 	public void drawScreen(int i, int j, float f) {
-		MonsoonBranding.render(this.width, this.height);
+		ApolloBranding.render(this.width, this.height);
 		this.drawDefaultBackground();
 		String titleStr = I18n.format("menu.game", new Object[0]);
 		int titleStrWidth = fontRendererObj.getStringWidth(titleStr);

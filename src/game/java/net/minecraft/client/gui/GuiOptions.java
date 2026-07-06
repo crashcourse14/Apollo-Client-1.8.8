@@ -27,7 +27,7 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.EnumDifficulty;
-import net.minecraft.monsoonclient.gui.MonsoonBranding;
+import net.minecraft.apolloclient.gui.ApolloBranding;
 
 
 /**+
@@ -262,7 +262,7 @@ public class GuiOptions extends GuiScreen implements GuiYesNoCallback {
 	 * mouseY, renderPartialTicks
 	 */
 	public void drawScreen(int i, int j, float f) {
-		MonsoonBranding.render(this.width, this.height);
+		ApolloBranding.render(this.width, this.height);
 		
 		this.drawDefaultBackground();
 		this.drawCenteredString(this.fontRendererObj, this.field_146442_a, this.width / 2, 15, 16777215);

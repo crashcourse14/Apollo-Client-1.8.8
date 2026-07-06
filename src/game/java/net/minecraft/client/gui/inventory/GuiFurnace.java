@@ -6,8 +6,7 @@ import net.minecraft.inventory.ContainerFurnace;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.monsoonclient.gui.MonsoonBranding;
-import net.minecraft.monsoonclient.gui.MonsoonBranding;
+import net.minecraft.apolloclient.gui.ApolloBranding;
 
 
 
@@ -48,7 +47,7 @@ public class GuiFurnace extends GuiContainer {
 	 * front of the items). Args : mouseX, mouseY
 	 */
 	protected void drawGuiContainerForegroundLayer(int var1, int var2) {
-		MonsoonBranding.render(this.width, this.height);
+		ApolloBranding.render(this.width, this.height);
 		String s = this.tileFurnace.getDisplayName().getUnformattedText();
 		this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 6, 4210752);
 		this.fontRendererObj.drawString(this.playerInventory.getDisplayName().getUnformattedText(), 8,

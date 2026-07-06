@@ -9,7 +9,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.monsoonclient.gui.MonsoonBranding;
+import net.minecraft.apolloclient.gui.ApolloBranding;
 
 
 /**+
@@ -90,7 +90,7 @@ public class GuiScreenOptionsSounds extends GuiScreen {
 	 * mouseY, renderPartialTicks
 	 */
 	public void drawScreen(int i, int j, float f) {
-		MonsoonBranding.render(this.width, this.height);
+		ApolloBranding.render(this.width, this.height);
 		this.drawDefaultBackground();
 		this.drawCenteredString(this.fontRendererObj, this.field_146507_a, this.width / 2, 15, 16777215);
 		super.drawScreen(i, j, f);

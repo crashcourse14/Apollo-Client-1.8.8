@@ -20,7 +20,7 @@ import net.minecraft.client.gui.GuiDisconnected;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.monsoonclient.gui.MonsoonBranding;
+import net.minecraft.apolloclient.gui.ApolloBranding;
 
 
 /**+
@@ -228,7 +228,7 @@ public class GuiConnecting extends GuiScreen {
 	 * mouseY, renderPartialTicks
 	 */
 	public void drawScreen(int i, int j, float f) {
-		MonsoonBranding.render(this.width, this.height);
+		ApolloBranding.render(this.width, this.height);
 		this.drawDefaultBackground();
 		if (this.handshaker == null) {
 			this.drawCenteredString(this.fontRendererObj, I18n.format("connect.connecting", new Object[0]),

@@ -60,7 +60,7 @@ public class EagRuntime {
 	}
 
 	public static String getClientName() {
-		return "Monsoon Client v1";
+		return "ApolloClient v1";
 	}
 	
 	public static void create() {

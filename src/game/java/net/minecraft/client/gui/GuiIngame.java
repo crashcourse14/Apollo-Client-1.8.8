@@ -57,13 +57,13 @@ import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
 import net.minecraft.world.border.WorldBorder;
-import net.minecraft.monsoonclient.gui.NotificationManager;
+import net.minecraft.apolloclient.gui.NotificationManager;
 import net.lax1dude.eaglercraft.v1_8.Keyboard;
 
 
 
-import net.minecraft.monsoonclient.Client;
-import net.minecraft.monsoonclient.gui.hud.GuiHudEditor;
+import net.minecraft.apolloclient.Client;
+import net.minecraft.apolloclient.gui.hud.GuiHudEditor;
 
 /**+
  * This portion of EaglercraftX contains deobfuscated Minecraft 1.8 source code.

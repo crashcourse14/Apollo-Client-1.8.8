@@ -25,7 +25,7 @@ import net.minecraft.client.multiplayer.ServerList;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.monsoonclient.gui.MonsoonBranding;
+import net.minecraft.apolloclient.gui.ApolloBranding;
 
 /**+
  * This portion of EaglercraftX contains deobfuscated Minecraft 1.8 source code.
@@ -339,7 +339,7 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback {
 	 * mouseY, renderPartialTicks
 	 */
 	public void drawScreen(int i, int j, float f) {
-		MonsoonBranding.render(this.width, this.height);
+		ApolloBranding.render(this.width, this.height);
 		this.hoveringText = null;
 		this.drawDefaultBackground();
 		this.serverListSelector.drawScreen(i, j, f);

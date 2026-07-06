@@ -13,10 +13,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
-import net.minecraft.monsoonclient.Client;
-import net.minecraft.monsoonclient.gui.mods.AntiSpamMod;
-import net.minecraft.monsoonclient.gui.mods.FriendAlertMod;
-import net.minecraft.monsoonclient.gui.NotificationManager;
+import net.minecraft.apolloclient.Client;
+import net.minecraft.apolloclient.gui.mods.AntiSpamMod;
+import net.minecraft.apolloclient.gui.mods.FriendAlertMod;
+import net.minecraft.apolloclient.gui.NotificationManager;
 
 
 /**+
@@ -138,9 +138,9 @@ public class GuiNewChat extends Gui {
 	}
 
 	    public void printChatMessage(IChatComponent chatComponent) {
-        // --- Monsoon Anti-Spam Hook ---
-        if (net.minecraft.monsoonclient.Client.INSTANCE != null && 
-            net.minecraft.monsoonclient.Client.INSTANCE.hudManager.antiSpamMod.isEnabled()) {
+        // --- Apollo Anti-Spam Hook ---
+        if (net.minecraft.apolloclient.Client.INSTANCE != null && 
+            net.minecraft.apolloclient.Client.INSTANCE.hudManager.antiSpamMod.isEnabled()) {
             
             String msg = chatComponent.getUnformattedText();
             

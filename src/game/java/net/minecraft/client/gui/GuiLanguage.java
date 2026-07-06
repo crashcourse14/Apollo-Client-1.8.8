@@ -11,7 +11,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.Language;
 import net.minecraft.client.resources.LanguageManager;
 import net.minecraft.client.settings.GameSettings;
-import net.minecraft.monsoonclient.gui.MonsoonBranding;
+import net.minecraft.apolloclient.gui.ApolloBranding;
 
 
 /**+
@@ -111,7 +111,7 @@ public class GuiLanguage extends GuiScreen {
 	 * mouseY, renderPartialTicks
 	 */
 	public void drawScreen(int i, int j, float f) {
-		MonsoonBranding.render(this.width, this.height);
+		ApolloBranding.render(this.width, this.height);
 		this.list.drawScreen(i, j, f);
 		this.drawCenteredString(this.fontRendererObj, I18n.format("options.language", new Object[0]), this.width / 2,
 				16, 16777215);

@@ -9,9 +9,9 @@ public class EaglercraftVersion {
 	
 	/// Customize these to fit your fork:
 	
-	public static final String projectForkName = "Monsoon Client";
+	public static final String projectForkName = "Apollo Client";
 	public static final String projectForkVersion = "u53";
-	public static final String projectForkVendor = "983kk";
+	public static final String projectForkVendor = "Archy_007";
 	
 	//////////////////////////////////////////////////////////////////////
 	
@@ -50,10 +50,10 @@ public class EaglercraftVersion {
 
 	private static String loadVersion() {
 		String str = EagRuntime.getResourceString(
-				"/assets/minecraft/monsoon/version/version.txt");
+				"/assets/minecraft/apolloclient/version/version.txt");
 
 		if (str == null || str.trim().isEmpty()) {
-			return "Monsoon Client v1";
+			return "Apollo Client v1";
 		}
 
 		return str.trim();

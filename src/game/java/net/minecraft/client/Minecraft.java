@@ -201,10 +201,10 @@ import net.minecraft.world.WorldSettings;
 import net.minecraft.world.storage.ISaveFormat;
 import net.optifine.Config;
 
-import net.minecraft.monsoonclient.Client;
-import net.minecraft.monsoonclient.event.EventManager;
-import net.minecraft.monsoonclient.event.events.ClientTick;
-import net.minecraft.monsoonclient.config.ConfigManager;
+import net.minecraft.apolloclient.Client;
+import net.minecraft.apolloclient.event.EventManager;
+import net.minecraft.apolloclient.event.events.ClientTick;
+import net.minecraft.apolloclient.config.ConfigManager;
 
 
 /**+

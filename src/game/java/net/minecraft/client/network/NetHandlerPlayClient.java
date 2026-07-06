@@ -222,9 +222,9 @@ import net.minecraft.world.WorldProviderSurface;
 import net.minecraft.world.WorldSettings;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
-import net.minecraft.monsoonclient.gui.SessionManager;
-import net.minecraft.monsoonclient.config.ConfigManager;
-import net.minecraft.monsoonclient.gui.NotificationManager;
+import net.minecraft.apolloclient.gui.SessionManager;
+import net.minecraft.apolloclient.config.ConfigManager;
+import net.minecraft.apolloclient.gui.NotificationManager;
 
 
 /**+

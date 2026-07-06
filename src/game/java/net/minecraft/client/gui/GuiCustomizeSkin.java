@@ -2,7 +2,7 @@ package net.minecraft.client.gui;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EnumPlayerModelParts;
-import net.minecraft.monsoonclient.gui.MonsoonBranding;
+import net.minecraft.apolloclient.gui.ApolloBranding;
 
 /**+
  * This portion of EaglercraftX contains deobfuscated Minecraft 1.8 source code.
@@ -91,7 +91,7 @@ public class GuiCustomizeSkin extends GuiScreen {
 	 * mouseY, renderPartialTicks
 	 */
 	public void drawScreen(int i, int j, float f) {
-		MonsoonBranding.render(this.width, this.height);
+		ApolloBranding.render(this.width, this.height);
 		this.drawDefaultBackground();
 		this.drawCenteredString(this.fontRendererObj, this.title, this.width / 2, 20, 16777215);
 		super.drawScreen(i, j, f);

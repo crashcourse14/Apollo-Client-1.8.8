@@ -1,0 +1,38 @@
+package net.minecraft.apolloclient.gui.mods;
+
+import net.minecraft.apolloclient.gui.HudMod;
+import net.minecraft.apolloclient.gui.hud.Category;
+import net.minecraft.apolloclient.gui.SessionManager;
+
+public class SessionTimeMod extends HudMod {
+
+    public SessionTimeMod() {
+        super("Session Timer", 5, 170, Category.HUD);
+        this.textFormat = "Session: %VALUE%";
+        this.renderBackground = true;
+        this.backgroundOpacity = 0.3f;
+    }
+
+    @Override
+    public void draw() {
+        drawModText(
+            formatText(SessionManager.getSessionTime()),
+            getX(),
+            getY()
+        );
+
+        super.draw();
+    }
+
+    @Override
+    public int getWidth() {
+        return getTextWidth(
+            formatText(SessionManager.getSessionTime())
+        );
+    }
+
+    @Override
+    public int getHeight() {
+        return getTextHeight();
+    }
+}

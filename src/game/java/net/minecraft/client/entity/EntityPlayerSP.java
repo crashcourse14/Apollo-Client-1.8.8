@@ -55,10 +55,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
 
-import net.minecraft.monsoonclient.Client;
-import net.minecraft.monsoonclient.event.events.EventUpdate;
-import net.minecraft.monsoonclient.event.Event;
-import net.minecraft.monsoonclient.event.EventManager;
+import net.minecraft.apolloclient.Client;
+import net.minecraft.apolloclient.event.events.EventUpdate;
+import net.minecraft.apolloclient.event.Event;
+import net.minecraft.apolloclient.event.EventManager;
 /**+
  * This portion of EaglercraftX contains deobfuscated Minecraft 1.8 source code.
  * 
