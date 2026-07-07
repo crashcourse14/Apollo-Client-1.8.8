@@ -79,11 +79,11 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 	private String openGLWarning1;
 	private String openGLWarning2;
 	private static final ResourceLocation splashTexts = new ResourceLocation("texts/splashes.txt");
-	private static final ResourceLocation apolloLogo = new ResourceLocation("apollo/title/logo.png");
+	private static final ResourceLocation apolloLogo = new ResourceLocation("apolloclient/title/logo.png");
 	private static final ResourceLocation minecraftTitleTextures = new ResourceLocation(
 			"textures/gui/title/minecraft.png");
 	private static final ResourceLocation eaglerGuiTextures = new ResourceLocation("eagler:gui/eagler_gui.png");
-	private static final ResourceLocation backgroundImage = new ResourceLocation("apollo/textures/background.png");
+	private static final ResourceLocation backgroundImage = new ResourceLocation("apolloclient/textures/background.png");
 	private int field_92024_r;
 	private int field_92023_s;
 	private int field_92022_t;

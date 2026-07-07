@@ -47,6 +47,8 @@ import net.minecraft.block.BlockSkull;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.apolloclient.Client;
+import net.minecraft.apolloclient.gui.mods.WavePointMod;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -1716,6 +1718,15 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
 	 * Draws the selection box for the player. Args: entityPlayer,
 	 * rayTraceHit, i, itemStack, partialTickTime
 	 */
+	public void renderWavePointMod(float partialTicks) {
+		if (Client.INSTANCE != null && Client.INSTANCE.hudManager != null) {
+			WavePointMod wavePointMod = Client.INSTANCE.hudManager.wavePointMod;
+			if (wavePointMod != null && wavePointMod.isEnabled()) {
+				wavePointMod.render3D(partialTicks);
+			}
+		}
+	}
+
 	public void drawSelectionBox(EntityPlayer player, MovingObjectPosition movingObjectPositionIn, int partialTicks,
 			float parFloat1) {
 		if (partialTicks == 0 && movingObjectPositionIn != null
@@ -1744,6 +1755,10 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
 			GlStateManager.disableBlend();
 		}
 
+	}
+
+	public static void drawSelectionBoundingBox(AxisAlignedBB parAxisAlignedBB) {
+		func_181561_a(parAxisAlignedBB);
 	}
 
 	public static void func_181561_a(AxisAlignedBB parAxisAlignedBB) {

@@ -1292,6 +1292,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
 			}
 		}
 
+		renderglobal.renderWavePointMod(partialTicks);
 		GlStateManager.enableBlend();
 		GlStateManager.tryBlendFuncSeparate(GL_SRC_ALPHA, 1, 1, 0);
 		this.mc.getTextureManager().getTexture(TextureMap.locationBlocksTexture).setBlurMipmap(false, false);

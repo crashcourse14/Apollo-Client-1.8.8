@@ -56,20 +56,20 @@ public class GuiModList extends GuiScreen {
     private static final int ID_TOGGLE_BASE  = 1000;
     private static final int ID_CHECKBOX_BASE= 500; 
 
-    private static final int C_PANEL = 0xE61A1C20;          
+    private static final int C_PANEL = 0xCC17191D;          
     private static final int C_HEADER = 0xF014161A;         
-    private static final int C_CARD = 0xCC20242A;           // Cards (80% alpha)
-    private static final int C_CARD_HOVER = 0xDD282D35;     // Hover state
-    private static final int C_ACCENT = 0xFF6B8AF7;         // Soft blue accent
-    private static final int C_ACCENT_DIM = 0x556B8AF7;     // Transparent accent
-    private static final int C_SELECTED_CAT = 0x556B8AF7;   // Selected category
-    private static final int C_CAT = 0x8822262C;            // Normal category
-    private static final int C_TEXTBOX = 0xCC1E2228;        // Textbox background
-    private static final int C_BORDER = 0xFF343A43;         // Borders
-    private static final int C_TEXT = 0xFFF2F4F8;           // Primary text
-    private static final int C_TEXT_DIM = 0xFF9BA3AE;       // Secondary text
-    private static final int C_ENABLED = 0xFF52C97A;        // Enabled green
-    private static final int C_DISABLED = 0xFF555B66;       // Neutral disabled gray
+    private static final int C_CARD = 0xAA23272E;           
+    private static final int C_CARD_HOVER = 0xDD282D35;     
+    private static final int C_ACCENT = 0xFF7E8794;      
+    private static final int C_ACCENT_DIM = 0x557E8794;     
+    private static final int C_SELECTED_CAT = 0x447E8794;   
+    private static final int C_CAT = 0x8822262C;          
+    private static final int C_TEXTBOX = 0xAA1E2228; //0xCC1E2228;        
+    private static final int C_BORDER = 0xFF343A43;     
+    private static final int C_TEXT = 0xFFF2F4F8;           
+    private static final int C_TEXT_DIM = 0xFF9BA3AE;      
+    private static final int C_ENABLED = 0xFF52C97A;        
+    private static final int C_DISABLED = 0xFF555B66;       
 
     private enum ViewMode { LIST, OPTIONS }
     private ViewMode viewMode = ViewMode.LIST;
@@ -256,7 +256,6 @@ public class GuiModList extends GuiScreen {
         return false;
     }
 
-    // ── Drawing ──────────────────────────────────────────────────────────
     @Override
     public void drawScreen(int mx, int my, float pt) {
         ApolloBranding.render(width, height);

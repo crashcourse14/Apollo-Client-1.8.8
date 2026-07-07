@@ -13,7 +13,10 @@ public enum ModOption {
     HOVER_COLOR(OptionType.COLOR),
     HOVER_OPACITY(OptionType.NUMBER),
     CLICK_COLOR(OptionType.COLOR),
-    SOUND_SLIDERS(OptionType.CUSTOM);
+    SOUND_SLIDERS(OptionType.CUSTOM),
+    BEAM_COLOR(OptionType.COLOR),
+    BEAM_OPACITY(OptionType.NUMBER),
+    BEAM_TYPE(OptionType.STRING);
 
     public enum OptionType { STRING, COLOR, NUMBER, BOOLEAN, CUSTOM }
     public final OptionType type;
