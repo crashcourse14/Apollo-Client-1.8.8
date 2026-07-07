@@ -23,10 +23,9 @@ public class WavePointMod extends HudMod {
     private boolean vWasPressed = false;
     private boolean pWasPressed = false;
 
-    // Customizable Variables
-    public int BEAM_COLOR = 0xFFFF0000;     // Red by default
-    public float BEAM_OPACITY = 0.6f;       // 60% opaque by default
-    public String BEAM_TYPE = "corner";     // "corner" or "full"
+    public int BEAM_COLOR = 0xFFFF0000;     
+    public float BEAM_OPACITY = 0.6f;       
+    public String BEAM_TYPE = "corner";     
 
     public WavePointMod() {
         super("Wave Points", 5, 130, Category.HUD);
@@ -38,7 +37,6 @@ public class WavePointMod extends HudMod {
             ModOption.BACKGROUND_COLOR,
             ModOption.BACKGROUND_OPACITY,
             
-            // Add the new options here so the GUI shows them
             ModOption.BEAM_COLOR,
             ModOption.BEAM_OPACITY,
             ModOption.BEAM_TYPE
@@ -49,7 +47,6 @@ public class WavePointMod extends HudMod {
     public void draw() {
         super.draw();
 
-        // 1. Handle Keybinds
         boolean vDown = Keyboard.isKeyDown(KeyboardConstants.KEY_V);
         if (vDown && !vWasPressed) {
             if (mc.thePlayer != null && mc.theWorld != null) {
@@ -67,22 +64,18 @@ public class WavePointMod extends HudMod {
         }
         pWasPressed = pDown;
 
-        // 2. Draw HUD Text List
         if (mc.thePlayer == null) return;
 
         int currentY = getY();
         for (WavePoint wp : wavePoints) {
             double dist = mc.thePlayer.getDistance(wp.pos.getX() + 0.5, wp.pos.getY(), wp.pos.getZ() + 0.5);
-            String displayText = wp.name + " | " + (int) dist + " blocks";
+            String displayText = wp.name + " - " + (int) dist + " blocks";
             
             drawModText(displayText, getX(), currentY);
             currentY += getTextHeight() + 2;
         }
     }
 
-    /**
-     * This method is called separately during 3D world rendering.
-     */
     public void render3D(float partialTicks) {
         if (!this.isEnabled() || mc.thePlayer == null || mc.theWorld == null || wavePoints.isEmpty()) return;
 
@@ -120,7 +113,6 @@ public class WavePointMod extends HudMod {
             }
         }
 
-        // Reset GL state
         GlStateManager.enableTexture2D();
         GlStateManager.enableDepth();
         GlStateManager.disableBlend();

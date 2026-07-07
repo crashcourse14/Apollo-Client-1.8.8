@@ -2,11 +2,10 @@ package net.minecraft.apolloclient.gui.hud;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.management.Notification;
 
 import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 import net.minecraft.client.gui.GuiButton;
@@ -20,9 +19,7 @@ import net.minecraft.apolloclient.gui.ModOption;
 import net.minecraft.apolloclient.gui.ApolloBranding;
 import net.minecraft.apolloclient.gui.SoundEntry;
 import net.minecraft.apolloclient.gui.mods.SoundMod;
-import net.minecraft.apolloclient.gui.ModOption;
 import net.minecraft.apolloclient.gui.NotificationManager;
-
 
 public class GuiModList extends GuiScreen {
 
@@ -64,7 +61,7 @@ public class GuiModList extends GuiScreen {
     private static final int C_ACCENT_DIM = 0x557E8794;     
     private static final int C_SELECTED_CAT = 0x447E8794;   
     private static final int C_CAT = 0x8822262C;          
-    private static final int C_TEXTBOX = 0xAA1E2228; //0xCC1E2228;        
+    private static final int C_TEXTBOX = 0xAA1E2228;        
     private static final int C_BORDER = 0xFF343A43;     
     private static final int C_TEXT = 0xFFF2F4F8;           
     private static final int C_TEXT_DIM = 0xFF9BA3AE;      
@@ -92,6 +89,9 @@ public class GuiModList extends GuiScreen {
     private GuiTextField searchField;
     private final Map<ModOption, GuiTextField> optionTextFields = new HashMap<>();
     private final Map<ModOption, GuiCheckboxButton> optionCheckboxes = new HashMap<>();
+    
+    private final Map<ModOption, GuiDropdown> optionDropdowns = new HashMap<>();
+    
     private int nextDynamicBtnId = ID_CHECKBOX_BASE;
 
     private int scrollRow    = 0;
@@ -202,6 +202,7 @@ public class GuiModList extends GuiScreen {
         buttonList.clear();
         optionTextFields.clear();
         optionCheckboxes.clear();
+        optionDropdowns.clear(); 
         nextDynamicBtnId = ID_CHECKBOX_BASE;
 
         if (activeMod == null) return;
@@ -230,6 +231,12 @@ public class GuiModList extends GuiScreen {
                 optionCheckboxes.put(opt, cb);
                 buttonList.add(cb);
                 fy += FIELD_H + FIELD_SPACING + 4;
+            } else if (opt == ModOption.BEAM_TYPE) {
+                // Handle BEAM_TYPE specifically with a Dropdown
+                List<String> opts = Arrays.asList("Corner", "Full");
+                int sel = activeMod.getOptionString(opt).equalsIgnoreCase("full") ? 1 : 0;
+                optionDropdowns.put(opt, new GuiDropdown(fieldX, fy, fieldW, FIELD_H, opts, sel));
+                fy += FIELD_H + FIELD_SPACING + 4;
             } else if (opt.type != ModOption.OptionType.CUSTOM) {
                 GuiTextField field = new GuiTextField(nextDynamicBtnId++, fontRendererObj, fieldX, fy, fieldW, FIELD_H);
                 field.setEnableBackgroundDrawing(false);
@@ -242,7 +249,6 @@ public class GuiModList extends GuiScreen {
                 optionTextFields.put(opt, field);
                 fy += FIELD_H + FIELD_SPACING + 4;
             } else {
-                // Custom rendering (like sound sliders)
                 if (opt == ModOption.SOUND_SLIDERS && activeMod instanceof SoundMod) {
                     optionsTotalHeight = ((SoundMod) activeMod).soundEntries.size() * SLIDER_ROW_H;
                 }
@@ -364,7 +370,6 @@ public class GuiModList extends GuiScreen {
         }
     }
 
-    // ── Dynamic Options Drawing ──────────────────────────────────────────
     private void drawOptionsView(int mx, int my) {
         boolean backHov = isIn(mx, my, backBtnX, backBtnY, backBtnSize * 3, backBtnSize);
         drawRect(backBtnX, backBtnY, backBtnX + backBtnSize * 3, backBtnY + backBtnSize, backHov ? C_SELECTED_CAT : C_CAT);
@@ -391,6 +396,10 @@ public class GuiModList extends GuiScreen {
             } else if (optionCheckboxes.containsKey(opt)) {
                 GuiCheckboxButton cb = optionCheckboxes.get(opt);
                 drawString(fontRendererObj, prettifyName(opt.name()), panelX + PADDING, cb.yPosition + (FIELD_H - 8) / 2, 0xFFCFCFCF);
+            } else if (optionDropdowns.containsKey(opt)) {
+                GuiDropdown dd = optionDropdowns.get(opt);
+                drawString(fontRendererObj, prettifyName(opt.name()), panelX + PADDING, dd.y + (FIELD_H - 8) / 2, 0xFFCFCFCF);
+                dd.draw(fontRendererObj, mx, my);
             } else if (opt == ModOption.SOUND_SLIDERS && activeMod instanceof SoundMod) {
                 drawSoundSliders((SoundMod) activeMod, mx, my);
             }
@@ -457,7 +466,6 @@ public class GuiModList extends GuiScreen {
         drawCenteredString(fontRendererObj, "✕", closeX + closeSize / 2, closeY + (closeSize - 8) / 2, C_TEXT);
     }
 
-    // ── Input Handling ───────────────────────────────────────────────────
     @Override
     public void handleMouseInput() throws IOException {
         super.handleMouseInput();
@@ -487,6 +495,17 @@ public class GuiModList extends GuiScreen {
         if (viewMode == ViewMode.OPTIONS) {
             for (GuiTextField field : optionTextFields.values()) field.mouseClicked(mx, my, btn);
             
+            // Handle Dropdown clicks
+            for (Map.Entry<ModOption, GuiDropdown> entry : optionDropdowns.entrySet()) {
+                if (entry.getValue().mouseClicked(mx, my, btn)) {
+                    // Convert "Corner" to "corner" before saving
+                    String selectedVal = entry.getValue().options.get(entry.getValue().selected).toLowerCase();
+                    activeMod.setOptionString(entry.getKey(), selectedVal);
+                    saveConfig();
+                    return;
+                }
+            }
+
             if (supports(ModOption.SOUND_SLIDERS) && activeMod instanceof SoundMod) {
                 int idx = sliderAt(mx, my, (SoundMod) activeMod);
                 if (idx >= 0) { draggingSlider = idx; updateSlider(mx, (SoundMod) activeMod, idx); return; }
@@ -540,7 +559,6 @@ public class GuiModList extends GuiScreen {
                 }
             }
         } else {
-            // Handle dynamically generated checkboxes
             for (Map.Entry<ModOption, GuiCheckboxButton> entry : optionCheckboxes.entrySet()) {
                 if (entry.getValue() == button) {
                     boolean newVal = !activeMod.getOptionBoolean(entry.getKey());
@@ -605,7 +623,6 @@ public class GuiModList extends GuiScreen {
         }
     }
 
-    // ── Slider & Misc Helpers ────────────────────────────────────────────
     private int sliderAt(int mx, int my, SoundMod mod) {
         int aX = panelX + PADDING;
         int aY = panelY + HEADER_HEIGHT + PADDING + backBtnSize + PADDING + 6;
@@ -654,7 +671,6 @@ public class GuiModList extends GuiScreen {
         return mx >= x && mx < x + w && my >= y && my < y + h;
     }
 
-    // ── Inner Classes ────────────────────────────────────────────────────
     private static class TabInfo {
         final String label; final Category category; final int x, y, w, h;
         TabInfo(String l, Category c, int x, int y, int w, int h) { label=l; category=c; this.x=x; this.y=y; this.w=w; this.h=h; }
