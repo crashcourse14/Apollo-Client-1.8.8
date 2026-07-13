@@ -9,7 +9,7 @@ VERSION_FILE="../desktopRuntime/resources/assets/minecraft/apolloclient/version/
 
 mkdir -p "$(dirname "$VERSION_FILE")"
 
-echo "Apollo Client v1.0 Patch 0 (Beta / $COMMIT_ID)" > "$VERSION_FILE"
+echo "Apollo Client 1.8 ($COMMIT_ID)" > "$VERSION_FILE"
 
 echo "Updated version.txt:"
 cat "$VERSION_FILE"

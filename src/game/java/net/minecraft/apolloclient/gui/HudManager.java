@@ -23,6 +23,7 @@ import net.minecraft.apolloclient.gui.mods.AntiSpamMod;
 import net.minecraft.apolloclient.gui.mods.SelfNameTagMod;
 import net.minecraft.apolloclient.gui.mods.ModernKeystrokesMod;
 import net.minecraft.apolloclient.gui.mods.WavePointMod;
+import net.minecraft.apolloclient.gui.mods.CPSMod;
 
 import net.minecraft.client.Minecraft;
 
@@ -47,7 +48,7 @@ public class HudManager {
     public SelfNameTagMod selfNameTagMod;
     public ModernKeystrokesMod modernKeystrokesMod;
     public WavePointMod wavePointMod;
-
+    public CPSMod cpsMod;
     public CategoryManager categoryManager;
     public NotificationManager notificationManager;
 
@@ -71,6 +72,7 @@ public class HudManager {
         hudMods.add(antiSpamMod = new AntiSpamMod());
         hudMods.add(modernKeystrokesMod = new ModernKeystrokesMod());
         hudMods.add(wavePointMod = new WavePointMod());
+        hudMods.add(cpsMod = new CPSMod());
 
         notificationManager = new NotificationManager(Minecraft.getMinecraft());
         categoryManager     = new CategoryManager(this);
