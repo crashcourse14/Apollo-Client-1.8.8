@@ -1,1 +1,0 @@
-Apollo Client v1.0 Patch 0 (Beta / 9192e0c)

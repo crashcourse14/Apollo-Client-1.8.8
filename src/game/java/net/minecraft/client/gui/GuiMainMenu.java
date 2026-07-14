@@ -72,6 +72,10 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
             "textures/gui/title/background/enable_blur.txt");
     private static final ResourceLocation eaglerGuiTextures = new ResourceLocation("eagler:gui/eagler_gui.png");
     
+    protected static final ResourceLocation linkTexture = new ResourceLocation("apolloclient/title/link.png");
+    protected static final ResourceLocation leaveTexture = new ResourceLocation("apolloclient/title/leave.png");
+    protected static final ResourceLocation gearTexture = new ResourceLocation("apolloclient/title/gear.png");
+    
     private static final ResourceLocation[] titlePanoramaPaths = new ResourceLocation[] {
             new ResourceLocation("textures/gui/title/background/panorama_0.png"),
             new ResourceLocation("textures/gui/title/background/panorama_1.png"),
@@ -239,15 +243,39 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
             this.buttonList.add(websiteBtn);
             startY += btnH + btnGap;
         }
-        int optionsX = this.width - 140;
 
-        this.buttonList.add(new GuiClearButton(101, cx, startY, btnW, btnH, "Social"));
-        this.buttonList.add(new GuiClearButton(0, optionsX, 5, 100, btnH, "Options"));
+        this.buttonList.add(new GuiClearButton(101, cx, startY, btnW, btnH, "Fluxer"));
         
-        GuiClearButton profileBtn = new GuiClearButton(4, 5, 5, 140, btnH, EaglerProfile.getName());
+        int profileW = 140;
+        int profileX = 5;
+
+        GuiClearButton profileBtn = new GuiClearButton(
+            4, profileX, 5, profileW, btnH, EaglerProfile.getName()
+        );
         profileBtn.drawCentered = false;
         profileBtn.textPaddingLeft = 24;
         this.buttonList.add(profileBtn);
+        
+
+        int linkX = profileX + profileW + 5;
+        int linkY = 5;
+
+        int optW = 100;
+        int optX = this.width - optW - 5;
+        int buttonSize = 20;
+
+        int gearX = this.width - buttonSize - 5;
+        int gearY = 5;
+
+        int leaveX = gearX - buttonSize - 5;
+        int leaveY = gearY;
+
+        this.buttonList.add(new GuiLinkButton(103, linkX, linkY, linkTexture));
+        this.buttonList.add(new GuiClearButton(0, optX, 5, optW, btnH, "Options"));
+
+        this.buttonList.add(new GuiLinkButton(1, leaveX, leaveY, leaveTexture));
+        this.buttonList.add(new GuiLinkButton(0, gearX, gearY, gearTexture));
+
 
         this.mc.func_181537_a(false);
     }
@@ -308,6 +336,10 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
         
         if (parGuiButton.id == 102) {
             EagRuntime.openLink("https://apolloclient.net");
+        }
+        
+        if (parGuiButton.id == 103) {
+            EagRuntime.openLink("https://discord.gg/yourdiscordlink");
         }
     }
 
@@ -492,7 +524,6 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
     }
 
     public void drawScreen(int i, int j, float f) {
-        // Draw the authentic blurred panorama
         GlStateManager.disableAlpha();
         if (enableBlur) {
             this.renderSkybox(i, j, f);
@@ -501,10 +532,9 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
         }
         GlStateManager.enableAlpha();
 
-        // Subtle dark vignette
         this.drawGradientRect(0, 0, this.width, this.height, 0x55000000, 0x88000000);
 
-        final int logoSize = 100;
+        final int logoSize = 72;
         final int logoX = (this.width - logoSize) / 2;
         final int logoY = this.height / 2 - 110;
 
@@ -512,17 +542,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
         this.mc.getTextureManager().bindTexture(apolloLogo);
         Gui.drawScaledCustomSizeModalRect(logoX, logoY, 0.0F, 0.0F, 256, 256, logoSize, logoSize, 256.0F, 256.0F);
 
-		/* 
-        final String title = "Apollo Client";
-        GlStateManager.pushMatrix();
-        GlStateManager.scale(2.0F, 2.0F, 2.0F);
-        int titleWidth = this.fontRendererObj.getStringWidth(title);
-        int titleX = (this.width - titleWidth * 2) / 4;
-        int titleY = (logoY + logoSize + 6) / 2;
-        this.drawString(this.fontRendererObj, title, titleX, titleY, 0xFFFFFFFF);
-        GlStateManager.popMatrix();
-		*/
-
+        // Client Title has been removed entirely
 
         String s = EaglercraftVersion.mainMenuStringB;
         this.drawString(this.fontRendererObj, s, 2, this.height - 10, 0xFFAAAAAA);
@@ -537,7 +557,6 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
         this.updateCheckerOverlay.drawScreen(i, j, f);
         super.drawScreen(i, j, f);
 
-        // ── Draw Player Skin Face on Edit Profile Button ──────────────────────
         for (Object o : this.buttonList) {
             if (o instanceof GuiClearButton) {
                 GuiClearButton btn = (GuiClearButton) o;
