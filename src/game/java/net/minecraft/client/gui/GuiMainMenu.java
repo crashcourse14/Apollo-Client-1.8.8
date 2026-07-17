@@ -73,7 +73,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
     private static final ResourceLocation eaglerGuiTextures = new ResourceLocation("eagler:gui/eagler_gui.png");
     
     protected static final ResourceLocation linkTexture = new ResourceLocation("apolloclient/title/link.png");
-    protected static final ResourceLocation leaveTexture = new ResourceLocation("apolloclient/title/leave.png");
+    protected static final ResourceLocation languageTexture = new ResourceLocation("apolloclient/title/language.png");
     protected static final ResourceLocation gearTexture = new ResourceLocation("apolloclient/title/gear.png");
     
     private static final ResourceLocation[] titlePanoramaPaths = new ResourceLocation[] {
@@ -244,9 +244,8 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
             startY += btnH + btnGap;
         }
 
-        this.buttonList.add(new GuiClearButton(101, cx, startY, btnW, btnH, "Fluxer"));
         
-        int profileW = 140;
+        int profileW = 100;
         int profileX = 5;
 
         GuiClearButton profileBtn = new GuiClearButton(
@@ -264,16 +263,17 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
         int optX = this.width - optW - 5;
         int buttonSize = 20;
 
+
         int gearX = this.width - buttonSize - 5;
         int gearY = 5;
 
-        int leaveX = gearX - buttonSize - 5;
-        int leaveY = gearY;
+        int languageX = gearX - buttonSize - 5;
+        int languageY = gearY;
 
-        this.buttonList.add(new GuiLinkButton(103, linkX, linkY, linkTexture));
-        this.buttonList.add(new GuiClearButton(0, optX, 5, optW, btnH, "Options"));
 
-        this.buttonList.add(new GuiLinkButton(1, leaveX, leaveY, leaveTexture));
+        this.buttonList.add(new GuiLinkButton(101, linkX, linkY, linkTexture));
+
+        this.buttonList.add(new GuiLinkButton(5, languageX, languageY, languageTexture));
         this.buttonList.add(new GuiLinkButton(0, gearX, gearY, gearTexture));
 
 
@@ -534,7 +534,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 
         this.drawGradientRect(0, 0, this.width, this.height, 0x55000000, 0x88000000);
 
-        final int logoSize = 72;
+        final int logoSize = 110;
         final int logoX = (this.width - logoSize) / 2;
         final int logoY = this.height / 2 - 110;
 

@@ -206,7 +206,6 @@ import net.minecraft.apolloclient.event.EventManager;
 import net.minecraft.apolloclient.event.events.ClientTick;
 import net.minecraft.apolloclient.config.ConfigManager;
 
-
 /**+
  * This portion of EaglercraftX contains deobfuscated Minecraft 1.8 source code.
  * 
@@ -243,7 +242,7 @@ public class Minecraft implements IThreadListener {
 	public int displayHeight;
 	public float displayDPI;
 	private boolean field_181541_X = false;
-	public Timer timer = new Timer(20.0F);
+	private Timer timer = new Timer(20.0F);
 	public WorldClient theWorld;
 	public RenderGlobal renderGlobal;
 	private RenderManager renderManager;
@@ -508,14 +507,8 @@ public class Minecraft implements IThreadListener {
 		SkinPreviewRenderer.initialize();
 		this.checkGLError("Post startup");
 		this.ingameGUI = new GuiIngame(this);
-		try {
-			logger.debug("BEFORE STARTUP");
-			Client.INSTANCE.startUp();
-			logger.debug("AFTER STARTUP");
-		} catch (Throwable t) {
-			logger.fatal("Client start up failed!", t);
-		}
-				
+
+		Client.INSTANCE.startUp();
 
 		this.mouseGrabSupported = Mouse.isMouseGrabSupported();
 		PointerInputAbstraction.init(this);
@@ -818,8 +811,8 @@ public class Minecraft implements IThreadListener {
 	 */
 	public void shutdownMinecraftApplet() {
 		try {
-			Client.INSTANCE.shutDown();
 			logger.info("Stopping!");
+			Client.INSTANCE.shutDown();
 			new ConfigManager().save();
 
 			try {
@@ -878,9 +871,6 @@ public class Minecraft implements IThreadListener {
 			}
 		}
 
-		ClientTick event = new ClientTick();
-		event.call();
-
 		long l = EagRuntime.nanoTime();
 
 		for (int j = 0; j < this.timer.elapsedTicks; ++j) {
@@ -889,6 +879,9 @@ public class Minecraft implements IThreadListener {
 				PointerInputAbstraction.runGameLoop();
 			}
 		}
+
+		ClientTick event = new ClientTick();
+		event.call();
 
 		long i1 = EagRuntime.nanoTime() - l;
 		this.checkGLError("Pre render");

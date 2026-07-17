@@ -138,4 +138,14 @@ public class PlatformRuntime {
 
 	public static native InputStream newGZIPInputStream(InputStream is) throws IOException;
 
+    public static void appendLoadingText(String string) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'appendLoadingText'");
+    }
+
+    public static void hideCustomLoadScreen() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'hideCustomLoadScreen'");
+    }
+
 }
