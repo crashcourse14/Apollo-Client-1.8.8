@@ -30,7 +30,7 @@ import net.minecraft.util.EnumWorldBlockLayer;
  */
 public class ChunkCompileTaskGenerator {
 	private final RenderChunk renderChunk;
-	private final List<Runnable> listFinishRunnables = Lists.newArrayList();
+	private List<Runnable> listFinishRunnables = null;
 	private final ChunkCompileTaskGenerator.Type type;
 	private RegionRenderCacheBuilder regionRenderCacheBuilder;
 	private CompiledChunk compiledChunk;
@@ -81,12 +81,17 @@ public class ChunkCompileTaskGenerator {
 		this.finished = true;
 		this.status = ChunkCompileTaskGenerator.Status.DONE;
 
-		for (int i = 0, l = this.listFinishRunnables.size(); i < l; ++i) {
-			this.listFinishRunnables.get(i).run();
+		if (this.listFinishRunnables != null) {
+			for (int i = 0, l = this.listFinishRunnables.size(); i < l; ++i) {
+				this.listFinishRunnables.get(i).run();
+			}
 		}
 	}
 
 	public void addFinishRunnable(Runnable parRunnable) {
+		if (this.listFinishRunnables == null) {
+			this.listFinishRunnables = Lists.newArrayList();
+		}
 		this.listFinishRunnables.add(parRunnable);
 		if (this.finished) {
 			parRunnable.run();

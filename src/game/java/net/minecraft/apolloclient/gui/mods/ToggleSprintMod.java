@@ -14,18 +14,18 @@ public class ToggleSprintMod extends HudMod {
     public ToggleSprintMod() {
         super("Toggle Sprint", 5, 90, Category.HUD);
         
-        // Enable background by default so it looks nice
         this.renderBackground = true;
-        this.backgroundOpacity = 0.3f;
+        this.backgroundOpacity = 0.0f;
+        this.enabled = true;
         
-        // Only allow the specific options you requested (NO TEXT_FORMAT)
         this.supportedOptions = new ModOption[] {
             ModOption.TEXT_COLOR,
             ModOption.TEXT_SCALE,
             ModOption.TEXT_SHADOW,
             ModOption.RENDER_BACKGROUND,
             ModOption.BACKGROUND_COLOR,
-            ModOption.BACKGROUND_OPACITY
+            ModOption.BACKGROUND_OPACITY,
+            ModOption.TEXT_SCALE
         };
     }
 

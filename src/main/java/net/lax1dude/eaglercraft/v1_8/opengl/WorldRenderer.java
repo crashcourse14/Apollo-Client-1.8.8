@@ -187,7 +187,7 @@ public class WorldRenderer {
 	public WorldRenderer.State func_181672_a() {
 		VertexFormat fmt = this.vertexFormat;
 		int i = (fmt.attribStride >> 2) * vertexCount;
-		IntBuffer buf = EagRuntime.allocateIntBuffer(i);
+		IntBuffer buf = IntBufferPool.checkout(i);
 		this.intBuffer.position(0);
 		this.intBuffer.limit(i);
 		buf.put(this.intBuffer);
@@ -605,7 +605,7 @@ public class WorldRenderer {
 
 		public void release() {
 			if(--refCount == 0) {
-				EagRuntime.freeIntBuffer(stateRawBuffer);
+				IntBufferPool.release(stateRawBuffer);
 			}
 			if(refCount < 0) {
 				logger.error("WorldRenderer.State released multiple times");

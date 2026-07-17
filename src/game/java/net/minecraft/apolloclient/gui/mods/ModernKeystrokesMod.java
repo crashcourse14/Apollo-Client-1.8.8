@@ -14,7 +14,7 @@ public class ModernKeystrokesMod extends HudMod {
     private static final int BORDER_COLOR = 0xFF2A2B2F;
 
     public ModernKeystrokesMod() {
-        super("Modern Keystrokes", 12, 90, Category.HUD);
+        super("Keystrokes", 12, 90, Category.HUD);
         this.supportedOptions = new ModOption[]{
             ModOption.RENDER_BACKGROUND,
             ModOption.BACKGROUND_COLOR,

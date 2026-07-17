@@ -8,13 +8,14 @@ import net.minecraft.client.Minecraft;
 public class FPSMod extends HudMod {
 
     public FPSMod() {
-        super("FPS", 5, 70, Category.HUD);
+        super("FPS", 5, 5, Category.HUD);
         
         this.textFormat = "%VALUE% FPS";
         this.icon = new ResourceLocation("apolloclient:textures/frames.png");
-        this.renderBackground = true;
-        this.backgroundOpacity = 0.3f;
+        this.renderBackground = false;
+        this.backgroundOpacity = 0.0f;
         this.enabled = true;
+        this.textScale = 1.5f;
 
     }
 

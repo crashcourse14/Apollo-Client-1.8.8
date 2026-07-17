@@ -17,9 +17,9 @@ import net.minecraft.util.BlockPos;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WavePointMod extends HudMod {
+public class WayPointMod extends HudMod {
 
-    private final List<WavePoint> wavePoints = new ArrayList<>();
+    private final List<WayPoint> wayPoints = new ArrayList<>();
     private boolean vWasPressed = false;
     private boolean pWasPressed = false;
 
@@ -27,8 +27,8 @@ public class WavePointMod extends HudMod {
     public float BEAM_OPACITY = 0.6f;       
     public String BEAM_TYPE = "corner";     
 
-    public WavePointMod() {
-        super("Wave Points", 5, 130, Category.HUD);
+    public WayPointMod() {
+        super("Way Points", 5, 130, Category.HUD);
         this.supportedOptions = new ModOption[] {
             ModOption.TEXT_COLOR,
             ModOption.TEXT_SCALE,
@@ -51,15 +51,15 @@ public class WavePointMod extends HudMod {
         if (vDown && !vWasPressed) {
             if (mc.thePlayer != null && mc.theWorld != null) {
                 BlockPos pos = mc.thePlayer.getPosition();
-                wavePoints.add(new WavePoint(pos, "Test Wave Point"));
+                wayPoints.add(new WayPoint(pos, "Test Way Point"));
             }
         }
         vWasPressed = vDown;
 
         boolean pDown = Keyboard.isKeyDown(KeyboardConstants.KEY_P);
         if (pDown && !pWasPressed) {
-            if (!wavePoints.isEmpty()) {
-                wavePoints.remove(wavePoints.size() - 1);
+            if (!wayPoints.isEmpty()) {
+                wayPoints.remove(wayPoints.size() - 1);
             }
         }
         pWasPressed = pDown;
@@ -67,7 +67,7 @@ public class WavePointMod extends HudMod {
         if (mc.thePlayer == null) return;
 
         int currentY = getY();
-        for (WavePoint wp : wavePoints) {
+        for (WayPoint wp : wayPoints) {
             double dist = mc.thePlayer.getDistance(wp.pos.getX() + 0.5, wp.pos.getY(), wp.pos.getZ() + 0.5);
             String displayText = wp.name + " - " + (int) dist + " blocks";
             
@@ -77,7 +77,7 @@ public class WavePointMod extends HudMod {
     }
 
     public void render3D(float partialTicks) {
-        if (!this.isEnabled() || mc.thePlayer == null || mc.theWorld == null || wavePoints.isEmpty()) return;
+        if (!this.isEnabled() || mc.thePlayer == null || mc.theWorld == null || wayPoints.isEmpty()) return;
 
         double playerX = mc.thePlayer.lastTickPosX + (mc.thePlayer.posX - mc.thePlayer.lastTickPosX) * partialTicks;
         double playerY = mc.thePlayer.lastTickPosY + (mc.thePlayer.posY - mc.thePlayer.lastTickPosY) * partialTicks;
@@ -96,7 +96,7 @@ public class WavePointMod extends HudMod {
         GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         GlStateManager.color(r, g, b, a);
 
-        for (WavePoint wp : wavePoints) {
+        for (WayPoint wp : wayPoints) {
             double relativeX = wp.pos.getX() + 0.5 - playerX;
             double relativeZ = wp.pos.getZ() + 0.5 - playerZ;
 
@@ -171,12 +171,12 @@ public class WavePointMod extends HudMod {
 
     @Override
     public int getWidth() {
-        return getTextWidth("Test Wave Point | 999 blocks");
+        return getTextWidth("Test Way Point | 999 blocks");
     }
 
     @Override
     public int getHeight() {
-        int points = Math.max(1, wavePoints.size());
+        int points = Math.max(1, wayPoints.size());
         return (getTextHeight() + 2) * points;
     }
 
@@ -221,12 +221,12 @@ public class WavePointMod extends HudMod {
         else super.setOptionString(opt, val);
     }
 
-    // Simple data class to store our wave points
-    private static class WavePoint {
+    // Simple data class to store our way points
+    private static class WayPoint {
         final BlockPos pos;
         final String name;
 
-        WavePoint(BlockPos pos, String name) {
+        WayPoint(BlockPos pos, String name) {
             this.pos = pos;
             this.name = name;
         }

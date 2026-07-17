@@ -19,6 +19,7 @@ import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
@@ -151,6 +152,12 @@ public class RenderChunk {
 			for (BlockPos blockpos$mutableblockpos : BlockPos.getAllInBoxMutable(blockpos, blockpos1)) {
 				IBlockState iblockstate = regionrendercache.getBlockStateFaster(blockpos$mutableblockpos);
 				Block block = iblockstate.getBlock();
+				if (block == Blocks.air) {
+					// air can never be opaque, never has a tile entity, and is never rendered,
+					// so skip straight to the next block instead of paying for 4 virtual calls
+					continue;
+				}
+
 				if (block.isOpaqueCube()) {
 					visgraph.func_178606_a(blockpos$mutableblockpos);
 				}

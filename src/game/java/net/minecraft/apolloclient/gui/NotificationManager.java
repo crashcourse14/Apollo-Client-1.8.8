@@ -23,8 +23,8 @@ public class NotificationManager extends Gui {
     private static final long SLIDE_MS = 400L; 
     private static final long HOLD_MS  = 3000L; 
 
-    private static final int COLOR_BG     = 0xCC0D0E10;
-    private static final int COLOR_BORDER = 0xFFDD3538;
+    private static final int COLOR_BG     = 0xCC17191D;
+    private static final int COLOR_BORDER = 0xFF343A43;
     private static final int COLOR_TITLE  = 0xFFFFFFFF;
     private static final int COLOR_BODY   = 0xFFAAAAAA;
 

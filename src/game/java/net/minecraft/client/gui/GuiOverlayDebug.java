@@ -22,6 +22,7 @@ import net.lax1dude.eaglercraft.v1_8.HString;
 import net.lax1dude.eaglercraft.v1_8.internal.EnumPlatformType;
 import net.lax1dude.eaglercraft.v1_8.opengl.EaglercraftGPU;
 import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
+import net.lax1dude.eaglercraft.v1_8.opengl.IntBufferPool;
 import net.lax1dude.eaglercraft.v1_8.opengl.ext.dynamiclights.DynamicLightsStateManager;
 import net.lax1dude.eaglercraft.v1_8.sp.SingleplayerServerController;
 import net.minecraft.block.Block;
@@ -29,6 +30,7 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.ClientBrandRetriever;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.chunk.RenderChunk;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.potion.PotionEffect;
@@ -452,6 +454,17 @@ public class GuiOverlayDebug extends Gui {
 									EaglercraftGPU.glGetString(7936) }),
 					EaglercraftGPU.glGetString(7937), EaglercraftGPU.glGetString(7938) });
 		}
+
+		arraylist.add("");
+		arraylist.add(EnumChatFormatting.LIGHT_PURPLE + "Potassium Renderer");
+		arraylist.add(HString.format("Chunk Updates: %d", new Object[] { Integer.valueOf(RenderChunk.renderChunksUpdated) }));
+		arraylist.add(HString.format("Geometry Pool: % 2d%% hit (%d/%d)",
+				new Object[] { Long.valueOf(poolHitPercent()), Long.valueOf(IntBufferPool.getHitCount()),
+						Long.valueOf(IntBufferPool.getCheckoutCount()) }));
+		arraylist.add(HString.format("Geometry Pool Idle: %d bufs, %dKB",
+				new Object[] { Integer.valueOf(IntBufferPool.getPooledBufferCount()),
+						Long.valueOf(IntBufferPool.getPooledInts() * 4L / 1024L) }));
+
 		if (this.isReducedDebug()) {
 			return arraylist;
 		} else {
@@ -536,6 +549,11 @@ public class GuiOverlayDebug extends Gui {
 		int k2 = MathHelper.clamp_int((int) ((float) k + (float) (k1 - k) * parFloat1), 0, 255);
 		int l2 = MathHelper.clamp_int((int) ((float) l + (float) (l1 - l) * parFloat1), 0, 255);
 		return i2 << 24 | j2 << 16 | k2 << 8 | l2;
+	}
+
+	private static long poolHitPercent() {
+		long checkouts = IntBufferPool.getCheckoutCount();
+		return checkouts == 0L ? 0L : (IntBufferPool.getHitCount() * 100L / checkouts);
 	}
 
 	private static long bytesToMb(long bytes) {

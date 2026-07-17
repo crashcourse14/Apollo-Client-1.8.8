@@ -9,6 +9,7 @@ import java.util.Map;
 
 import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiClearButton; 
 import net.minecraft.client.gui.GuiCheckboxButton;
 import net.minecraft.client.gui.GuiModButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -348,7 +349,7 @@ public class GuiModList extends GuiScreen {
         int togBtnY = optBtnY + CARD_BTN_H + 3;
 
         for (Object o : buttonList) {
-            GuiButton btn = (GuiButton) o;
+            GuiClearButton btn = (GuiClearButton) o;
             if (btn.id == ID_OPTIONS_BASE + i) {
                 btn.xPosition = c.x + (CARD_W - CARD_BTN_W) / 2;
                 btn.yPosition = optBtnY;
@@ -363,7 +364,7 @@ public class GuiModList extends GuiScreen {
 
     private void hideCardButtons(int i) {
         for (Object o : buttonList) {
-            GuiButton btn = (GuiButton) o;
+            GuiClearButton btn = (GuiClearButton) o;
             if (btn.id == ID_OPTIONS_BASE + i || btn.id == ID_TOGGLE_BASE + i) {
                 btn.visible = false;
             }

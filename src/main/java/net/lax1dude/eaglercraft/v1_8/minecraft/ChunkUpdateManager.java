@@ -102,12 +102,15 @@ public class ChunkUpdateManager {
 		}else {
 			boolean flag = false;
 			long millis = EagRuntime.steadyTimeMillis();
-			List<ChunkCompileTaskGenerator> droppedUpdates = new LinkedList<>();
+			List<ChunkCompileTaskGenerator> droppedUpdates = null;
 			while(!queue.isEmpty()) {
 				ChunkCompileTaskGenerator generator = queue.remove(0);
 				
 				if(!generator.canExecuteYet()) {
 					if(millis - generator.goddamnFuckingTimeout < 60000l) {
+						if (droppedUpdates == null) {
+							droppedUpdates = new LinkedList<>();
+						}
 						droppedUpdates.add(generator);
 					}
 					continue;
@@ -122,7 +125,9 @@ public class ChunkUpdateManager {
 					break;
 				}
 			}
-			queue.addAll(droppedUpdates);
+			if (droppedUpdates != null) {
+				queue.addAll(droppedUpdates);
+			}
 			return flag;
 		}
 	}

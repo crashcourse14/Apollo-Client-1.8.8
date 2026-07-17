@@ -21,7 +21,7 @@ public class CPSMod extends HudMod {
         this.icon = new ResourceLocation("apolloclient:textures/cps.png");
         this.renderBackground = true;
         this.backgroundOpacity = 0.3f;
-        this.enabled = true;
+        this.enabled = false;
     }
 
     @Override

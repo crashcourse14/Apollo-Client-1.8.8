@@ -48,7 +48,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.apolloclient.Client;
-import net.minecraft.apolloclient.gui.mods.WavePointMod;
+import net.minecraft.apolloclient.gui.mods.WayPointMod;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -1718,11 +1718,11 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
 	 * Draws the selection box for the player. Args: entityPlayer,
 	 * rayTraceHit, i, itemStack, partialTickTime
 	 */
-	public void renderWavePointMod(float partialTicks) {
+	public void renderWayPointMod(float partialTicks) {
 		if (Client.INSTANCE != null && Client.INSTANCE.hudManager != null) {
-			WavePointMod wavePointMod = Client.INSTANCE.hudManager.wavePointMod;
-			if (wavePointMod != null && wavePointMod.isEnabled()) {
-				wavePointMod.render3D(partialTicks);
+			WayPointMod wayPointMod = Client.INSTANCE.hudManager.wayPointMod;
+			if (wayPointMod != null && wayPointMod.isEnabled()) {
+				wayPointMod.render3D(partialTicks);
 			}
 		}
 	}
