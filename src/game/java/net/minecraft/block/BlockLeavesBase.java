@@ -42,7 +42,12 @@ public class BlockLeavesBase extends Block {
 	}
 
 	public boolean shouldSideBeRendered(IBlockAccess iblockaccess, BlockPos blockpos, EnumFacing enumfacing) {
-		return !this.fancyGraphics && iblockaccess.getBlockState(blockpos).getBlock() == this ? false
-				: super.shouldSideBeRendered(iblockaccess, blockpos, enumfacing);
-	}
+	Block neighbor = iblockaccess.getBlockState(blockpos).getBlock();
+		if (neighbor instanceof BlockLeavesBase) {
+			// leaf-to-leaf face: only render if fast graphics wants leaves opaque-cutout
+			// (i.e. always cull, since a fully-opaque neighbor leaf hides this face)
+			return false;
+		}
+	return super.shouldSideBeRendered(iblockaccess, blockpos, enumfacing);
+}
 }

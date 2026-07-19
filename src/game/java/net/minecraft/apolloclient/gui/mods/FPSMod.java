@@ -11,7 +11,7 @@ public class FPSMod extends HudMod {
         super("FPS", 5, 5, Category.HUD);
         
         this.textFormat = "%VALUE% FPS";
-        this.icon = new ResourceLocation("apolloclient:textures/frames.png");
+        this.icon = new ResourceLocation("apolloclient/textures/mods/frames.png");
         this.renderBackground = false;
         this.backgroundOpacity = 0.0f;
         this.enabled = true;

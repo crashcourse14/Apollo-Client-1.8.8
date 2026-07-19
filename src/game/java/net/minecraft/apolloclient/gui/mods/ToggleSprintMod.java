@@ -12,7 +12,7 @@ public class ToggleSprintMod extends HudMod {
     private boolean rWasPressed = false;
 
     public ToggleSprintMod() {
-        super("Toggle Sprint", 5, 90, Category.HUD);
+        super("Toggle Sprint", 2, 90, Category.HUD);
         
         this.renderBackground = true;
         this.backgroundOpacity = 0.0f;

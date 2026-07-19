@@ -39,6 +39,7 @@ import net.lax1dude.eaglercraft.v1_8.sp.gui.GuiScreenIntegratedServerBusy;
 import net.lax1dude.eaglercraft.v1_8.sp.gui.GuiScreenIntegratedServerStartup;
 import net.lax1dude.eaglercraft.v1_8.update.GuiUpdateCheckerOverlay;
 import net.lax1dude.eaglercraft.v1_8.update.UpdateService;
+import net.minecraft.apolloclient.gui.hud.GuiHudEditor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.renderer.Tessellator;
@@ -75,6 +76,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
     protected static final ResourceLocation linkTexture = new ResourceLocation("apolloclient/title/link.png");
     protected static final ResourceLocation languageTexture = new ResourceLocation("apolloclient/title/language.png");
     protected static final ResourceLocation gearTexture = new ResourceLocation("apolloclient/title/gear.png");
+    protected static final ResourceLocation editTexture = new ResourceLocation("apolloclient/title/edit.png");
     
     private static final ResourceLocation[] titlePanoramaPaths = new ResourceLocation[] {
             new ResourceLocation("textures/gui/title/background/panorama_0.png"),
@@ -238,8 +240,8 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
             startY += btnH + btnGap;
             
             GuiClearButton websiteBtn = new GuiClearButton(102, cx, startY, btnW, btnH, "Website");
-            websiteBtn.bgColor = 0xFF555B66;
-            websiteBtn.hoverBgColor = 0xFF7E8794;
+            websiteBtn.bgColor = 0xFFB42E30;
+            websiteBtn.hoverBgColor = 0xFF752225;
             this.buttonList.add(websiteBtn);
             startY += btnH + btnGap;
         }
@@ -268,11 +270,15 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
         int gearY = 5;
 
         int languageX = gearX - buttonSize - 5;
-        int languageY = gearY;
+        int languageY = 5;
+
+        int editX = languageX - buttonSize - 5;
+        int editY = 5;
 
 
         this.buttonList.add(new GuiLinkButton(101, linkX, linkY, linkTexture));
 
+        this.buttonList.add(new GuiLinkButton(104, editX, editY, editTexture));
         this.buttonList.add(new GuiLinkButton(5, languageX, languageY, languageTexture));
         this.buttonList.add(new GuiLinkButton(0, gearX, gearY, gearTexture));
 
@@ -340,6 +346,10 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
         
         if (parGuiButton.id == 103) {
             EagRuntime.openLink("https://discord.gg/yourdiscordlink");
+        }
+
+        if (parGuiButton.id == 104) {
+            mc.displayGuiScreen(new GuiHudEditor());
         }
     }
 
@@ -542,8 +552,6 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
         this.mc.getTextureManager().bindTexture(apolloLogo);
         Gui.drawScaledCustomSizeModalRect(logoX, logoY, 0.0F, 0.0F, 256, 256, logoSize, logoSize, 256.0F, 256.0F);
 
-        // Client Title has been removed entirely
-
         String s = EaglercraftVersion.mainMenuStringB;
         this.drawString(this.fontRendererObj, s, 2, this.height - 10, 0xFFAAAAAA);
 
@@ -576,6 +584,31 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
                 }
             }
         }
+
+        this.drawDevelopmentBanner();
+    }
+
+    private void drawDevelopmentBanner() {
+        String text = "Client is still in development!";
+        final int borderThickness = 2;
+        final int paddingX = 6;
+        final int paddingY = 4;
+        final int fontHeight = 8;
+
+        int textWidth = this.fontRendererObj.getStringWidth(text);
+        int boxWidth = textWidth + paddingX * 2;
+        int boxHeight = fontHeight + paddingY * 2;
+        int boxX = (this.width - boxWidth) / 2;
+        int boxY = 5;
+
+        int bgColor = 0x806B1818;
+        int borderColor = 0x80A92525;
+
+        Gui.drawRect(boxX - borderThickness, boxY - borderThickness, boxX + boxWidth + borderThickness,
+                boxY + boxHeight + borderThickness, borderColor);
+        Gui.drawRect(boxX, boxY, boxX + boxWidth, boxY + boxHeight, bgColor);
+
+        this.drawCenteredString(this.fontRendererObj, text, this.width / 2, boxY + paddingY, 0xFFFFFFFF);
     }
 
     protected void mouseClicked(int par1, int par2, int par3) {

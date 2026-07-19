@@ -10,9 +10,9 @@ import net.minecraft.client.Minecraft;
  */
 public class GuiCheckboxButton extends GuiButton {
 
-    public int checkedColor   = 0xFFEE4639;
+    public int checkedColor   = 0xFFDD3538;
     public int uncheckedColor = 0xFF1C1D21;
-    public int checkmarkColor = 0xFFFFFFFF;
+    public int checkmarkColor = 0xFFEDEDED;
 
     private boolean checked;
 

@@ -18,7 +18,7 @@ public class ClockMod extends HudMod {
         this.backgroundOpacity = 0.3f;
         this.textFormat = "%VALUE%";
         this.icon = new ResourceLocation("minecraft:apolloclient/textures/clock.png");
-        this.enabled = true;
+        this.enabled = false;
     }
 
     private String getCurrentTime() {

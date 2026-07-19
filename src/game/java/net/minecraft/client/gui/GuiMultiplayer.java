@@ -107,6 +107,7 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback {
 		}
 
 		this.createButtons();
+		ApolloBranding.render(this.width, this.height);
 	}
 
 	/**+
@@ -339,7 +340,6 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback {
 	 * mouseY, renderPartialTicks
 	 */
 	public void drawScreen(int i, int j, float f) {
-		ApolloBranding.render(this.width, this.height);
 		this.hoveringText = null;
 		this.drawDefaultBackground();
 		this.serverListSelector.drawScreen(i, j, f);

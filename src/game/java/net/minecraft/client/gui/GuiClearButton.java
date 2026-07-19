@@ -14,8 +14,8 @@ public class GuiClearButton extends GuiButton {
     protected static final ResourceLocation buttonTextures = new ResourceLocation("textures/gui/widgets.png");
     public float fontScale = 1.0f;
 
-    public int bgColor = 0xFF14161A;
-    public int hoverBgColor = 0xFF292D35;
+    public int bgColor = 0xFF0E1013;  
+    public int hoverBgColor = 0xFF181A1D; 
     public int borderColor = 0xFF000000;
     public int hoverBorderColor = 0xFF000000;
     
@@ -97,7 +97,6 @@ public class GuiClearButton extends GuiButton {
     protected void drawRoundedButtonBackground(int x, int y, int width, int height, int backgroundColor,
             int borderColor) {
         this.drawRoundedRect(x, y, x + width, y + height, 0, backgroundColor);
-        // Border drawing has been removed completely!
     }
 
     private void drawRoundedRect(int left, int top, int right, int bottom, int radius, int color) {

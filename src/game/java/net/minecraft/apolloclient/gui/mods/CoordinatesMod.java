@@ -8,11 +8,12 @@ import net.minecraft.util.ResourceLocation;
 public class CoordinatesMod extends HudMod {
 
     public CoordinatesMod() {
-        super("Coordinates", 5, 30, Category.HUD);
-        this.renderBackground = true;
-        this.backgroundOpacity = 0.3f;
+        super("Coordinates", 2, 30, Category.HUD);
+        this.renderBackground = false;
+        this.backgroundOpacity = 0.0f;
         this.textFormat = "X: %X% Y: %Y% Z: %Z%";
         this.icon = new ResourceLocation("minecraft:apolloclient/textures/coordinates.png"); 
+        this.textScale = 1.5f;
 
     }
 
