@@ -145,31 +145,25 @@ public class GuiNewChat extends Gui {
             String msg = chatComponent.getUnformattedText();
             
             if (msg.equals(AntiSpamMod.lastMessage)) {
-                // It's a duplicate!
+
                 AntiSpamMod.duplicateCount++;
                 
                 this.deleteChatLine(AntiSpamMod.lastUsedChatId);
                 
-                // Append the [Nx] tag in yellow
                 chatComponent.appendText(" " + net.minecraft.util.EnumChatFormatting.YELLOW + "[" + AntiSpamMod.duplicateCount + "x]");
                 
-                // Print it using the SAME ID so we can delete it again next time
                 this.printChatMessageWithOptionalDeletion(chatComponent, AntiSpamMod.lastUsedChatId);
                 return;
             } else {
-                // It's a new message, reset the tracker
+
                 AntiSpamMod.lastMessage = msg;
                 AntiSpamMod.duplicateCount = 1;
-                
-                // Increment the ID so it gets a unique ID (prevents deleting older messages)
                 AntiSpamMod.lastUsedChatId++;
-                
-                // Reset the ID if it gets too high to prevent integer overflow
+            
                 if (AntiSpamMod.lastUsedChatId > 99000) {
                     AntiSpamMod.lastUsedChatId = 1000;
                 }
                 
-                // Print it using the new unique ID
                 this.printChatMessageWithOptionalDeletion(chatComponent, AntiSpamMod.lastUsedChatId);
                 return;
             }
@@ -183,18 +177,15 @@ public class GuiNewChat extends Gui {
 	 * an existing Chat Line of that ID from the GUI
 	 */
 	public void printChatMessageWithOptionalDeletion(IChatComponent parIChatComponent, int parInt1) {
-
-		// Friend Alert — check if a watched name joined the game
 		try {
 			FriendAlertMod mod = Client.INSTANCE.hudManager.friendAlertMod;
 			if (mod != null && mod.isEnabled()) {
 				String plain = parIChatComponent.getUnformattedText();
-				// Vanilla join message format: "PlayerName joined the game"
 				if (plain.endsWith(" joined the game")) {
 					String joiner = plain.replace(" joined the game", "").trim();
 					if (mod.isWatched(joiner)) {
 						this.setChatLine(new ChatComponentText(
-							"§4[§cMSC§4] §aAlert: §e" + joiner + " §ajoined the game!"),
+							"§4[§cAC§4] §aAlert: §e" + joiner + " §ajoined the game!"),
 							0, this.mc.ingameGUI.getUpdateCounter(), false);
 							NotificationManager.push("Friend Joined", joiner + " is online!");
 					}
@@ -204,7 +195,7 @@ public class GuiNewChat extends Gui {
 					String disconnecter = plain.replace(" left the game", "").trim();
 					if (mod.isWatched(disconnecter)) {
 						this.setChatLine(new ChatComponentText(
-							"§4[§cMSC§4] §aAlert: §e" + disconnecter + " §aleft the game!"),
+							"§4[§cAC§4] §aAlert: §e" + disconnecter + " §aleft the game!"),
 							0, this.mc.ingameGUI.getUpdateCounter(), false);
 							NotificationManager.push("Friend left", disconnecter + " left!");
 					}
