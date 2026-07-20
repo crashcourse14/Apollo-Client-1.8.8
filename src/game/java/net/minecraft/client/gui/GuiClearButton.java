@@ -95,7 +95,7 @@ public class GuiClearButton extends GuiButton {
     }
 
     protected void drawRoundedButtonBackground(int x, int y, int width, int height, int backgroundColor) {
-        RoundedRectHelper.drawRoundedRect(x, y, x + width, y + height, 10, backgroundColor);
+        RoundedRectHelper.drawRoundedRect(x, y, x + width, y + height, 8, backgroundColor);
     }
 
     

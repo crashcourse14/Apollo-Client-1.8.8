@@ -1393,7 +1393,6 @@ public class EntityRenderer implements IResourceManagerReloadListener {
 		if (!this.mc.gameSettings.fancyGraphics) {
 			f /= 2.0F;
 		}
-
 		if (f != 0.0F) {
 			this.random.setSeed((long) this.rendererUpdateCount * 312987231L);
 			Entity entity = this.mc.getRenderViewEntity();
@@ -1411,22 +1410,18 @@ public class EntityRenderer implements IResourceManagerReloadListener {
 				j = 0;
 			}
 
+			j /= 10; 
+
 			for (int k = 0; k < j; ++k) {
-				BlockPos blockpos1 = worldclient
-						.getPrecipitationHeight(blockpos.add(this.random.nextInt(b0) - this.random.nextInt(b0), 0,
-								this.random.nextInt(b0) - this.random.nextInt(b0)));
+				BlockPos blockpos1 = worldclient.getPrecipitationHeight(blockpos.add(this.random.nextInt(b0) - this.random.nextInt(b0), 0, this.random.nextInt(b0) - this.random.nextInt(b0)));
 				BiomeGenBase biomegenbase = worldclient.getBiomeGenForCoords(blockpos1);
 				BlockPos blockpos2 = blockpos1.down();
 				Block block = worldclient.getBlockState(blockpos2).getBlock();
-				if (blockpos1.getY() <= blockpos.getY() + b0 && blockpos1.getY() >= blockpos.getY() - b0
-						&& biomegenbase.canSpawnLightningBolt()
-						&& biomegenbase.getFloatTemperature(blockpos1) >= 0.15F) {
+				if (blockpos1.getY() <= blockpos.getY() + b0 && blockpos1.getY() >= blockpos.getY() - b0 && biomegenbase.canSpawnLightningBolt() && biomegenbase.getFloatTemperature(blockpos1) >= 0.15F) {
 					double d3 = this.random.nextDouble();
 					double d4 = this.random.nextDouble();
 					if (block.getMaterial() == Material.lava) {
-						this.mc.theWorld.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, (double) blockpos1.getX() + d3,
-								(double) ((float) blockpos1.getY() + 0.1F) - block.getBlockBoundsMinY(),
-								(double) blockpos1.getZ() + d4, 0.0D, 0.0D, 0.0D, new int[0]);
+						this.mc.theWorld.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, (double) blockpos1.getX() + d3, (double) ((float) blockpos1.getY() + 0.1F) - block.getBlockBoundsMinY(), (double) blockpos1.getZ() + d4, 0.0D, 0.0D, 0.0D, new int[0]);
 					} else if (block.getMaterial() != Material.air) {
 						block.setBlockBoundsBasedOnState(worldclient, blockpos2);
 						++i;
@@ -1435,28 +1430,25 @@ public class EntityRenderer implements IResourceManagerReloadListener {
 							d1 = (double) ((float) blockpos2.getY() + 0.1F) + block.getBlockBoundsMaxY() - 1.0D;
 							d2 = (double) blockpos2.getZ() + d4;
 						}
-
 						if (!DeferredStateManager.isDeferredRenderer()) {
-							this.mc.theWorld.spawnParticle(EnumParticleTypes.WATER_DROP, (double) blockpos2.getX() + d3,
-									(double) ((float) blockpos2.getY() + 0.1F) + block.getBlockBoundsMaxY(),
-									(double) blockpos2.getZ() + d4, 0.0D, 0.0D, 0.0D, new int[0]);
+							if (this.random.nextInt(2) == 0) { 
+								this.mc.theWorld.spawnParticle(EnumParticleTypes.WATER_DROP, (double) blockpos2.getX() + d3, (double) ((float) blockpos2.getY() + 0.1F) + block.getBlockBoundsMaxY(), (double) blockpos2.getZ() + d4, 0.0D, 0.0D, 0.0D, new int[0]);
+							}
 						}
 					}
 				}
 			}
-
 			if (i > 0 && this.random.nextInt(3) < this.rainSoundCounter++) {
 				this.rainSoundCounter = 0;
-				if (d1 > (double) (blockpos.getY() + 1) && worldclient.getPrecipitationHeight(blockpos)
-						.getY() > MathHelper.floor_float((float) blockpos.getY())) {
+				if (d1 > (double) (blockpos.getY() + 1) && worldclient.getPrecipitationHeight(blockpos).getY() > MathHelper.floor_float((float) blockpos.getY())) {
 					this.mc.theWorld.playSound(d0, d1, d2, "ambient.weather.rain", 0.1F, 0.5F, false);
 				} else {
 					this.mc.theWorld.playSound(d0, d1, d2, "ambient.weather.rain", 0.2F, 1.0F, false);
 				}
 			}
-
 		}
 	}
+
 
 	/**+
 	 * Render rain and snow
