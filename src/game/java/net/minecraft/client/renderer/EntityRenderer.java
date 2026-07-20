@@ -39,6 +39,8 @@ import net.lax1dude.eaglercraft.v1_8.opengl.ext.dynamiclights.DynamicLightsState
 import net.lax1dude.eaglercraft.v1_8.vector.Vector4f;
 import net.lax1dude.eaglercraft.v1_8.voice.VoiceTagRenderer;
 import net.lax1dude.eaglercraft.v1_8.vector.Matrix4f;
+import net.minecraft.apolloclient.event.EventManager;
+import net.minecraft.apolloclient.event.events.RenderEvent;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.material.Material;
@@ -1184,6 +1186,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
 		if (fxaa) {
 			EffectPipelineFXAA.end();
 		}
+
 	}
 
 	private void renderWorldPass(int pass, float partialTicks, long finishTimeNano) {

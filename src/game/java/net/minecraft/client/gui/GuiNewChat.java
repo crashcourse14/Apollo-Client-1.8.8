@@ -194,7 +194,7 @@ public class GuiNewChat extends Gui {
 					String joiner = plain.replace(" joined the game", "").trim();
 					if (mod.isWatched(joiner)) {
 						this.setChatLine(new ChatComponentText(
-							"§3[§bMSC§3] §aAlert: §e" + joiner + " §ajoined the game!"),
+							"§4[§cMSC§4] §aAlert: §e" + joiner + " §ajoined the game!"),
 							0, this.mc.ingameGUI.getUpdateCounter(), false);
 							NotificationManager.push("Friend Joined", joiner + " is online!");
 					}
@@ -204,7 +204,7 @@ public class GuiNewChat extends Gui {
 					String disconnecter = plain.replace(" left the game", "").trim();
 					if (mod.isWatched(disconnecter)) {
 						this.setChatLine(new ChatComponentText(
-							"§3[§bMSC§3] §aAlert: §e" + disconnecter + " §aleft the game!"),
+							"§4[§cMSC§4] §aAlert: §e" + disconnecter + " §aleft the game!"),
 							0, this.mc.ingameGUI.getUpdateCounter(), false);
 							NotificationManager.push("Friend left", disconnecter + " left!");
 					}

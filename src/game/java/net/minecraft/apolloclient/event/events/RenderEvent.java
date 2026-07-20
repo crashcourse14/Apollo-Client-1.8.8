@@ -1,7 +1,9 @@
 package net.minecraft.apolloclient.event.events;
 
-import net.minecraft.apolloclient.event.Event;
+public class RenderEvent {
+    public float partialTicks;
 
-public class RenderEvent extends Event{
-
+    public RenderEvent(float partialTicks) {
+        this.partialTicks = partialTicks;
+    }
 }

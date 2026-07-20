@@ -20,7 +20,6 @@ import net.minecraft.apolloclient.gui.mods.ItemCounterMod;
 import net.minecraft.apolloclient.gui.mods.ToggleSprintMod;
 import net.minecraft.apolloclient.config.ConfigManager; 
 import net.minecraft.apolloclient.gui.mods.AntiSpamMod;
-import net.minecraft.apolloclient.gui.mods.SelfNameTagMod;
 import net.minecraft.apolloclient.gui.mods.ModernKeystrokesMod;
 import net.minecraft.apolloclient.gui.mods.WayPointMod;
 import net.minecraft.apolloclient.gui.mods.CPSMod;
@@ -45,7 +44,6 @@ public class HudManager {
     public ItemCounterMod itemCounterMod;
     public ToggleSprintMod toggleSprintMod;
     public AntiSpamMod antiSpamMod;
-    public SelfNameTagMod selfNameTagMod;
     public ModernKeystrokesMod modernKeystrokesMod;
     public WayPointMod wayPointMod;
     public CPSMod cpsMod;
@@ -68,7 +66,6 @@ public class HudManager {
         hudMods.add(blockOverlayMod = new BlockOverlayMod());
         hudMods.add(itemCounterMod = new ItemCounterMod());
         hudMods.add(toggleSprintMod = new ToggleSprintMod());
-        hudMods.add(selfNameTagMod = new SelfNameTagMod());
         hudMods.add(antiSpamMod = new AntiSpamMod());
         hudMods.add(modernKeystrokesMod = new ModernKeystrokesMod());
         hudMods.add(wayPointMod = new WayPointMod());

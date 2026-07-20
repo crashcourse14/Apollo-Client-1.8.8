@@ -24,92 +24,60 @@ import net.minecraft.apolloclient.gui.NotificationManager;
 
 public class GuiModList extends GuiScreen {
 
-    // ============================================================
-    //  LAYOUT CONSTANTS
-    // ============================================================
-
     private static final int HEADER_HEIGHT   = 30;
     private static final int PADDING         = 10;
     private static final int CAT_BTN_H       = 20;
     private static final int CAT_SPACING     = 4;
-    private static final int CAT_ICON_W      = 3; // left accent strip width
-
+    private static final int CAT_ICON_W      = 3; 
     private static final int CARD_W          = 92;
-    private static final int CARD_H          = 100;
+    private static final int CARD_H          = 120;
     private static final int CARD_SPACING    = 8;
     private static final int ICON_SIZE       = 30;
     private static final int CARD_BTN_H      = 15;
     private static final int CARD_BTN_W      = 68;
-    private static final int CARD_RADIUS_TOP = 3; // visual accent bar height
-
+    private static final int CARD_RADIUS_TOP = 3; 
     private static final int FORM_LABEL_W    = 110;
     private static final int FIELD_H         = 15;
     private static final int FIELD_SPACING   = 8;
-
     private static final int SEARCH_W        = 110;
     private static final int SEARCH_H        = 16;
-
     private static final int SB_W            = 4;
     private static final int SB_PAD          = 4;
-
     private static final int SLIDER_H        = 10;
     private static final int SLIDER_LABEL_W  = 96;
     private static final int SLIDER_ROW_H    = SLIDER_H + 8;
-
     private static final int ID_OPTIONS_BASE = 2000;
     private static final int ID_TOGGLE_BASE  = 1000;
     private static final int ID_CHECKBOX_BASE= 500; 
-
-    // ============================================================
-    //  COLOR SCHEME  (dark neutral base, crimson accent)
-    // ============================================================
-
-    // Base surfaces
-    private static final int C_PANEL        = 0xFF0E1013; // main panel background
-    private static final int C_HEADER       = 0xFF16181C; // header strip
-    private static final int C_SIDEBAR      = 0xFF121417; // category rail background
-
-    // Cards / tiles
+    private static final int C_PANEL        = 0xFF0E1013; 
+    private static final int C_HEADER       = 0xFF16181C; 
+    private static final int C_SIDEBAR      = 0xFF121417; 
     private static final int C_CARD         = 0xFF16181C;
     private static final int C_CARD_HOVER   = 0xFF1C1F24;
-    private static final int C_CARD_ACTIVE  = 0xFF1A1417; // subtle red-tinted card when enabled
-
-    // Category tabs
+    private static final int C_CARD_ACTIVE  = 0xFF1A1417; 
     private static final int C_CAT          = 0xFF15171B;
     private static final int C_CAT_HOVER    = 0xFF1C1F24;
-    private static final int C_SELECTED_CAT = 0xFF1E1517; // red-tinted selected background
-
-    // Accent (crimson red)
+    private static final int C_SELECTED_CAT = 0xFF1E1517; 
     private static final int C_ACCENT       = 0xFFB42E30;
     private static final int C_ACCENT_HOVER = 0xFFC93A3C;
     private static final int C_ACCENT_DIM   = 0x55B42E30;
     private static final int C_ACCENT_FAINT = 0x22B42E30;
-
-    // Inputs / borders
     private static final int C_TEXTBOX      = 0xFF1B1D21;
     private static final int C_TEXTBOX_FOCUS= 0xFF202226;
     private static final int C_BORDER       = 0xFF24262B;
     private static final int C_BORDER_LIGHT = 0xFF2E3136;
-
-    // Text
     private static final int C_TEXT         = 0xFFF2F3F5;
     private static final int C_TEXT_DIM     = 0xFF8B8F97;
     private static final int C_TEXT_FAINT   = 0xFF5B5E64;
-
-    // Status
     private static final int C_ENABLED      = 0xFFB42E30;
     private static final int C_DISABLED     = 0xFF4A4D53;
-
-    // ============================================================
-    //  STATE
-    // ============================================================
 
     private enum ViewMode { LIST, OPTIONS }
     private ViewMode viewMode = ViewMode.LIST;
     private HudMod activeMod;
-
     private final GuiScreen parentScreen;
     private Category selectedCategory = null;
+
     private final List<HudMod>     currentMods  = new ArrayList<>();
     private final List<TabInfo>    categoryTabs = new ArrayList<>();
     private final List<CardLayout> cardLayouts  = new ArrayList<>();
@@ -119,13 +87,12 @@ public class GuiModList extends GuiScreen {
     private int modsAreaX, modsAreaY, modsAreaW, modsAreaH;
     private int searchX, searchY;
     private int closeX, closeY, closeSize;
-
     private int backBtnX, backBtnY, backBtnW, backBtnH;
 
     private GuiTextField searchField;
+
     private final Map<ModOption, GuiTextField> optionTextFields = new HashMap<>();
     private final Map<ModOption, GuiCheckboxButton> optionCheckboxes = new HashMap<>();
-
     private final Map<ModOption, GuiDropdown> optionDropdowns = new HashMap<>();
 
     private int nextDynamicBtnId = ID_CHECKBOX_BASE;
@@ -134,16 +101,11 @@ public class GuiModList extends GuiScreen {
     private int totalRows    = 0;
     private int visibleRows  = 0;
     private int cols         = 3;
-
     private int optionsScrollOffset = 0;
     private int optionsTotalHeight  = 0;
     private int draggingSlider      = -1;
 
     public GuiModList(GuiScreen parent) { this.parentScreen = parent; }
-
-    // ============================================================
-    //  INIT / LAYOUT
-    // ============================================================
 
     @Override
     public void initGui() {
@@ -301,20 +263,13 @@ public class GuiModList extends GuiScreen {
         return false;
     }
 
-    // ============================================================
-    //  DRAW
-    // ============================================================
-
     @Override
     public void drawScreen(int mx, int my, float pt) {
         ApolloBranding.render(width, height);
         this.drawDefaultBackground();
 
-        // Panel body + subtle border
         drawRect(panelX - 1, panelY - 1, panelX + panelW + 1, panelY + panelH + 1, C_BORDER);
         drawRect(panelX, panelY, panelX + panelW, panelY + panelH, C_PANEL);
-
-        // Header
         drawRect(panelX, panelY, panelX + panelW, panelY + HEADER_HEIGHT, C_HEADER);
         drawRect(panelX, panelY + HEADER_HEIGHT - 1, panelX + panelW, panelY + HEADER_HEIGHT, C_ACCENT);
 
@@ -343,7 +298,6 @@ public class GuiModList extends GuiScreen {
     }
 
     private void drawListView(int mx, int my) {
-        // -------- Sidebar --------
         drawRect(catColX - PADDING / 2, catColY - PADDING / 2,
                  catColX + catColW + PADDING / 2, panelY + panelH - PADDING / 2, C_SIDEBAR);
 
@@ -359,7 +313,6 @@ public class GuiModList extends GuiScreen {
             drawString(fontRendererObj, t.label, t.x + CAT_ICON_W + 8, t.y + (t.h - 8) / 2, textColor);
         }
 
-        // -------- Mod grid --------
         if (currentMods.isEmpty()) {
             String msg = "No mods found";
             drawCenteredString(fontRendererObj, msg,
@@ -381,7 +334,6 @@ public class GuiModList extends GuiScreen {
             positionCardButtons(i, c, screenY);
         }
 
-        // -------- Scrollbar --------
         if (totalRows > visibleRows) {
             int sbX = modsAreaX + modsAreaW + SB_PAD;
             drawRect(sbX, modsAreaY, sbX + SB_W, modsAreaY + modsAreaH, C_CAT);
@@ -392,7 +344,6 @@ public class GuiModList extends GuiScreen {
             drawRect(sbX, thumbY, sbX + SB_W, thumbY + thumbH, C_ACCENT_DIM);
         }
 
-        // Clip stray content above/below grid area (mirrors original masking approach)
         drawRect(modsAreaX - 1, panelY + HEADER_HEIGHT, modsAreaX + modsAreaW + SB_W + SB_PAD + 1, modsAreaY, C_PANEL);
         drawRect(modsAreaX - 1, modsAreaY + modsAreaH, modsAreaX + modsAreaW + SB_W + SB_PAD + 1, panelY + panelH, C_PANEL);
     }
@@ -407,11 +358,8 @@ public class GuiModList extends GuiScreen {
 
         drawRect(cx - 1, cy - 1, cx + CARD_W + 1, cy + CARD_H + 1, borderCol);
         drawRect(cx, cy, cx + CARD_W, cy + CARD_H, cardBg);
-
-        // Top accent strip -- solid red when enabled, muted grey otherwise
         drawRect(cx, cy, cx + CARD_W, cy + CARD_RADIUS_TOP, on ? C_ACCENT : C_DISABLED);
 
-        // Icon tile
         int iconX = cx + (CARD_W - ICON_SIZE) / 2;
         int iconY = cy + 10;
         drawRect(iconX - 1, iconY - 1, iconX + ICON_SIZE + 1, iconY + ICON_SIZE + 1, C_BORDER);
@@ -428,10 +376,6 @@ public class GuiModList extends GuiScreen {
         String trimmed = fontRendererObj.trimStringToWidth(mod.name, CARD_W - 6);
         drawCenteredString(fontRendererObj, trimmed, cx + CARD_W / 2, nameY, C_TEXT);
 
-        // Status dot + label
-        String status = on ? "Enabled" : "Disabled";
-        int statusY = nameY + 11;
-        drawCenteredString(fontRendererObj, status, cx + CARD_W / 2, statusY, on ? C_ENABLED : C_TEXT_FAINT);
     }
 
     private void positionCardButtons(int i, CardLayout c, int screenY) {
