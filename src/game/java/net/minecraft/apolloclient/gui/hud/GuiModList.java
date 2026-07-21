@@ -21,6 +21,7 @@ import net.minecraft.apolloclient.gui.ApolloBranding;
 import net.minecraft.apolloclient.gui.SoundEntry;
 import net.minecraft.apolloclient.gui.mods.SoundMod;
 import net.minecraft.apolloclient.gui.NotificationManager;
+import net.minecraft.client.gui.RoundedRectHelper; 
 
 public class GuiModList extends GuiScreen {
 
@@ -268,10 +269,12 @@ public class GuiModList extends GuiScreen {
         ApolloBranding.render(width, height);
         this.drawDefaultBackground();
 
-        drawRect(panelX - 1, panelY - 1, panelX + panelW + 1, panelY + panelH + 1, C_BORDER);
-        drawRect(panelX, panelY, panelX + panelW, panelY + panelH, C_PANEL);
-        drawRect(panelX, panelY, panelX + panelW, panelY + HEADER_HEIGHT, C_HEADER);
-        drawRect(panelX, panelY + HEADER_HEIGHT - 1, panelX + panelW, panelY + HEADER_HEIGHT, C_ACCENT);
+        int radius = 5;
+
+        RoundedRectHelper.drawRoundedRect(panelX - 1, panelY - 1, panelX + panelW + 1, panelY + panelH + 1, radius, C_BORDER);
+        RoundedRectHelper.drawRoundedRect(panelX, panelY, panelX + panelW, panelY + panelH, radius, C_PANEL);
+        RoundedRectHelper.drawRoundedRect(panelX, panelY, panelX + panelW, panelY + HEADER_HEIGHT, radius, C_HEADER);
+        RoundedRectHelper.drawRoundedRect(panelX, panelY + HEADER_HEIGHT - 1, panelX + panelW, panelY + HEADER_HEIGHT, radius, C_ACCENT);
 
         drawString(fontRendererObj, "§cApollo §rClient",
                 panelX + PADDING, panelY + (HEADER_HEIGHT - 8) / 2, C_TEXT);
@@ -284,9 +287,9 @@ public class GuiModList extends GuiScreen {
 
         if (viewMode == ViewMode.LIST) {
             boolean focus = searchField.isFocused();
-            drawRect(searchX - 1, searchY - 1, searchX + SEARCH_W + 1, searchY + SEARCH_H + 1,
+            RoundedRectHelper.drawRoundedRect(searchX - 1, searchY - 1, searchX + SEARCH_W + 1, searchY + SEARCH_H + 1, 5, 
                     focus ? C_ACCENT : C_BORDER_LIGHT);
-            drawRect(searchX, searchY, searchX + SEARCH_W, searchY + SEARCH_H,
+            RoundedRectHelper.drawRoundedRect(searchX, searchY, searchX + SEARCH_W, searchY + SEARCH_H, 5,
                     focus ? C_TEXTBOX_FOCUS : C_TEXTBOX);
             if (searchField.getText().isEmpty() && !searchField.isFocused()) {
                 drawString(fontRendererObj, "Search mods...", searchX + 5, searchY + (SEARCH_H - 8) / 2, C_TEXT_FAINT);
@@ -298,8 +301,8 @@ public class GuiModList extends GuiScreen {
     }
 
     private void drawListView(int mx, int my) {
-        drawRect(catColX - PADDING / 2, catColY - PADDING / 2,
-                 catColX + catColW + PADDING / 2, panelY + panelH - PADDING / 2, C_SIDEBAR);
+        RoundedRectHelper.drawRoundedRect(catColX - PADDING / 2, catColY - PADDING / 2,
+                 catColX + catColW + PADDING / 2, panelY + panelH - PADDING / 2, 5, C_SIDEBAR);
 
         for (TabInfo t : categoryTabs) {
             boolean active = t.category == selectedCategory;
@@ -336,7 +339,7 @@ public class GuiModList extends GuiScreen {
 
         if (totalRows > visibleRows) {
             int sbX = modsAreaX + modsAreaW + SB_PAD;
-            drawRect(sbX, modsAreaY, sbX + SB_W, modsAreaY + modsAreaH, C_CAT);
+            RoundedRectHelper.drawRoundedRect(sbX, modsAreaY, sbX + SB_W, modsAreaY + modsAreaH, 5, C_CAT);
             float ratio = (float) visibleRows / totalRows;
             int thumbH  = Math.max(14, (int)(modsAreaH * ratio));
             int maxScroll = Math.max(1, totalRows - visibleRows);
@@ -344,8 +347,8 @@ public class GuiModList extends GuiScreen {
             drawRect(sbX, thumbY, sbX + SB_W, thumbY + thumbH, C_ACCENT_DIM);
         }
 
-        drawRect(modsAreaX - 1, panelY + HEADER_HEIGHT, modsAreaX + modsAreaW + SB_W + SB_PAD + 1, modsAreaY, C_PANEL);
-        drawRect(modsAreaX - 1, modsAreaY + modsAreaH, modsAreaX + modsAreaW + SB_W + SB_PAD + 1, panelY + panelH, C_PANEL);
+        RoundedRectHelper.drawRoundedRect(modsAreaX - 1, panelY + HEADER_HEIGHT, modsAreaX + modsAreaW + SB_W + SB_PAD + 1, modsAreaY, 5, C_PANEL);
+        RoundedRectHelper.drawRoundedRect(modsAreaX - 1, modsAreaY + modsAreaH, modsAreaX + modsAreaW + SB_W + SB_PAD + 1, panelY + panelH, 5,  C_PANEL);
     }
 
     private void drawCard(int i, int cx, int cy, int mx, int my) {
@@ -356,9 +359,9 @@ public class GuiModList extends GuiScreen {
         int cardBg = hov ? C_CARD_HOVER : (on ? C_CARD_ACTIVE : C_CARD);
         int borderCol = on ? C_ACCENT_DIM : (hov ? C_BORDER_LIGHT : C_BORDER);
 
-        drawRect(cx - 1, cy - 1, cx + CARD_W + 1, cy + CARD_H + 1, borderCol);
-        drawRect(cx, cy, cx + CARD_W, cy + CARD_H, cardBg);
-        drawRect(cx, cy, cx + CARD_W, cy + CARD_RADIUS_TOP, on ? C_ACCENT : C_DISABLED);
+        RoundedRectHelper.drawRoundedRect(cx - 1, cy - 1, cx + CARD_W + 1, cy + CARD_H + 1, 5, borderCol);
+        RoundedRectHelper.drawRoundedRect(cx, cy, cx + CARD_W, cy + CARD_H, 5, cardBg);
+        RoundedRectHelper.drawRoundedRect(cx, cy, cx + CARD_W, cy + CARD_RADIUS_TOP, 5, on ? C_ACCENT : C_DISABLED);
 
         int iconX = cx + (CARD_W - ICON_SIZE) / 2;
         int iconY = cy + 10;
@@ -371,7 +374,6 @@ public class GuiModList extends GuiScreen {
         drawCenteredString(fontRendererObj, initial, iconX + ICON_SIZE / 2, iconY + (ICON_SIZE - 8) / 2,
                 on ? C_TEXT : C_TEXT_DIM);
 
-        // Name
         int nameY = iconY + ICON_SIZE + 6;
         String trimmed = fontRendererObj.trimStringToWidth(mod.name, CARD_W - 6);
         drawCenteredString(fontRendererObj, trimmed, cx + CARD_W / 2, nameY, C_TEXT);
@@ -407,8 +409,8 @@ public class GuiModList extends GuiScreen {
 
     private void drawOptionsView(int mx, int my) {
         boolean backHov = isIn(mx, my, backBtnX, backBtnY, backBtnW, backBtnH);
-        drawRect(backBtnX, backBtnY, backBtnX + backBtnW, backBtnY + backBtnH, backHov ? C_CAT_HOVER : C_CAT);
-        drawRect(backBtnX, backBtnY, backBtnX + CAT_ICON_W, backBtnY + backBtnH, backHov ? C_ACCENT : C_BORDER_LIGHT);
+        RoundedRectHelper.drawRoundedRect(backBtnX, backBtnY, backBtnX + backBtnW, backBtnY + backBtnH, 5, backHov ? C_CAT_HOVER : C_CAT);
+        RoundedRectHelper.drawRoundedRect(backBtnX, backBtnY, backBtnX + CAT_ICON_W, backBtnY + backBtnH, 5, backHov ? C_ACCENT : C_BORDER_LIGHT);
         drawString(fontRendererObj, "< Back", backBtnX + CAT_ICON_W + 6, backBtnY + (backBtnH - 8) / 2,
                 backHov ? C_TEXT : C_TEXT_DIM);
 
@@ -416,7 +418,7 @@ public class GuiModList extends GuiScreen {
                 backBtnX + backBtnW + PADDING, backBtnY + (backBtnH - 8) / 2, C_TEXT);
 
         int divY = backBtnY + backBtnH + 6;
-        drawRect(panelX + PADDING, divY, panelX + panelW - PADDING, divY + 1, C_BORDER);
+        RoundedRectHelper.drawRoundedRect(panelX + PADDING, divY, panelX + panelW - PADDING, divY + 1, 5, C_BORDER);
 
         for (ModOption opt : activeMod.supportedOptions) {
             if (optionTextFields.containsKey(opt)) {
@@ -425,8 +427,8 @@ public class GuiModList extends GuiScreen {
 
                 if (opt.type == ModOption.OptionType.COLOR) {
                     int swX = field.xPosition + field.width + 6;
-                    drawRect(swX - 1, field.yPosition - 1, swX + FIELD_H + 1, field.yPosition + FIELD_H + 1, C_BORDER);
-                    drawRect(swX, field.yPosition, swX + FIELD_H, field.yPosition + FIELD_H, activeMod.getOptionColor(opt));
+                    RoundedRectHelper.drawRoundedRect(swX - 1, field.yPosition - 1, swX + FIELD_H + 1, field.yPosition + FIELD_H + 1, 5, C_BORDER);
+                    RoundedRectHelper.drawRoundedRect(swX, field.yPosition, swX + FIELD_H, field.yPosition + FIELD_H, 5, activeMod.getOptionColor(opt));
                 }
                 if (opt == ModOption.WATCH_NAMES) {
                     drawString(fontRendererObj, "§7e.g. friend1,friend2", field.xPosition, field.yPosition + FIELD_H + 3, C_TEXT_FAINT);
@@ -501,13 +503,10 @@ public class GuiModList extends GuiScreen {
 
     private void drawCloseButton(int mx, int my) {
         boolean hov = isIn(mx, my, closeX, closeY, closeSize, closeSize);
-        drawRect(closeX, closeY, closeX + closeSize, closeY + closeSize, hov ? C_ACCENT : C_CAT);
+        RoundedRectHelper.drawRoundedRect(closeX, closeY, closeX + closeSize, closeY + closeSize, 5, hov ? C_ACCENT : C_CAT);
         drawCenteredString(fontRendererObj, "\u2715", closeX + closeSize / 2, closeY + (closeSize - 8) / 2, C_TEXT);
     }
 
-    // ============================================================
-    //  INPUT
-    // ============================================================
 
     @Override
     public void handleMouseInput() throws IOException {
