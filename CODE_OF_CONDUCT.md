@@ -19,7 +19,7 @@ In general, while it is allowed to use AI for the development of this client (co
 
 You have the power to say something if you hear something that you don't like. Do so respectfully, and when you or others feel disrespected. If you do not want to speak up, or your concerns are not being fixed ethically, please consider contacting adminstration. We demand proof if any, as we do not want false reports. 
 
-# Well will not tolerate the below, includind but not limited to:
+# Well will not tolerate the below, including but not limited to:
 **Communication (1)** 
 
 - Harassing
