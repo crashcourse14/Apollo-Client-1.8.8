@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html style="width:100%;height:100%;background-color:black;">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"/>
+        <meta name="description" content="EaglercraftX 1.8 test directory HTML page"/>
+        <meta name="keywords" content="eaglercraft, eaglercraftx, minecraft, 1.8, 1.8.8"/>
+        <title>Apollo Client 1.8</title>
+
+        <link type="image/png" rel="shortcut icon" href="../apolloclient/logos/logo.png" />
+        <link rel="icon" href="../apolloclient/logos/logo.png" />
+
+        <script type="text/javascript" src="/game/classes.js"></script>
+
+        <script type="text/javascript">
+            "use strict";
+
+            window.addEventListener("load", function () {
+                if (window.location.href.indexOf("file:") === 0) {
+                    alert(
+                        "HTTP please, do not open this file locally, run a local HTTP server and load it via HTTP"
+                    );
+                    return;
+                }
+
+                var relayId = Math.floor(Math.random() * 3);
+
+                window.eaglercraftXOpts = {
+                    demoMode: false,
+                    container: "game_frame",
+                    assetsURI: "/game/assets.epk",
+                    localesURI: "lang/",
+                    worldsDB: "worlds",
+                    logInvalidCerts: true,
+                    crashOnUncaughtExceptions: true,
+
+                    localStorageLoaded: function (key) {
+                        if (key === "apollo_config") {
+                            let data = localStorage.getItem("apollo_config");
+
+                            if (!data) {
+                                return null;
+                            }
+
+                            // Decode Base64 to byte array format expected by Eagler
+                            let binary = atob(data);
+                            let bytes = new Uint8Array(binary.length);
+
+                            for (let i = 0; i < binary.length; i++) {
+                                bytes[i] = binary.charCodeAt(i);
+                            }
+
+                            return bytes;
+                        }
+
+                        let data = localStorage.getItem("cl_" + key);
+
+                        if (!data) {
+                            return null;
+                        }
+
+                        let binary = atob(data);
+                        let bytes = new Uint8Array(binary.length);
+
+                        for (let i = 0; i < binary.length; i++) {
+                            bytes[i] = binary.charCodeAt(i);
+                        }
+
+                        return bytes;
+                    },
+
+                    localStorageSaved: function (key, data) {
+                        function toBase64(bytes) {
+                            let binary = "";
+
+                            for (let i = 0; i < bytes.length; i++) {
+                                binary += String.fromCharCode(bytes[i]);
+                            }
+
+                            return btoa(binary);
+                        }
+
+                        if (key === "apollo_config") {
+                            localStorage.setItem(
+                                "apollo_config",
+                                toBase64(data)
+                            );
+                            return;
+                        }
+
+                        localStorage.setItem(
+                            "cl_" + key,
+                            toBase64(data)
+                        );
+                    },
+
+                    servers: [
+                        {
+                            addr: "wss://eagler.skeletonmc.com",
+                            name: "SkeletonMC",
+                        },
+                        {
+                            addr: "wss://mc.arch.lol",
+                            name: "ArchMC",
+                        },
+                        {
+                            addr: "wss://Usasmp.eagler.host",
+                            name: "USA SMP",
+                        },
+                    ],
+
+                    relays: [
+                        {
+                            addr: "wss://relay.deev.is/",
+                            comment: "lax1dude relay #1",
+                            primary: relayId === 0,
+                        },
+                        {
+                            addr: "wss://relay.lax1dude.net/",
+                            comment: "lax1dude relay #2",
+                            primary: relayId === 1,
+                        },
+                        {
+                            addr: "wss://relay.shhnowisnottheti.me/",
+                            comment: "ayunami relay #1",
+                            primary: relayId === 2,
+                        },
+                    ],
+                };
+
+                var q = window.location.search;
+
+                if (
+                    typeof q === "string" &&
+                    q[0] === "?" &&
+                    typeof window.URLSearchParams !== "undefined"
+                ) {
+                    q = new window.URLSearchParams(q);
+
+                    var s = q.get("server");
+
+                    if (s) {
+                        window.eaglercraftXOpts.joinServer = s;
+                    }
+                }
+
+                main();
+            });
+        </script>
+    </head>
+
+    <body id="game_frame" style="margin:0px;width:100%;height:100%;overflow:hidden;background-color:black;">
+    </body>
+</html>
