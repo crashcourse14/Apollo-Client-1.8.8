@@ -5,3 +5,12 @@ Apollo Client is an open-source modified Eaglercraft client that aims to improve
 The project's website is: https://apolloclientmc.vercel.app .
 
 Use `git clone` to check the source locally, or simply download the zip (not recommended).
+
+To use the client (JavaScript), follow the instructions below:
+
+- Download `assets.epk` in the "target_teavm_javascript" folder;
+- Download `classes.js` in the "target_teavm_javascript"folder;
+- Download `index.html` in the "web_template" folder;
+- Make sure the file paths to `assets.epk` and `classes.js` in your HTML are correct.
+
+If it does not work, and shows a black screen, that is due to incorrect file paths to `classes.js` and should also make sure `assets.epk` has the correct file path as well.
