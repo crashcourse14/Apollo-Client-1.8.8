@@ -20,10 +20,8 @@ public class TabListSidebar extends GuiScreen {
     private static final int TEXT_DIM  = 0xFF8B8F97;
     private static final int BORDER    = 0xFF24262B;
     private static final int TEXTBOX   = 0xFF1B1D21;
-    private static final int TEXTBOX_FOCUS = 0xFF202226;
 
     private static final int SIDEBAR_W = 170;
-    private static final int RADIUS    = 5;
     private static final int PADDING   = 10;
     private static final int ROW_H     = 20;
     private static final int FACE_SIZE = 16;

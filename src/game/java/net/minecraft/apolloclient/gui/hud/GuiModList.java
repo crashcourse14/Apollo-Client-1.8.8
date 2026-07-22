@@ -30,9 +30,9 @@ public class GuiModList extends GuiScreen {
     private static final int CAT_SPACING     = 4;
     private static final int CAT_ICON_W      = 3; 
     private static final int CARD_W          = 92;
-    private static final int CARD_H          = 120;
+    private static final int CARD_H          = 100;
     private static final int CARD_SPACING    = 8;
-    private static final int ICON_SIZE       = 30;
+    private static final int ICON_SIZE       = 20;
     private static final int CARD_BTN_H      = 15;
     private static final int CARD_BTN_W      = 68;
     private static final int CARD_RADIUS_TOP = 3; 

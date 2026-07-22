@@ -7,6 +7,8 @@ import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.gui.RoundedRectHelper; 
+
 
 /**
  * Renders slide-in notifications in the bottom-right corner of the screen.
@@ -18,13 +20,12 @@ public class NotificationManager extends Gui {
     private static final int PADDING     = 10;
     private static final int BORDER_W    = 3;
     private static final int SPACING     = 4; // Space between stacked notifications
-    private static final int MAX_STACK   = 4; // Maximum notifications on screen at once
+    private static final int MAX_STACK   = 4; 
     
     private static final long SLIDE_MS = 400L; 
     private static final long HOLD_MS  = 3000L; 
 
-    private static final int COLOR_BG     = 0xCC17191D;
-    private static final int COLOR_BORDER = 0xFF343A43;
+    private static final int COLOR_BG     = 0xFF0E1013;
     private static final int COLOR_TITLE  = 0xFFFFFFFF;
     private static final int COLOR_BODY   = 0xFFAAAAAA;
 
@@ -41,7 +42,6 @@ public class NotificationManager extends Gui {
     public static void push(String title, String body) {
         activeNotifications.add(new ActiveNotification(title, body, System.currentTimeMillis()));
         
-        // If we exceed the max stack size, remove the oldest one
         if (activeNotifications.size() > MAX_STACK) {
             activeNotifications.remove(0);
         }
@@ -58,28 +58,21 @@ public class NotificationManager extends Gui {
         int screenH = sr.getScaledHeight();
         int margin = 4;
 
-        // Start drawing from the bottom of the screen
         int currentY = screenH - margin;
 
-        // Loop backwards (bottom to top) so the newest notification appears at the bottom
         for (int i = activeNotifications.size() - 1; i >= 0; i--) {
             ActiveNotification notif = activeNotifications.get(i);
             long elapsed = now - notif.startTime;
 
-            // If the notification has finished its cycle, remove it and skip drawing
             if (elapsed >= totalLife) {
                 activeNotifications.remove(i);
                 continue;
             }
 
-            // Measure text to determine height
             int bodyLines = mc.fontRendererObj.listFormattedStringToWidth(notif.body, WIDTH - PADDING * 2 - BORDER_W).size();
-            int height = PADDING + mc.fontRendererObj.FONT_HEIGHT          
-                       + 5                                                  
-                       + bodyLines * mc.fontRendererObj.FONT_HEIGHT          
-                       + PADDING;
+            int height = PADDING + mc.fontRendererObj.FONT_HEIGHT + 5 + bodyLines * mc.fontRendererObj.FONT_HEIGHT + PADDING;
 
-            // Calculate slide offset based on real time
+
             float slideOffset;
             if (elapsed < SLIDE_MS) {
                 float t = (float) elapsed / SLIDE_MS;
@@ -92,35 +85,28 @@ public class NotificationManager extends Gui {
             }
 
             int x = (int) (screenW - WIDTH - margin + slideOffset);
-            
-            // Move the Y position up for this notification
+        
             currentY -= height;
             int y = currentY;
 
             GlStateManager.enableBlend();
             GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 
-            // 1. Draw background (shifted right by BORDER_W to make room for left border)
-            drawRect(x + BORDER_W, y, x + WIDTH, y + height, COLOR_BG);
+            // BACKGROUND
+            RoundedRectHelper.drawRoundedRect(x + BORDER_W, y, x + WIDTH, y + height, 5, COLOR_BG);
             
-            // 2. Draw border on the LEFT side
-            drawRect(x, y, x + BORDER_W, y + height, COLOR_BORDER);
+            // TITLE
+            mc.fontRendererObj.drawStringWithShadow(notif.title, x + BORDER_W + PADDING, y + PADDING, COLOR_TITLE);
 
-            // 3. Draw title (shifted right by BORDER_W so it doesn't overlap the border)
-            mc.fontRendererObj.drawStringWithShadow(notif.title,
-                    x + BORDER_W + PADDING, y + PADDING, COLOR_TITLE);
-
-            // 4. Draw body (shifted right by BORDER_W)
+            // BODY
             int bodyY = y + PADDING + mc.fontRendererObj.FONT_HEIGHT + 5;
-            for (String line : mc.fontRendererObj.listFormattedStringToWidth(
-                    notif.body, WIDTH - PADDING * 2 - BORDER_W)) {
+            for (String line : mc.fontRendererObj.listFormattedStringToWidth(notif.body, WIDTH - PADDING * 2 - BORDER_W)) {
                 mc.fontRendererObj.drawStringWithShadow(line, x + BORDER_W + PADDING, bodyY, COLOR_BODY);
                 bodyY += mc.fontRendererObj.FONT_HEIGHT;
             }
 
             GlStateManager.disableBlend();
 
-            // Add spacing for the next notification above it
             currentY -= SPACING;
         }
     }
@@ -133,7 +119,6 @@ public class NotificationManager extends Gui {
         return t * t;
     }
 
-    // Inner class now stores the time it was created
     private static class ActiveNotification {
         final String title;
         final String body;
