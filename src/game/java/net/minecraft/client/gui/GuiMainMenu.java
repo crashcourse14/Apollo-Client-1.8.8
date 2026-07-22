@@ -48,6 +48,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.ISaveFormat;
+import net.minecraft.client.gui.RoundedRectHelper; 
 
 public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
     private static final Logger logger = LogManager.getLogger();
@@ -77,6 +78,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
     protected static final ResourceLocation languageTexture = new ResourceLocation("apolloclient/title/language.png");
     protected static final ResourceLocation gearTexture = new ResourceLocation("apolloclient/title/gear.png");
     protected static final ResourceLocation editTexture = new ResourceLocation("apolloclient/title/edit.png");
+    protected static final ResourceLocation wardrobeTexture = new ResourceLocation("apolloclient/title/shirt.png");
     
     private static final ResourceLocation[] titlePanoramaPaths = new ResourceLocation[] {
             new ResourceLocation("textures/gui/title/background/panorama_0.png"),
@@ -275,9 +277,13 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
         int editX = languageX - buttonSize - 5;
         int editY = 5;
 
+        int wardrobeX = editX - buttonSize - 5;
+        int wardrobeY = 5;
+
 
         this.buttonList.add(new GuiLinkButton(101, linkX, linkY, linkTexture));
 
+        this.buttonList.add(new GuiLinkButton(104, wardrobeX, wardrobeY, wardrobeTexture));
         this.buttonList.add(new GuiLinkButton(104, editX, editY, editTexture));
         this.buttonList.add(new GuiLinkButton(5, languageX, languageY, languageTexture));
         this.buttonList.add(new GuiLinkButton(0, gearX, gearY, gearTexture));
@@ -602,11 +608,8 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
         int boxY = 5;
 
         int bgColor = 0x806B1818;
-        int borderColor = 0x80A92525;
 
-        Gui.drawRect(boxX - borderThickness, boxY - borderThickness, boxX + boxWidth + borderThickness,
-                boxY + boxHeight + borderThickness, borderColor);
-        Gui.drawRect(boxX, boxY, boxX + boxWidth, boxY + boxHeight, bgColor);
+        RoundedRectHelper.drawRoundedRect(boxX, boxY, boxX + boxWidth, boxY + boxHeight, 5, bgColor);
 
         this.drawCenteredString(this.fontRendererObj, text, this.width / 2, boxY + paddingY, 0xFFFFFFFF);
     }

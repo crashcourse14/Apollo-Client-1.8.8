@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.lax1dude.eaglercraft.v1_8.opengl.GlStateManager;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiClearButton; 
 import net.minecraft.client.gui.GuiCheckboxButton;
@@ -88,6 +87,9 @@ public class GuiModList extends GuiScreen {
     private int modsAreaX, modsAreaY, modsAreaW, modsAreaH;
     private int searchX, searchY;
     private int closeX, closeY, closeSize;
+    private int tabListBtnY;
+    private static final int ID_TAB_LIST = 9001;
+    private GuiClearButton tabListButton;
     private int backBtnX, backBtnY, backBtnW, backBtnH;
 
     private GuiTextField searchField;
@@ -163,6 +165,8 @@ public class GuiModList extends GuiScreen {
             categoryTabs.add(new TabInfo(labels[i], cats[i], catColX, y, catColW, CAT_BTN_H));
             y += CAT_BTN_H + CAT_SPACING;
         }
+        tabListBtnY = y + CAT_SPACING;
+        this.tabListButton = new GuiClearButton(ID_TAB_LIST, catColX, tabListBtnY, catColW, CAT_BTN_H, "Tab list");
     }
 
     private void rebuildMods() {
@@ -170,6 +174,8 @@ public class GuiModList extends GuiScreen {
         currentMods.clear();
         cardLayouts.clear();
         scrollRow = 0;
+
+        if (this.tabListButton != null) this.buttonList.add(this.tabListButton);
 
         String q = searchField != null ? searchField.getText().trim().toLowerCase() : "";
 
@@ -409,8 +415,8 @@ public class GuiModList extends GuiScreen {
 
     private void drawOptionsView(int mx, int my) {
         boolean backHov = isIn(mx, my, backBtnX, backBtnY, backBtnW, backBtnH);
-        RoundedRectHelper.drawRoundedRect(backBtnX, backBtnY, backBtnX + backBtnW, backBtnY + backBtnH, 5, backHov ? C_CAT_HOVER : C_CAT);
-        RoundedRectHelper.drawRoundedRect(backBtnX, backBtnY, backBtnX + CAT_ICON_W, backBtnY + backBtnH, 5, backHov ? C_ACCENT : C_BORDER_LIGHT);
+        drawRect(backBtnX, backBtnY, backBtnX + backBtnW, backBtnY + backBtnH, backHov ? C_CAT_HOVER : C_CAT);
+        drawRect(backBtnX, backBtnY, backBtnX + CAT_ICON_W, backBtnY + backBtnH, backHov ? C_ACCENT : C_BORDER_LIGHT);
         drawString(fontRendererObj, "< Back", backBtnX + CAT_ICON_W + 6, backBtnY + (backBtnH - 8) / 2,
                 backHov ? C_TEXT : C_TEXT_DIM);
 
@@ -583,6 +589,10 @@ public class GuiModList extends GuiScreen {
     @Override
     protected void actionPerformed(GuiButton button) {
         int id = button.id;
+        if (id == ID_TAB_LIST) {
+            this.mc.displayGuiScreen(new TabListSidebar(this));
+            return;
+        }
         if (viewMode == ViewMode.LIST) {
             if (id >= ID_OPTIONS_BASE) {
                 int i = id - ID_OPTIONS_BASE;

@@ -1,1 +1,1 @@
-Apollo Client 1.8.8 (cfeb73d7)
+Apollo Client 1.8.8 (d2c6a3e8)
