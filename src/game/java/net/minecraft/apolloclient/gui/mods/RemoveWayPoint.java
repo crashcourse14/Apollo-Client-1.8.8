@@ -76,7 +76,7 @@ public class RemoveWayPoint extends GuiScreen {
         RoundedRectHelper.drawRoundedRect(menuX - 1, menuY - 1, menuX + MENU_W + 1, menuY + MENU_H + 1, RADIUS, 0xFF24262B);
         RoundedRectHelper.drawRoundedRect(menuX, menuY, menuX + MENU_W, menuY + MENU_H, RADIUS, MENU_BG);
 
-        drawString(fontRendererObj, "Remove way Point", menuX + 10, menuY + 8, TEXT_MAIN);
+        drawString(fontRendererObj, "Remove Way Point", menuX + 10, menuY + 8, TEXT_MAIN);
 
         boolean focus = this.nameField.isFocused();
         RoundedRectHelper.drawRoundedRect(
