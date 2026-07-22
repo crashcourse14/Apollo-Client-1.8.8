@@ -4,6 +4,8 @@ Apollo Client is an open-source modified Eaglercraft client that aims to improve
 
 The project's website is: https://apolloclientmc.vercel.app .
 
+To play the current version of the project: https://apolloclientmc.vercel.app/game.html .
+
 Use `git clone` to check the source locally, or simply download the zip (not recommended).
 
 To use the client (JavaScript), follow the instructions below:

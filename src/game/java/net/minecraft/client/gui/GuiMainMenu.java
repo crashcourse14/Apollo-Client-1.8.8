@@ -72,13 +72,12 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
             "textures/gui/title/minecraft.png");
     private static final ResourceLocation minecraftTitleBlurFlag = new ResourceLocation(
             "textures/gui/title/background/enable_blur.txt");
-    private static final ResourceLocation eaglerGuiTextures = new ResourceLocation("eagler:gui/eagler_gui.png");
     
     protected static final ResourceLocation linkTexture = new ResourceLocation("apolloclient/title/link.png");
     protected static final ResourceLocation languageTexture = new ResourceLocation("apolloclient/title/language.png");
     protected static final ResourceLocation gearTexture = new ResourceLocation("apolloclient/title/gear.png");
     protected static final ResourceLocation editTexture = new ResourceLocation("apolloclient/title/edit.png");
-    protected static final ResourceLocation wardrobeTexture = new ResourceLocation("apolloclient/title/shirt.png");
+    protected static final ResourceLocation newsTexture = new ResourceLocation("apolloclient/title/news.png");
     
     private static final ResourceLocation[] titlePanoramaPaths = new ResourceLocation[] {
             new ResourceLocation("textures/gui/title/background/panorama_0.png"),
@@ -277,13 +276,13 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
         int editX = languageX - buttonSize - 5;
         int editY = 5;
 
-        int wardrobeX = editX - buttonSize - 5;
-        int wardrobeY = 5;
+        int newsX = editX - buttonSize - 5;
+        int newsY = 5;
 
 
         this.buttonList.add(new GuiLinkButton(101, linkX, linkY, linkTexture));
 
-        this.buttonList.add(new GuiLinkButton(104, wardrobeX, wardrobeY, wardrobeTexture));
+        this.buttonList.add(new GuiLinkButton(105, newsX, newsY, newsTexture));
         this.buttonList.add(new GuiLinkButton(104, editX, editY, editTexture));
         this.buttonList.add(new GuiLinkButton(5, languageX, languageY, languageTexture));
         this.buttonList.add(new GuiLinkButton(0, gearX, gearY, gearTexture));
@@ -357,6 +356,11 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
         if (parGuiButton.id == 104) {
             mc.displayGuiScreen(new GuiHudEditor());
         }
+
+        if (parGuiButton.id == 105) {
+            mc.displayGuiScreen(new GuiNews());
+        }
+
     }
 
     public void confirmClicked(boolean flag, int i) {

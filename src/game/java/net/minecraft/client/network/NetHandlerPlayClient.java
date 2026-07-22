@@ -355,7 +355,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 		SessionManager.startSessionTime();
 		NotificationManager.push("Notice", "Client ranked aren't handled by the server!");
 		mc.ingameGUI.getChatGUI().printChatMessage(
-			new ChatComponentText("§4[§cMSC§4] §rNotice: all client ranks aren't handled by the server!")
+			new ChatComponentText("§4[§cAC§4] §rNotice: all client ranks aren't handled by the server!")
 		);
 		this.gameController.playerController = new PlayerControllerMP(this.gameController, this);
 		this.clientWorldController = new WorldClient(this, new WorldSettings(0L, packetIn.getGameType(), false,

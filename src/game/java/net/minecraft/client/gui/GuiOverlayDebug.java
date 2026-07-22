@@ -79,7 +79,7 @@ public class GuiOverlayDebug extends Gui {
 		playerOffset = 0;
 		int ww = scaledResolutionIn.getScaledWidth();
 		int hh = scaledResolutionIn.getScaledHeight();
-		if (this.mc.gameSettings.showDebugInfo) {
+		if (!this.mc.gameSettings.showDebugInfo) {
 			GlStateManager.pushMatrix();
 			this.renderDebugInfoLeft();
 			this.renderDebugInfoRight(scaledResolutionIn);
