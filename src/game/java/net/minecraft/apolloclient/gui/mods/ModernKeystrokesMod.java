@@ -9,8 +9,8 @@ import net.minecraft.client.gui.Gui;
 
 public class ModernKeystrokesMod extends HudMod {
 
-    private static final int KEY_SIZE = 24; // Width and height of standard keys
-    private static final int GAP = 4;       // Space between keys
+    private static final int KEY_SIZE = 24; 
+    private static final int GAP = 4;       
     private static final int BORDER_COLOR = 0xFF2A2B2F;
 
     public ModernKeystrokesMod() {
@@ -27,23 +27,22 @@ public class ModernKeystrokesMod extends HudMod {
 
     @Override
     public void draw() {
-        // Draws the background if enabled in options
         super.draw();
 
         int x = getX();
         int y = getY();
 
-        // Row 1: W (Centered over ASD)
+        // ROW NUMBER 1 (W)
         int wX = x + KEY_SIZE + GAP;
         drawKey(wX, y, KEY_SIZE, Keyboard.isKeyDown(KeyboardConstants.KEY_W), "W");
 
-        // Row 2: A, S, D
+        // ROW NUMBER 2: (A, S, D)
         int row2Y = y + KEY_SIZE + GAP;
         drawKey(x, row2Y, KEY_SIZE, Keyboard.isKeyDown(KeyboardConstants.KEY_A), "A");
         drawKey(x + KEY_SIZE + GAP, row2Y, KEY_SIZE, Keyboard.isKeyDown(KeyboardConstants.KEY_S), "S");
         drawKey(x + (KEY_SIZE + GAP) * 2, row2Y, KEY_SIZE, Keyboard.isKeyDown(KeyboardConstants.KEY_D), "D");
 
-        // Row 3: Spacebar (Spans the exact width of the 3 keys below it)
+        // ROW NUMBER 3 (Spacebar)
         int row3Y = row2Y + KEY_SIZE + GAP;
         int spaceWidth = KEY_SIZE * 3 + GAP * 2;
         drawKey(x, row3Y, spaceWidth, Keyboard.isKeyDown(KeyboardConstants.KEY_SPACE), "");
@@ -53,7 +52,6 @@ public class ModernKeystrokesMod extends HudMod {
      * Helper method to draw a single key with its background, border, and label.
      */
     private void drawKey(int x, int y, int width, boolean pressed, String label) {
-        // Determine colors based on press state
         int bgColor = pressed ? applyAlpha(clickColor, hoverOpacity) : applyAlpha(backgroundColor, backgroundOpacity);
         int borderColor = pressed ? 0xFFFFFFFF : BORDER_COLOR;
 
@@ -61,12 +59,11 @@ public class ModernKeystrokesMod extends HudMod {
         
         Gui.drawRect(x, y, x + width, y + KEY_SIZE, bgColor);
 
-        // Draw label (if it has one)
         if (!label.isEmpty()) {
             fr.drawStringWithShadow(
                     label,
-                    x + (width - fr.getStringWidth(label)) / 2,   // Center X
-                    y + (KEY_SIZE - fr.FONT_HEIGHT) / 2,          // Center Y
+                    x + (width - fr.getStringWidth(label)) / 2,  
+                    y + (KEY_SIZE - fr.FONT_HEIGHT) / 2,          
                     textColor
             );
         }

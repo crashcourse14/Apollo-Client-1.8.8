@@ -21,3 +21,13 @@ The client has only been tested using the **JavaScript** version. It has NOT be 
 ## Commiting
 
 As a contributer, you should add your name to `CONTRIBUTORS.md`. You are also **expected** to obey the rules in `COMMIT.md`. It is important to do so to keep the client alive, and clean.
+
+## FILES
+
+**MODULES**
+
+`/src/game/java/net/minecraft/apolloclient/gui/mods`
+
+**HUDS (Click GUI)**
+
+`/src/game/java/net/minecraft/apolloclient/gui/hud`
