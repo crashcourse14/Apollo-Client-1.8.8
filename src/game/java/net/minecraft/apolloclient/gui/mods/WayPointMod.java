@@ -26,10 +26,15 @@ public class WayPointMod extends HudMod {
 
     public int BEAM_COLOR = 0xFFFF0000;
     public float BEAM_OPACITY = 0.6f;
-    public String BEAM_TYPE = "corner";
+    public String BEAM_TYPE = "full"; // "full" or "corner"
+
 
     public WayPointMod() {
         super("Way Points", 5, 130, Category.HUD);
+
+        this.enabled = true;
+
+
         this.supportedOptions = new ModOption[] {
             ModOption.TEXT_COLOR,
             ModOption.TEXT_SCALE,
@@ -37,7 +42,6 @@ public class WayPointMod extends HudMod {
             ModOption.RENDER_BACKGROUND,
             ModOption.BACKGROUND_COLOR,
             ModOption.BACKGROUND_OPACITY,
-
             ModOption.BEAM_COLOR,
             ModOption.BEAM_OPACITY,
             ModOption.BEAM_TYPE

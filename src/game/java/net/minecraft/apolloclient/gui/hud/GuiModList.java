@@ -330,12 +330,24 @@ public class GuiModList extends GuiScreen {
 
         for (int i = 0; i < currentMods.size(); i++) {
             CardLayout c = cardLayouts.get(i);
-            if (c.row < scrollRow || c.row >= scrollRow + visibleRows + 1) {
+            if (c.row < scrollRow) {
                 hideCardButtons(i);
                 continue;
             }
             int screenY = modsAreaY + (c.row - scrollRow) * (CARD_H + CARD_SPACING);
-            if (screenY + CARD_H < modsAreaY || screenY > modsAreaY + modsAreaH) {
+
+            /*
+
+            FIXED BUG 
+            (Drawing more rows then what should be rendered)
+
+            Only draw rows that fit ENTIRELY within the mods area. A row that would be
+            clipped top or bottom is skipped outright (no scissoring available), and it
+            will render fully once the user scrolls it into a fully-visible position.
+            
+            */
+
+            if (screenY < modsAreaY || screenY + CARD_H > modsAreaY + modsAreaH) {
                 hideCardButtons(i);
                 continue;
             }

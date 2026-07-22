@@ -32,7 +32,6 @@ public class SoundMod extends HudMod {
         // Only expose the sound-slider panel — no text format / color / etc.
         this.supportedOptions = new ModOption[] { ModOption.SOUND_SLIDERS };
 
-        // ── Mobs ────────────────────────────────────────────────────────────
         soundEntries.add(new SoundEntry("Creeper",      "mob.creeper",      1.0f));
         soundEntries.add(new SoundEntry("Skeleton",     "mob.skeleton",     1.0f));
         soundEntries.add(new SoundEntry("Zombie",       "mob.zombie",       1.0f));
@@ -51,8 +50,6 @@ public class SoundMod extends HudMod {
         soundEntries.add(new SoundEntry("Cat",          "mob.cat",          1.0f));
         soundEntries.add(new SoundEntry("Villager",     "mob.villager",     1.0f));
         soundEntries.add(new SoundEntry("Bat",          "mob.bat",          1.0f));
-
-        // ── Blocks ──────────────────────────────────────────────────────────
         soundEntries.add(new SoundEntry("Footsteps",    "step",             1.0f));
         soundEntries.add(new SoundEntry("Block Break",  "dig",              1.0f));
         soundEntries.add(new SoundEntry("Block Place",  "place",            1.0f));
@@ -72,10 +69,6 @@ public class SoundMod extends HudMod {
         soundEntries.add(new SoundEntry("Cave Ambient", "ambient.cave",     1.0f));
     }
 
-    // -----------------------------------------------------------------------
-    // Volume lookup
-    // -----------------------------------------------------------------------
-
     /**
      * Returns the volume multiplier for a given sound event name.
      * Called from your sound hook/mixin before playing each sound.
@@ -94,9 +87,6 @@ public class SoundMod extends HudMod {
         return 1.0f;
     }
 
-    // -----------------------------------------------------------------------
-    // HudMod overrides — SoundMod draws nothing on the HUD
-    // -----------------------------------------------------------------------
 
     @Override
     public void draw() {

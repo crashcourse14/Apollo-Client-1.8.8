@@ -32,6 +32,7 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiNews; 
 
 import static net.lax1dude.eaglercraft.v1_8.opengl.RealOpenGLEnums.*;
 
@@ -319,7 +320,7 @@ public class GuiScreenEditProfile extends GuiScreen {
 				if(!this.mc.gameSettings.hideDefaultUsernameWarning && EaglerProfile.isDefaultUsername(EaglerProfile.getName())) {
 					this.mc.displayGuiScreen(new GuiScreenDefaultUsernameNote(this, parent));
 				}else {
-					this.mc.displayGuiScreen(parent);
+					this.mc.displayGuiScreen(new GuiNews());
 				}
 			}else if(par1GuiButton.id == 1) {
 				EagRuntime.displayFileChooser("image/png", "png");
