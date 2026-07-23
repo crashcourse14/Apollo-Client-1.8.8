@@ -48,6 +48,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.apolloclient.Client;
+import net.minecraft.apolloclient.gui.mods.BlockOverlayMod;
 import net.minecraft.apolloclient.gui.mods.WayPointMod;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -1731,9 +1732,17 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
 			float parFloat1) {
 		if (partialTicks == 0 && movingObjectPositionIn != null
 				&& movingObjectPositionIn.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+
+			BlockOverlayMod blockOverlayMod = (Client.INSTANCE != null && Client.INSTANCE.hudManager != null)
+					? Client.INSTANCE.hudManager.blockOverlayMod
+					: null;
+			boolean useOverlay = blockOverlayMod != null && blockOverlayMod.isEnabled();
+
 			GlStateManager.enableBlend();
 			GlStateManager.tryBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, 1, 0);
-			GlStateManager.color(0.0F, 0.0F, 0.0F, 0.4F);
+			if (!useOverlay) {
+				GlStateManager.color(0.0F, 0.0F, 0.0F, 0.4F);
+			}
 			EaglercraftGPU.glLineWidth(2.0F);
 			GlStateManager.disableTexture2D();
 			GlStateManager.depthMask(false);
@@ -1745,9 +1754,23 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
 				double d0 = player.lastTickPosX + (player.posX - player.lastTickPosX) * (double) parFloat1;
 				double d1 = player.lastTickPosY + (player.posY - player.lastTickPosY) * (double) parFloat1;
 				double d2 = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * (double) parFloat1;
-				func_181561_a(block.getSelectedBoundingBox(this.theWorld, blockpos)
+				AxisAlignedBB aabb = block.getSelectedBoundingBox(this.theWorld, blockpos)
 						.expand(0.0020000000949949026D, 0.0020000000949949026D, 0.0020000000949949026D)
-						.offset(-d0, -d1, -d2));
+						.offset(-d0, -d1, -d2);
+
+				if (useOverlay) {
+					int fill = blockOverlayMod.fillColor;
+					int fillAlpha = fill >>> 24 & 0xFF;
+					if (fillAlpha > 0) {
+						// disable depth mask stays false so the fill doesn't z-fight with the outline
+						drawFilledSelectionBox(aabb, fill >> 16 & 0xFF, fill >> 8 & 0xFF, fill & 0xFF, fillAlpha);
+					}
+					int outline = blockOverlayMod.outlineColor;
+					GlStateManager.color((outline >> 16 & 0xFF) / 255.0F, (outline >> 8 & 0xFF) / 255.0F,
+							(outline & 0xFF) / 255.0F, (outline >>> 24 & 0xFF) / 255.0F);
+				}
+
+				func_181561_a(aabb);
 			}
 
 			GlStateManager.depthMask(true);
@@ -1755,6 +1778,47 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
 			GlStateManager.disableBlend();
 		}
 
+	}
+
+	/**
+	 * Draws all six faces of the AABB as solid alpha-blended quads, used for
+	 * BlockOverlayMod's "full block color" fill. r/g/b/a are 0-255.
+	 */
+	private static void drawFilledSelectionBox(AxisAlignedBB aabb, int r, int g, int b, int a) {
+		Tessellator tessellator = Tessellator.getInstance();
+		WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+		worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
+		// -X
+		worldrenderer.pos(aabb.minX, aabb.minY, aabb.minZ).color(r, g, b, a).endVertex();
+		worldrenderer.pos(aabb.minX, aabb.minY, aabb.maxZ).color(r, g, b, a).endVertex();
+		worldrenderer.pos(aabb.minX, aabb.maxY, aabb.maxZ).color(r, g, b, a).endVertex();
+		worldrenderer.pos(aabb.minX, aabb.maxY, aabb.minZ).color(r, g, b, a).endVertex();
+		// +X
+		worldrenderer.pos(aabb.maxX, aabb.minY, aabb.maxZ).color(r, g, b, a).endVertex();
+		worldrenderer.pos(aabb.maxX, aabb.minY, aabb.minZ).color(r, g, b, a).endVertex();
+		worldrenderer.pos(aabb.maxX, aabb.maxY, aabb.minZ).color(r, g, b, a).endVertex();
+		worldrenderer.pos(aabb.maxX, aabb.maxY, aabb.maxZ).color(r, g, b, a).endVertex();
+		// -Y (bottom)
+		worldrenderer.pos(aabb.minX, aabb.minY, aabb.minZ).color(r, g, b, a).endVertex();
+		worldrenderer.pos(aabb.maxX, aabb.minY, aabb.minZ).color(r, g, b, a).endVertex();
+		worldrenderer.pos(aabb.maxX, aabb.minY, aabb.maxZ).color(r, g, b, a).endVertex();
+		worldrenderer.pos(aabb.minX, aabb.minY, aabb.maxZ).color(r, g, b, a).endVertex();
+		// +Y (top)
+		worldrenderer.pos(aabb.minX, aabb.maxY, aabb.maxZ).color(r, g, b, a).endVertex();
+		worldrenderer.pos(aabb.maxX, aabb.maxY, aabb.maxZ).color(r, g, b, a).endVertex();
+		worldrenderer.pos(aabb.maxX, aabb.maxY, aabb.minZ).color(r, g, b, a).endVertex();
+		worldrenderer.pos(aabb.minX, aabb.maxY, aabb.minZ).color(r, g, b, a).endVertex();
+		// -Z
+		worldrenderer.pos(aabb.maxX, aabb.minY, aabb.minZ).color(r, g, b, a).endVertex();
+		worldrenderer.pos(aabb.minX, aabb.minY, aabb.minZ).color(r, g, b, a).endVertex();
+		worldrenderer.pos(aabb.minX, aabb.maxY, aabb.minZ).color(r, g, b, a).endVertex();
+		worldrenderer.pos(aabb.maxX, aabb.maxY, aabb.minZ).color(r, g, b, a).endVertex();
+		// +Z
+		worldrenderer.pos(aabb.minX, aabb.minY, aabb.maxZ).color(r, g, b, a).endVertex();
+		worldrenderer.pos(aabb.maxX, aabb.minY, aabb.maxZ).color(r, g, b, a).endVertex();
+		worldrenderer.pos(aabb.maxX, aabb.maxY, aabb.maxZ).color(r, g, b, a).endVertex();
+		worldrenderer.pos(aabb.minX, aabb.maxY, aabb.maxZ).color(r, g, b, a).endVertex();
+		tessellator.draw();
 	}
 
 	public static void drawSelectionBoundingBox(AxisAlignedBB parAxisAlignedBB) {
