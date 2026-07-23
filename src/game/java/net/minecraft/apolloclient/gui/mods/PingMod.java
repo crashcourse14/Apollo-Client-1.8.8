@@ -15,7 +15,7 @@ public class PingMod extends HudMod {
         super("Ping", 5, 150, Category.HUD);
         this.renderBackground = true;
         this.backgroundOpacity = 0.3f;
-        this.textFormat = "Ping: %VALUE%";
+        this.textFormat = "Ping: %VALUE%ms";
     }
 
     @Override
