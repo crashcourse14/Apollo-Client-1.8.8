@@ -44,23 +44,23 @@ public class Client {
     }
 
 
-    private float oldGamma = -1;
+    private boolean gammaOverridden = false;
+    private float oldGamma = 1.0F;
 
     @EventTarget
     public void onTick(ClientTick event) {
-        if (mc.theWorld == null) return;
+        boolean shouldOverride = mc.theWorld != null
+                && Client.INSTANCE.hudManager.fullBrightMod.isEnabled();
 
-        if (Client.INSTANCE.hudManager.fullBrightMod.isEnabled()) {
-            if (oldGamma == -1) {
+        if (shouldOverride) {
+            if (!gammaOverridden) {
                 oldGamma = mc.gameSettings.gammaSetting;
+                gammaOverridden = true;
             }
-
             mc.gameSettings.gammaSetting = 1000.0F;
-        } else {
-            if (oldGamma != -1) {
-                mc.gameSettings.gammaSetting = oldGamma;
-                oldGamma = -1;
-            }
+        } else if (gammaOverridden) {
+            mc.gameSettings.gammaSetting = oldGamma;
+            gammaOverridden = false;
         }
     }
 }

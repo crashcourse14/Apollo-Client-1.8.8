@@ -14,11 +14,13 @@ public class ToggleSprintMod extends HudMod {
     public ToggleSprintMod() {
         super("Toggle Sprint", 2, 90, Category.HUD);
         
+        this.textFormat = "[%VALUE%]";
         this.renderBackground = true;
         this.backgroundOpacity = 0.0f;
         this.enabled = true;
         
         this.supportedOptions = new ModOption[] {
+            ModOption.TEXT_FORMAT,
             ModOption.TEXT_COLOR,
             ModOption.TEXT_SCALE,
             ModOption.TEXT_SHADOW,

@@ -17,7 +17,7 @@ public class FullBrightMod extends HudMod {
 
     @Override
     public void draw() {
-        fr.drawStringWithShadow("FullBright", getX(), getY(), -1);
+        fr.drawStringWithShadow("", getX(), getY(), -1);
         super.draw();
     }
 
