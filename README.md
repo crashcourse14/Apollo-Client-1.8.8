@@ -10,6 +10,7 @@ Use `git clone` to check the source locally, or simply download the zip (not rec
 
 To use the client (JavaScript), follow the instructions below:
 
+- Run `./CompileJS.sh` in the "target_teavm_javascript" folder;
 - Download `assets.epk` in the "target_teavm_javascript" folder;
 - Download `classes.js` in the "target_teavm_javascript"folder;
 - Download `index.html` in the "web_template" folder;

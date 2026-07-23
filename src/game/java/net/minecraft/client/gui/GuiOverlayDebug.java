@@ -79,7 +79,7 @@ public class GuiOverlayDebug extends Gui {
 		playerOffset = 0;
 		int ww = scaledResolutionIn.getScaledWidth();
 		int hh = scaledResolutionIn.getScaledHeight();
-		if (!this.mc.gameSettings.showDebugInfo) {
+		if (this.mc.gameSettings.showDebugInfo) {
 			GlStateManager.pushMatrix();
 			this.renderDebugInfoLeft();
 			this.renderDebugInfoRight(scaledResolutionIn);
@@ -340,7 +340,7 @@ public class GuiOverlayDebug extends Gui {
 	}
 
 	protected List<String> call() {
-		if (this.mc.gameSettings.showDebugInfo) {
+		if (!this.mc.gameSettings.showDebugInfo) {
 			BlockPos blockpos = new BlockPos(this.mc.getRenderViewEntity().posX,
 					this.mc.getRenderViewEntity().getEntityBoundingBox().minY, this.mc.getRenderViewEntity().posZ);
 			return Lists.newArrayList(new String[] { this.mc.renderGlobal.getDebugInfoShort(),
